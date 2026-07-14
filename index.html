@@ -54,7 +54,13 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/educore/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/educore/favicon-16x16.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/educore/apple-touch-icon.png" />
+
+    <!-- ========== WEB APP MANIFEST (مع المسار الصحيح) ========== -->
     <link rel="manifest" href="/educore/site.webmanifest" />
+
+    <!-- ========== MODERN MOBILE APP CAPABLE (بدلاً من القديم) ========== -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <!-- تم إزالة: <meta name="apple-mobile-web-app-capable" content="yes"> -->
 
     <!-- ========== PRECONNECT ========== -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -69,10 +75,6 @@
       rel="stylesheet"
     />
 
-    <!-- ========== APPLE STATUS BAR ========== -->
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-
     <!-- ========== MICROSOFT ========== -->
     <meta name="msapplication-TileColor" content="#4B5563" />
     <meta name="msapplication-tap-highlight" content="no" />
@@ -84,7 +86,7 @@
   <body>
     <div id="root" role="main" aria-label="تطبيق EduCore"></div>
 
-    <!-- ========== SCRIPT (Vite entry point) ========== -->
+    <!-- Vite سيتولى تحميل نقطة الدخول أثناء التطوير، وأثناء البناء سيتم استبدالها بملفات assets -->
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

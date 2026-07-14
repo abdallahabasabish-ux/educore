@@ -39,7 +39,8 @@ function App() {
   return (
     <ThemeProvider defaultTheme="light" storageKey="edukore-theme">
       <ToastProvider>
-        <BrowserRouter basename="/educore"> {/* ✅ basename مضبوط */}
+        {/* ✅ basename مضبوط على اسم المستودع */}
+        <BrowserRouter basename="/educore">
           <Routes>
             <Route element={<PublicLayout />}>
               <Route path="/" element={<HomePage />} />

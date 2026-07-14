@@ -4,6 +4,7 @@ import path from 'path';
 
 export default defineConfig({
   plugins: [react()],
+  base: '/educore/', // ✅ تمت الإضافة ليتوافق مع GitHub Pages
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),

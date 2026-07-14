@@ -4,7 +4,7 @@ import path from 'path';
 
 export default defineConfig({
   plugins: [react()],
-  base: '/educore/', // ✅ تمت الإضافة ليتوافق مع GitHub Pages
+  base: '/educore/', // ✅ يجب أن يكون نفس اسم المستودع
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -16,15 +16,12 @@ export default defineConfig({
         manualChunks: {
           'react-vendor': ['react', 'react-dom', 'react-router-dom'],
           'firebase-vendor': ['firebase/app', 'firebase/auth', 'firebase/firestore', 'firebase/storage'],
-          'ui-vendor': ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-tabs'],
-          'form-vendor': ['react-hook-form', '@hookform/resolvers', 'zod'],
-          'chart-vendor': ['recharts'],
         },
       },
     },
-    target: 'es2020',
+    sourcemap: false,
     minify: 'esbuild',
-    sourcemap: true,
+    target: 'es2020',
   },
   server: {
     port: 3000,

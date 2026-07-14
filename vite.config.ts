@@ -4,13 +4,15 @@ import path from 'path';
 
 export default defineConfig({
   plugins: [react()],
-  base: '/educore/', // ✅ يجب أن يكون نفس اسم المستودع
+  base: '/educore/', // ✅ يجب أن يكون اسم المستودع الخاص بك
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
   },
   build: {
+    outDir: 'dist',
+    assetsDir: 'assets',
     rollupOptions: {
       output: {
         manualChunks: {

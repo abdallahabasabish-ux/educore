@@ -66,7 +66,8 @@ function App() {
   return (
     <ThemeProvider defaultTheme="light" storageKey="edukore-theme">
       <ToastProvider>
-        <BrowserRouter>
+        {/* ✅ تمت إضافة basename ليتوافق مع GitHub Pages */}
+        <BrowserRouter basename="/educore">
           <Routes>
             {/* Public Routes */}
             <Route element={<PublicLayout />}>

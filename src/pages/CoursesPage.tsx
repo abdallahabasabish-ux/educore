@@ -1,81 +1,64 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
   Plus, 
   Search, 
-  Filter, 
-  MoreVertical,
-  Edit,
-  Trash2,
-  Eye,
+  Edit, 
+  Trash2, 
+  Eye, 
   BookOpen,
+  Filter,
+  ChevronDown,
+  MoreVertical,
+  PlayCircle,
   Users,
-  Clock,
-  ChevronLeft,
-  ChevronRight
+  Clock
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuLabel, 
-  DropdownMenuSeparator, 
-  DropdownMenuTrigger 
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useAuth } from '@/hooks/useAuth';
 import { useFirestore } from '@/hooks/useFirestore';
 import { useToast } from '@/hooks/useToast';
 import { Course } from '@/types';
 import { Skeleton } from '@/components/ui/skeleton';
-import { cn } from '@/lib/utils';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-
-const courseSchema = z.object({
-  title: z.string().min(3, 'العنوان يجب أن يكون 3 أحرف على الأقل'),
-  description: z.string().min(10, 'الوصف يجب أن يكون 10 أحرف على الأقل'),
-  level: z.enum(['beginner', 'intermediate', 'advanced']),
-  price: z.number().min(0, 'السعر يجب أن يكون 0 أو أكثر'),
-  category: z.string().optional(),
-});
-
-type CourseForm = z.infer<typeof courseSchema>;
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { formatDate, truncateText } from '@/lib/utils';
 
 const CoursesPage = () => {
-  const { user, isTeacher } = useAuth();
+  const { user } = useAuth();
   const { getDocuments, createDocument, updateDocument, deleteDocument } = useFirestore<Course>();
   const { addToast } = useToast();
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filterLevel, setFilterLevel] = useState<string>('all');
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterStatus, setFilterStatus] = useState<'all' | 'published' | 'draft'>('all');
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [editingCourse, setEditingCourse] = useState<Course | null>(null);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [courseToDelete, setCourseToDelete] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    setValue,
-    formState: { errors, isSubmitting },
-  } = useForm<CourseForm>({
-    resolver: zodResolver(courseSchema),
-    defaultValues: {
-      level: 'beginner',
-      price: 0,
-    },
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    price: 0,
+    level: 'beginner' as 'beginner' | 'intermediate' | 'advanced',
+    category: '',
+    isPublished: false,
   });
 
   useEffect(() => {
@@ -100,25 +83,42 @@ const CoursesPage = () => {
     }
   };
 
-  const handleCreateCourse = async (data: CourseForm) => {
+  const filteredCourses = courses.filter((course) => {
+    const matchesSearch = course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          course.description?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = filterStatus === 'all' || 
+                          (filterStatus === 'published' && course.isPublished) ||
+                          (filterStatus === 'draft' && !course.isPublished);
+    return matchesSearch && matchesStatus;
+  });
+
+  const handleCreate = async () => {
+    setIsSubmitting(true);
     try {
-      const courseData = {
-        ...data,
-        academyId: user?.id,
-        isPublished: false,
+      const result = await createDocument('courses', {
+        ...formData,
+        academyId: user?.academyId || '',
         studentsCount: 0,
         chapters: [],
-      };
-      const result = await createDocument('courses', courseData);
-      if (result.success && result.data) {
-        setCourses([result.data, ...courses]);
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+      if (result.success) {
         addToast({
           type: 'success',
-          title: 'تم إنشاء الكورس',
-          description: 'تم إضافة الكورس بنجاح',
+          title: 'تم الإنشاء',
+          description: 'تم إنشاء الكورس بنجاح',
         });
-        setIsDialogOpen(false);
-        reset();
+        setIsCreateDialogOpen(false);
+        setFormData({
+          title: '',
+          description: '',
+          price: 0,
+          level: 'beginner',
+          category: '',
+          isPublished: false,
+        });
+        loadCourses();
       }
     } catch (error) {
       addToast({
@@ -126,23 +126,35 @@ const CoursesPage = () => {
         title: 'خطأ',
         description: 'فشل في إنشاء الكورس',
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  const handleUpdateCourse = async (data: CourseForm) => {
+  const handleUpdate = async () => {
     if (!editingCourse) return;
+    setIsSubmitting(true);
     try {
-      const result = await updateDocument('courses', editingCourse.id, data);
-      if (result.success && result.data) {
-        setCourses(courses.map(c => c.id === editingCourse.id ? result.data : c));
+      const result = await updateDocument('courses', editingCourse.id, {
+        ...formData,
+        updatedAt: new Date(),
+      });
+      if (result.success) {
         addToast({
           type: 'success',
-          title: 'تم تحديث الكورس',
-          description: 'تم حفظ التغييرات بنجاح',
+          title: 'تم التحديث',
+          description: 'تم تحديث الكورس بنجاح',
         });
-        setIsDialogOpen(false);
         setEditingCourse(null);
-        reset();
+        setFormData({
+          title: '',
+          description: '',
+          price: 0,
+          level: 'beginner',
+          category: '',
+          isPublished: false,
+        });
+        loadCourses();
       }
     } catch (error) {
       addToast({
@@ -150,22 +162,22 @@ const CoursesPage = () => {
         title: 'خطأ',
         description: 'فشل في تحديث الكورس',
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  const handleDeleteCourse = async () => {
-    if (!courseToDelete) return;
+  const handleDelete = async (id: string) => {
+    if (!confirm('هل أنت متأكد من حذف هذا الكورس؟')) return;
     try {
-      const result = await deleteDocument('courses', courseToDelete);
+      const result = await deleteDocument('courses', id);
       if (result.success) {
-        setCourses(courses.filter(c => c.id !== courseToDelete));
         addToast({
           type: 'success',
-          title: 'تم حذف الكورس',
+          title: 'تم الحذف',
           description: 'تم حذف الكورس بنجاح',
         });
-        setDeleteDialogOpen(false);
-        setCourseToDelete(null);
+        loadCourses();
       }
     } catch (error) {
       addToast({
@@ -178,41 +190,41 @@ const CoursesPage = () => {
 
   const openEditDialog = (course: Course) => {
     setEditingCourse(course);
-    setValue('title', course.title);
-    setValue('description', course.description);
-    setValue('level', course.level);
-    setValue('price', course.price);
-    setValue('category', course.category || '');
-    setIsDialogOpen(true);
+    setFormData({
+      title: course.title,
+      description: course.description || '',
+      price: course.price || 0,
+      level: course.level || 'beginner',
+      category: course.category || '',
+      isPublished: course.isPublished || false,
+    });
   };
 
-  const openDeleteDialog = (id: string) => {
-    setCourseToDelete(id);
-    setDeleteDialogOpen(true);
+  const closeEditDialog = () => {
+    setEditingCourse(null);
+    setFormData({
+      title: '',
+      description: '',
+      price: 0,
+      level: 'beginner',
+      category: '',
+      isPublished: false,
+    });
   };
 
-  const filteredCourses = courses.filter(course => {
-    const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          course.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesLevel = filterLevel === 'all' || course.level === filterLevel;
-    return matchesSearch && matchesLevel;
-  });
-
-  const getLevelBadge = (level: string) => {
-    const levels = {
-      beginner: { label: 'مبتدئ', variant: 'success' as const },
-      intermediate: { label: 'متوسط', variant: 'warning' as const },
-      advanced: { label: 'متقدم', variant: 'destructive' as const },
-    };
-    return levels[level as keyof typeof levels] || levels.beginner;
-  };
-
-  if (!isTeacher) {
+  if (loading) {
     return (
-      <div className="text-center py-12">
-        <BookOpen className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
-        <h2 className="heading-3 mb-2">غير مصرح به</h2>
-        <p className="text-muted-foreground">هذه الصفحة مخصصة للمدرسين فقط</p>
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <Skeleton className="h-8 w-48" />
+          <Skeleton className="h-10 w-32" />
+        </div>
+        <Skeleton className="h-12 w-full" />
+        <div className="grid grid-cols-1 gap-4">
+          {[1, 2, 3].map((i) => (
+            <Skeleton key={i} className="h-24 w-full" />
+          ))}
+        </div>
       </div>
     );
   }
@@ -225,202 +237,60 @@ const CoursesPage = () => {
       className="space-y-6"
     >
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h1 className="heading-3">الكورسات</h1>
-          <p className="text-muted-foreground">إدارة جميع الكورسات التعليمية</p>
+          <p className="text-muted-foreground">إدارة الكورسات التعليمية الخاصة بك</p>
         </div>
-        <Button onClick={() => {
-          setEditingCourse(null);
-          reset();
-          setIsDialogOpen(true);
-        }} className="min-h-[44px]">
-          <Plus className="ml-2 h-4 w-4 rtl:mr-2 rtl:ml-0" />
-          إضافة كورس جديد
-        </Button>
-      </div>
-
-      {/* Filters */}
-      <div className="flex flex-col sm:flex-row gap-4">
-        <div className="relative flex-1">
-          <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground rtl:left-3 rtl:right-auto" />
-          <Input
-            placeholder="بحث عن كورس..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pr-10 min-h-[44px]"
-          />
-        </div>
-        <Select value={filterLevel} onValueChange={setFilterLevel}>
-          <SelectTrigger className="min-h-[44px] sm:w-[180px]">
-            <SelectValue placeholder="المستوى" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">جميع المستويات</SelectItem>
-            <SelectItem value="beginner">مبتدئ</SelectItem>
-            <SelectItem value="intermediate">متوسط</SelectItem>
-            <SelectItem value="advanced">متقدم</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* Courses Grid */}
-      {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[1, 2, 3, 4, 5, 6].map((i) => (
-            <Card key={i}>
-              <CardHeader>
-                <Skeleton className="h-6 w-3/4" />
-                <Skeleton className="h-4 w-1/2" />
-              </CardHeader>
-              <CardContent>
-                <Skeleton className="h-20 w-full" />
-              </CardContent>
-              <CardFooter>
-                <Skeleton className="h-10 w-full" />
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
-      ) : filteredCourses.length === 0 ? (
-        <Card className="text-center py-12">
-          <CardContent>
-            <BookOpen className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
-            <h3 className="font-semibold text-lg mb-2">لا توجد كورسات</h3>
-            <p className="text-muted-foreground mb-4">
-              {searchQuery ? 'لا توجد نتائج مطابقة للبحث' : 'ابدأ بإضافة أول كورس لك'}
-            </p>
-            {!searchQuery && (
-              <Button onClick={() => {
-                setEditingCourse(null);
-                reset();
-                setIsDialogOpen(true);
-              }}>
-                <Plus className="ml-2 h-4 w-4 rtl:mr-2 rtl:ml-0" />
-                إضافة كورس
-              </Button>
-            )}
-          </CardContent>
-        </Card>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredCourses.map((course, index) => {
-            const levelBadge = getLevelBadge(course.level);
-            return (
-              <motion.div
-                key={course.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.05 }}
-              >
-                <Card className="card-hover h-full flex flex-col">
-                  <CardHeader>
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="flex-1 min-w-0">
-                        <CardTitle className="text-lg truncate">{course.title}</CardTitle>
-                        <CardDescription className="flex items-center gap-2 mt-1">
-                          <Badge variant={levelBadge.variant}>{levelBadge.label}</Badge>
-                          <span className="text-xs text-muted-foreground">
-                            {course.studentsCount || 0} طالب
-                          </span>
-                        </CardDescription>
-                      </div>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon" className="min-h-[44px] min-w-[44px]">
-                            <MoreVertical className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuLabel>الإجراءات</DropdownMenuLabel>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem asChild>
-                            <Link to={`/courses/${course.id}`}>
-                              <Eye className="ml-2 h-4 w-4 rtl:mr-2 rtl:ml-0" />
-                              عرض التفاصيل
-                            </Link>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => openEditDialog(course)}>
-                            <Edit className="ml-2 h-4 w-4 rtl:mr-2 rtl:ml-0" />
-                            تعديل
-                          </DropdownMenuItem>
-                          <DropdownMenuItem 
-                            onClick={() => openDeleteDialog(course.id)}
-                            className="text-danger focus:text-danger"
-                          >
-                            <Trash2 className="ml-2 h-4 w-4 rtl:mr-2 rtl:ml-0" />
-                            حذف
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="flex-1">
-                    <p className="text-sm text-muted-foreground line-clamp-3">
-                      {course.description}
-                    </p>
-                  </CardContent>
-                  <CardFooter className="flex items-center justify-between">
-                    <span className="font-semibold">
-                      {course.price === 0 ? 'مجاني' : `${course.price} ر.س`}
-                    </span>
-                    <Button asChild variant="outline" size="sm" className="min-h-[44px]">
-                      <Link to={`/courses/${course.id}`}>
-                        عرض التفاصيل
-                        <ChevronLeft className="mr-2 h-4 w-4 rtl:ml-2 rtl:mr-0" />
-                      </Link>
-                    </Button>
-                  </CardFooter>
-                </Card>
-              </motion.div>
-            );
-          })}
-        </div>
-      )}
-
-      {/* Create/Edit Dialog */}
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-[550px] max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>{editingCourse ? 'تعديل الكورس' : 'إضافة كورس جديد'}</DialogTitle>
-            <DialogDescription>
-              {editingCourse ? 'قم بتحديث معلومات الكورس' : 'أدخل معلومات الكورس الجديد'}
-            </DialogDescription>
-          </DialogHeader>
-          <form onSubmit={handleSubmit(editingCourse ? handleUpdateCourse : handleCreateCourse)}>
-            <div className="space-y-4 py-4">
+        <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+          <DialogTrigger asChild>
+            <Button className="min-h-[44px]">
+              <Plus className="ml-2 h-4 w-4 rtl:mr-2 rtl:ml-0" />
+              إضافة كورس جديد
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>إضافة كورس جديد</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="title">عنوان الكورس</Label>
                 <Input
                   id="title"
+                  value={formData.title}
+                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                   placeholder="أدخل عنوان الكورس"
                   className="min-h-[44px]"
-                  {...register('title')}
                 />
-                {errors.title && (
-                  <p className="text-sm text-danger">{errors.title.message}</p>
-                )}
               </div>
-
               <div className="space-y-2">
                 <Label htmlFor="description">الوصف</Label>
                 <Textarea
                   id="description"
-                  placeholder="وصف الكورس"
-                  className="min-h-[100px] resize-y"
-                  {...register('description')}
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  placeholder="أدخل وصف الكورس"
+                  className="min-h-[100px]"
                 />
-                {errors.description && (
-                  <p className="text-sm text-danger">{errors.description.message}</p>
-                )}
               </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="price">السعر</Label>
+                  <Input
+                    id="price"
+                    type="number"
+                    value={formData.price}
+                    onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })}
+                    placeholder="0"
+                    className="min-h-[44px]"
+                  />
+                </div>
                 <div className="space-y-2">
                   <Label htmlFor="level">المستوى</Label>
                   <Select
-                    defaultValue="beginner"
-                    onValueChange={(value) => setValue('level', value as any)}
+                    value={formData.level}
+                    onValueChange={(value) => setFormData({ ...formData, level: value as any })}
                   >
                     <SelectTrigger className="min-h-[44px]">
                       <SelectValue placeholder="اختر المستوى" />
@@ -431,73 +301,236 @@ const CoursesPage = () => {
                       <SelectItem value="advanced">متقدم</SelectItem>
                     </SelectContent>
                   </Select>
-                  {errors.level && (
-                    <p className="text-sm text-danger">{errors.level.message}</p>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="price">السعر (ر.س)</Label>
-                  <Input
-                    id="price"
-                    type="number"
-                    placeholder="0"
-                    className="min-h-[44px]"
-                    {...register('price', { valueAsNumber: true })}
-                  />
-                  {errors.price && (
-                    <p className="text-sm text-danger">{errors.price.message}</p>
-                  )}
                 </div>
               </div>
-
               <div className="space-y-2">
-                <Label htmlFor="category">التصنيف (اختياري)</Label>
+                <Label htmlFor="category">التصنيف</Label>
                 <Input
                   id="category"
+                  value={formData.category}
+                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                   placeholder="مثال: برمجة، تصميم، تسويق"
                   className="min-h-[44px]"
-                  {...register('category')}
                 />
-                {errors.category && (
-                  <p className="text-sm text-danger">{errors.category.message}</p>
-                )}
+              </div>
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="isPublished"
+                  checked={formData.isPublished}
+                  onChange={(e) => setFormData({ ...formData, isPublished: e.target.checked })}
+                  className="h-4 w-4 rounded border-input"
+                />
+                <Label htmlFor="isPublished">نشر الكورس فوراً</Label>
+              </div>
+              <Button 
+                onClick={handleCreate} 
+                className="w-full min-h-[44px]"
+                disabled={isSubmitting || !formData.title}
+              >
+                {isSubmitting ? 'جاري الإنشاء...' : 'إنشاء الكورس'}
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
+
+      {/* Filters */}
+      <Card>
+        <CardContent className="p-4">
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex-1 relative">
+              <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="بحث عن كورس..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pr-10 min-h-[44px]"
+              />
+            </div>
+            <Select
+              value={filterStatus}
+              onValueChange={(value) => setFilterStatus(value as any)}
+            >
+              <SelectTrigger className="w-full sm:w-[180px] min-h-[44px]">
+                <SelectValue placeholder="الحالة" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">جميع الكورسات</SelectItem>
+                <SelectItem value="published">منشور</SelectItem>
+                <SelectItem value="draft">مسودة</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Courses List */}
+      <Card>
+        <CardContent className="p-0">
+          {filteredCourses.length === 0 ? (
+            <div className="text-center py-12">
+              <BookOpen className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+              <h3 className="text-lg font-semibold mb-2">لا توجد كورسات</h3>
+              <p className="text-muted-foreground">ابدأ بإضافة أول كورس لك</p>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>الكورس</TableHead>
+                    <TableHead>المستوى</TableHead>
+                    <TableHead>الطلاب</TableHead>
+                    <TableHead>السعر</TableHead>
+                    <TableHead>الحالة</TableHead>
+                    <TableHead className="text-left">الإجراءات</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredCourses.map((course) => (
+                    <TableRow key={course.id}>
+                      <TableCell>
+                        <div>
+                          <div className="font-medium">{course.title}</div>
+                          <div className="text-sm text-muted-foreground">
+                            {truncateText(course.description || '', 50)}
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline">
+                          {course.level === 'beginner' && 'مبتدئ'}
+                          {course.level === 'intermediate' && 'متوسط'}
+                          {course.level === 'advanced' && 'متقدم'}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>{course.studentsCount || 0}</TableCell>
+                      <TableCell>{course.price === 0 ? 'مجاني' : `${course.price} ريال`}</TableCell>
+                      <TableCell>
+                        <Badge variant={course.isPublished ? 'success' : 'warning'}>
+                          {course.isPublished ? 'منشور' : 'مسودة'}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            asChild
+                            className="min-h-[44px] min-w-[44px]"
+                          >
+                            <Link to={`/courses/${course.id}`}>
+                              <Eye className="h-4 w-4" />
+                            </Link>
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => openEditDialog(course)}
+                            className="min-h-[44px] min-w-[44px]"
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleDelete(course.id)}
+                            className="min-h-[44px] min-w-[44px] text-danger hover:text-danger"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Edit Dialog */}
+      <Dialog open={!!editingCourse} onOpenChange={(open) => !open && closeEditDialog()}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>تعديل الكورس</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="edit-title">عنوان الكورس</Label>
+              <Input
+                id="edit-title"
+                value={formData.title}
+                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                className="min-h-[44px]"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-description">الوصف</Label>
+              <Textarea
+                id="edit-description"
+                value={formData.description}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                className="min-h-[100px]"
+              />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="edit-price">السعر</Label>
+                <Input
+                  id="edit-price"
+                  type="number"
+                  value={formData.price}
+                  onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })}
+                  className="min-h-[44px]"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="edit-level">المستوى</Label>
+                <Select
+                  value={formData.level}
+                  onValueChange={(value) => setFormData({ ...formData, level: value as any })}
+                >
+                  <SelectTrigger className="min-h-[44px]">
+                    <SelectValue placeholder="اختر المستوى" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="beginner">مبتدئ</SelectItem>
+                    <SelectItem value="intermediate">متوسط</SelectItem>
+                    <SelectItem value="advanced">متقدم</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
-
-            <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => {
-                setIsDialogOpen(false);
-                setEditingCourse(null);
-                reset();
-              }} className="min-h-[44px]">
-                إلغاء
-              </Button>
-              <Button type="submit" disabled={isSubmitting} className="min-h-[44px]">
-                {isSubmitting ? 'جاري الحفظ...' : (editingCourse ? 'تحديث' : 'إضافة')}
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
-
-      {/* Delete Dialog */}
-      <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>تأكيد الحذف</DialogTitle>
-            <DialogDescription>
-              هل أنت متأكد من حذف هذا الكورس؟ هذا الإجراء لا يمكن التراجع عنه.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => setDeleteDialogOpen(false)} className="min-h-[44px]">
-              إلغاء
+            <div className="space-y-2">
+              <Label htmlFor="edit-category">التصنيف</Label>
+              <Input
+                id="edit-category"
+                value={formData.category}
+                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                className="min-h-[44px]"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="edit-isPublished"
+                checked={formData.isPublished}
+                onChange={(e) => setFormData({ ...formData, isPublished: e.target.checked })}
+                className="h-4 w-4 rounded border-input"
+              />
+              <Label htmlFor="edit-isPublished">نشر الكورس</Label>
+            </div>
+            <Button 
+              onClick={handleUpdate} 
+              className="w-full min-h-[44px]"
+              disabled={isSubmitting || !formData.title}
+            >
+              {isSubmitting ? 'جاري التحديث...' : 'تحديث الكورس'}
             </Button>
-            <Button type="button" variant="destructive" onClick={handleDeleteCourse} className="min-h-[44px]">
-              حذف
-            </Button>
-          </DialogFooter>
+          </div>
         </DialogContent>
       </Dialog>
     </motion.div>

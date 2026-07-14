@@ -1,163 +1,168 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
-  ArrowRight, 
-  Plus, 
-  Edit, 
-  Trash2, 
-  PlayCircle,
-  FileText,
+  ArrowRight,
+  ArrowLeft,
+  Plus,
+  Trash2,
+  Edit,
+  Eye,
+  BookOpen,
+  Users,
+  Clock,
+  Play,
   ChevronDown,
   ChevronUp,
-  Clock,
-  Users,
-  BookOpen
+  MoreVertical,
+  Video,
+  FileText,
+  CheckCircle,
+  XCircle
 } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { useToast } from '@/hooks/useToast';
-import { useFirestore } from '@/hooks/useFirestore';
-import { Course, Chapter, Lesson } from '@/types';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useToast } from '@/hooks/useToast';
+import { useFirestore } from '@/hooks/useFirestore';
+import { useAuth } from '@/hooks/useAuth';
+import { Course, Chapter, Lesson } from '@/types';
+import { formatDate, truncateText } from '@/lib/utils';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { formatDate, cn } from '@/lib/utils';
+
+const chapterSchema = z.object({
+  title: z.string().min(3, 'عنوان الفصل مطلوب'),
+  description: z.string().optional(),
+});
+
+const lessonSchema = z.object({
+  title: z.string().min(3, 'عنوان الدرس مطلوب'),
+  description: z.string().optional(),
+  videoUrl: z.string().url('رابط الفيديو غير صحيح'),
+  videoSource: z.enum(['youtube', 'vimeo', 'upload']),
+  isFree: z.boolean().default(false),
+});
+
+type ChapterForm = z.infer<typeof chapterSchema>;
+type LessonForm = z.infer<typeof lessonSchema>;
 
 const CourseDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { getDocument, updateDocument, deleteDocument, addSubCollection } = useFirestore<Course>();
+  const { user, isTeacher } = useAuth();
+  const { getDocument, updateDocument, addSubCollection } = useFirestore<Course>();
   const { addToast } = useToast();
-  
+
   const [course, setCourse] = useState<Course | null>(null);
   const [loading, setLoading] = useState(true);
-  const [expandedChapters, setExpandedChapters] = useState<Set<string>>(new Set());
-  const [isChapterDialogOpen, setIsChapterDialogOpen] = useState(false);
-  const [isLessonDialogOpen, setIsLessonDialogOpen] = useState(false);
-  const [editingChapter, setEditingChapter] = useState<Chapter | null>(null);
-  const [editingLesson, setEditingLesson] = useState<Lesson | null>(null);
-  const [selectedChapterId, setSelectedChapterId] = useState<string>('');
+  const [isAddingChapter, setIsAddingChapter] = useState(false);
+  const [isAddingLesson, setIsAddingLesson] = useState(false);
+  const [selectedChapterId, setSelectedChapterId] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [chapterForm, setChapterForm] = useState({
-    title: '',
-    description: '',
+  const chapterForm = useForm<ChapterForm>({
+    resolver: zodResolver(chapterSchema),
   });
 
-  const [lessonForm, setLessonForm] = useState({
-    title: '',
-    description: '',
-    videoUrl: '',
-    videoSource: 'youtube' as 'youtube' | 'vimeo' | 'upload',
-    isFree: false,
+  const lessonForm = useForm<LessonForm>({
+    resolver: zodResolver(lessonSchema),
+    defaultValues: {
+      isFree: false,
+      videoSource: 'youtube',
+    },
   });
 
   useEffect(() => {
-    if (id) {
-      loadCourse();
-    }
-  }, [id]);
-
-  const loadCourse = async () => {
-    setLoading(true);
-    try {
-      const result = await getDocument('courses', id!);
-      if (result.success && result.data) {
-        setCourse(result.data);
-        // Auto-expand all chapters
-        const chapterIds = new Set(result.data.chapters?.map(c => c.id) || []);
-        setExpandedChapters(chapterIds);
-      } else {
+    const loadCourse = async () => {
+      if (!id) return;
+      setLoading(true);
+      try {
+        const result = await getDocument('courses', id);
+        if (result.success && result.data) {
+          setCourse(result.data);
+        } else {
+          addToast({
+            type: 'error',
+            title: 'خطأ',
+            description: 'الكورس غير موجود',
+          });
+          navigate('/courses');
+        }
+      } catch (error) {
         addToast({
           type: 'error',
           title: 'خطأ',
-          description: 'الكورس غير موجود',
+          description: 'فشل تحميل الكورس',
         });
-        navigate('/courses');
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      addToast({
-        type: 'error',
-        title: 'خطأ',
-        description: 'فشل في تحميل الكورس',
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
+    loadCourse();
+  }, [id]);
 
-  const toggleChapter = (chapterId: string) => {
-    setExpandedChapters(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(chapterId)) {
-        newSet.delete(chapterId);
-      } else {
-        newSet.add(chapterId);
-      }
-      return newSet;
-    });
-  };
-
-  const handleAddChapter = async () => {
+  const handleAddChapter = async (data: ChapterForm) => {
     if (!course) return;
     setIsSubmitting(true);
     try {
-      const newChapter: Omit<Chapter, 'id'> = {
+      const chapter: Chapter = {
+        id: Math.random().toString(36).substring(2, 9),
         courseId: course.id,
-        title: chapterForm.title,
-        description: chapterForm.description,
-        order: course.chapters?.length || 0,
+        title: data.title,
+        description: data.description,
+        order: (course.chapters?.length || 0) + 1,
         lessons: [],
         createdAt: new Date(),
         updatedAt: new Date(),
       };
 
-      // Add to course chapters
-      const updatedChapters = [...(course.chapters || []), { ...newChapter, id: `chapter-${Date.now()}` }];
+      const updatedChapters = [...(course.chapters || []), chapter];
       const result = await updateDocument('courses', course.id, {
         chapters: updatedChapters,
-        updatedAt: new Date(),
       });
 
-      if (result.success) {
+      if (result.success && result.data) {
+        setCourse(result.data);
         addToast({
           type: 'success',
-          title: 'تم الإضافة',
+          title: 'تم إضافة الفصل',
           description: 'تم إضافة الفصل بنجاح',
         });
-        setIsChapterDialogOpen(false);
-        setChapterForm({ title: '', description: '' });
-        loadCourse();
+        setIsAddingChapter(false);
+        chapterForm.reset();
       }
     } catch (error) {
       addToast({
         type: 'error',
         title: 'خطأ',
-        description: 'فشل في إضافة الفصل',
+        description: 'فشل إضافة الفصل',
       });
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleAddLesson = async () => {
+  const handleAddLesson = async (data: LessonForm) => {
     if (!course || !selectedChapterId) return;
     setIsSubmitting(true);
     try {
-      const newLesson: Omit<Lesson, 'id'> = {
+      const lesson: Lesson = {
+        id: Math.random().toString(36).substring(2, 9),
         chapterId: selectedChapterId,
-        title: lessonForm.title,
-        description: lessonForm.description,
-        videoUrl: lessonForm.videoUrl,
-        videoSource: lessonForm.videoSource,
-        isFree: lessonForm.isFree,
+        title: data.title,
+        description: data.description,
+        videoUrl: data.videoUrl,
+        videoSource: data.videoSource,
         order: 0,
+        isFree: data.isFree,
         createdAt: new Date(),
         updatedAt: new Date(),
       };
@@ -166,38 +171,32 @@ const CourseDetailPage = () => {
         if (chapter.id === selectedChapterId) {
           return {
             ...chapter,
-            lessons: [...(chapter.lessons || []), { ...newLesson, id: `lesson-${Date.now()}` }],
+            lessons: [...(chapter.lessons || []), lesson],
           };
         }
         return chapter;
-      }) || [];
+      });
 
       const result = await updateDocument('courses', course.id, {
         chapters: updatedChapters,
-        updatedAt: new Date(),
       });
 
-      if (result.success) {
+      if (result.success && result.data) {
+        setCourse(result.data);
         addToast({
           type: 'success',
-          title: 'تم الإضافة',
+          title: 'تم إضافة الدرس',
           description: 'تم إضافة الدرس بنجاح',
         });
-        setIsLessonDialogOpen(false);
-        setLessonForm({
-          title: '',
-          description: '',
-          videoUrl: '',
-          videoSource: 'youtube',
-          isFree: false,
-        });
-        loadCourse();
+        setIsAddingLesson(false);
+        lessonForm.reset();
+        setSelectedChapterId(null);
       }
     } catch (error) {
       addToast({
         type: 'error',
         title: 'خطأ',
-        description: 'فشل في إضافة الدرس',
+        description: 'فشل إضافة الدرس',
       });
     } finally {
       setIsSubmitting(false);
@@ -205,32 +204,30 @@ const CourseDetailPage = () => {
   };
 
   const handleDeleteChapter = async (chapterId: string) => {
-    if (!course || !confirm('هل أنت متأكد من حذف هذا الفصل؟')) return;
+    if (!course) return;
     try {
       const updatedChapters = course.chapters?.filter(c => c.id !== chapterId) || [];
       const result = await updateDocument('courses', course.id, {
         chapters: updatedChapters,
-        updatedAt: new Date(),
       });
-      if (result.success) {
+      if (result.success && result.data) {
+        setCourse(result.data);
         addToast({
           type: 'success',
-          title: 'تم الحذف',
-          description: 'تم حذف الفصل بنجاح',
+          title: 'تم حذف الفصل',
         });
-        loadCourse();
       }
     } catch (error) {
       addToast({
         type: 'error',
         title: 'خطأ',
-        description: 'فشل في حذف الفصل',
+        description: 'فشل حذف الفصل',
       });
     }
   };
 
   const handleDeleteLesson = async (chapterId: string, lessonId: string) => {
-    if (!course || !confirm('هل أنت متأكد من حذف هذا الدرس؟')) return;
+    if (!course) return;
     try {
       const updatedChapters = course.chapters?.map(chapter => {
         if (chapter.id === chapterId) {
@@ -240,25 +237,24 @@ const CourseDetailPage = () => {
           };
         }
         return chapter;
-      }) || [];
+      });
 
       const result = await updateDocument('courses', course.id, {
         chapters: updatedChapters,
-        updatedAt: new Date(),
       });
-      if (result.success) {
+
+      if (result.success && result.data) {
+        setCourse(result.data);
         addToast({
           type: 'success',
-          title: 'تم الحذف',
-          description: 'تم حذف الدرس بنجاح',
+          title: 'تم حذف الدرس',
         });
-        loadCourse();
       }
     } catch (error) {
       addToast({
         type: 'error',
         title: 'خطأ',
-        description: 'فشل في حذف الدرس',
+        description: 'فشل حذف الدرس',
       });
     }
   };
@@ -266,10 +262,9 @@ const CourseDetailPage = () => {
   if (loading) {
     return (
       <div className="space-y-6">
-        <Skeleton className="h-8 w-64" />
-        <Skeleton className="h-40 w-full" />
-        <Skeleton className="h-20 w-full" />
-        <Skeleton className="h-20 w-full" />
+        <Skeleton className="h-8 w-48" />
+        <Skeleton className="h-32 w-full" />
+        <Skeleton className="h-64 w-full" />
       </div>
     );
   }
@@ -277,10 +272,8 @@ const CourseDetailPage = () => {
   if (!course) {
     return (
       <div className="text-center py-12">
-        <h2 className="heading-3 mb-4">الكورس غير موجود</h2>
-        <Button asChild>
-          <Link to="/courses">العودة إلى الكورسات</Link>
-        </Button>
+        <h2 className="text-2xl font-bold mb-4">الكورس غير موجود</h2>
+        <Button onClick={() => navigate('/courses')}>العودة إلى الكورسات</Button>
       </div>
     );
   }
@@ -293,298 +286,296 @@ const CourseDetailPage = () => {
       className="space-y-6"
     >
       {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Link to="/courses" className="hover:text-foreground">الكورسات</Link>
-            <span>/</span>
-            <span>{course.title}</span>
+          <div className="flex items-center gap-3">
+            <Button variant="ghost" size="sm" onClick={() => navigate('/courses')}>
+              <ArrowRight className="ml-2 h-4 w-4 rtl:mr-2 rtl:ml-0" />
+              العودة
+            </Button>
+            <h1 className="heading-3">{course.title}</h1>
           </div>
-          <h1 className="heading-3 mt-2">{course.title}</h1>
-          <div className="flex flex-wrap items-center gap-3 mt-2">
-            <Badge variant={course.isPublished ? 'success' : 'warning'}>
-              {course.isPublished ? 'منشور' : 'مسودة'}
-            </Badge>
-            <Badge variant="outline">
-              {course.level === 'beginner' && 'مبتدئ'}
-              {course.level === 'intermediate' && 'متوسط'}
-              {course.level === 'advanced' && 'متقدم'}
-            </Badge>
-            <span className="text-sm text-muted-foreground">
-              <Users className="inline h-4 w-4 ml-1" />
-              {course.studentsCount || 0} طالب
-            </span>
-          </div>
+          <p className="text-muted-foreground mt-1">{course.description}</p>
         </div>
-        <Button asChild variant="outline" className="min-h-[44px]">
-          <Link to="/courses">
-            <ArrowRight className="ml-2 h-4 w-4 rtl:mr-2 rtl:ml-0" />
-            العودة
-          </Link>
-        </Button>
-      </div>
-
-      {/* Course Info */}
-      <Card>
-        <CardContent className="p-6 space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <p className="text-sm text-muted-foreground">الوصف</p>
-              <p className="mt-1">{course.description || 'لا يوجد وصف'}</p>
-            </div>
-            <div>
-              <p className="text-sm text-muted-foreground">التصنيف</p>
-              <p className="mt-1">{course.category || 'غير محدد'}</p>
-            </div>
-            <div>
-              <p className="text-sm text-muted-foreground">السعر</p>
-              <p className="mt-1">{course.price === 0 ? 'مجاني' : `${course.price} ريال`}</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Chapters Section */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <h2 className="heading-4">الفصول والدروس</h2>
-        <div className="flex gap-2">
-          <Dialog open={isChapterDialogOpen} onOpenChange={setIsChapterDialogOpen}>
-            <DialogTrigger asChild>
-              <Button size="sm" className="min-h-[44px]">
-                <Plus className="ml-2 h-4 w-4 rtl:mr-2 rtl:ml-0" />
-                إضافة فصل
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>إضافة فصل جديد</DialogTitle>
-              </DialogHeader>
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="chapter-title">عنوان الفصل</Label>
-                  <Input
-                    id="chapter-title"
-                    value={chapterForm.title}
-                    onChange={(e) => setChapterForm({ ...chapterForm, title: e.target.value })}
-                    className="min-h-[44px]"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="chapter-description">الوصف</Label>
-                  <Textarea
-                    id="chapter-description"
-                    value={chapterForm.description}
-                    onChange={(e) => setChapterForm({ ...chapterForm, description: e.target.value })}
-                    className="min-h-[80px]"
-                  />
-                </div>
-                <Button 
-                  onClick={handleAddChapter} 
-                  className="w-full min-h-[44px]"
-                  disabled={isSubmitting || !chapterForm.title}
-                >
-                  {isSubmitting ? 'جاري الإضافة...' : 'إضافة الفصل'}
-                </Button>
-              </div>
-            </DialogContent>
-          </Dialog>
-
-          <Dialog open={isLessonDialogOpen} onOpenChange={setIsLessonDialogOpen}>
-            <DialogTrigger asChild>
-              <Button size="sm" variant="outline" className="min-h-[44px]">
-                <Plus className="ml-2 h-4 w-4 rtl:mr-2 rtl:ml-0" />
-                إضافة درس
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-2xl">
-              <DialogHeader>
-                <DialogTitle>إضافة درس جديد</DialogTitle>
-              </DialogHeader>
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="lesson-chapter">الفصل</Label>
-                  <Select
-                    value={selectedChapterId}
-                    onValueChange={setSelectedChapterId}
-                  >
-                    <SelectTrigger className="min-h-[44px]">
-                      <SelectValue placeholder="اختر الفصل" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {course.chapters?.map((chapter) => (
-                        <SelectItem key={chapter.id} value={chapter.id}>
-                          {chapter.title}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="lesson-title">عنوان الدرس</Label>
-                  <Input
-                    id="lesson-title"
-                    value={lessonForm.title}
-                    onChange={(e) => setLessonForm({ ...lessonForm, title: e.target.value })}
-                    className="min-h-[44px]"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="lesson-description">الوصف</Label>
-                  <Textarea
-                    id="lesson-description"
-                    value={lessonForm.description}
-                    onChange={(e) => setLessonForm({ ...lessonForm, description: e.target.value })}
-                    className="min-h-[80px]"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="lesson-video">رابط الفيديو</Label>
-                  <Input
-                    id="lesson-video"
-                    value={lessonForm.videoUrl}
-                    onChange={(e) => setLessonForm({ ...lessonForm, videoUrl: e.target.value })}
-                    placeholder="https://www.youtube.com/watch?v=..."
-                    className="min-h-[44px]"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="lesson-source">مصدر الفيديو</Label>
-                  <Select
-                    value={lessonForm.videoSource}
-                    onValueChange={(value) => setLessonForm({ ...lessonForm, videoSource: value as any })}
-                  >
-                    <SelectTrigger className="min-h-[44px]">
-                      <SelectValue placeholder="اختر المصدر" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="youtube">YouTube</SelectItem>
-                      <SelectItem value="vimeo">Vimeo</SelectItem>
-                      <SelectItem value="upload">رفع مباشر</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    id="lesson-free"
-                    checked={lessonForm.isFree}
-                    onChange={(e) => setLessonForm({ ...lessonForm, isFree: e.target.checked })}
-                    className="h-4 w-4 rounded border-input"
-                  />
-                  <Label htmlFor="lesson-free">درس مجاني</Label>
-                </div>
-                <Button 
-                  onClick={handleAddLesson} 
-                  className="w-full min-h-[44px]"
-                  disabled={isSubmitting || !lessonForm.title || !selectedChapterId || !lessonForm.videoUrl}
-                >
-                  {isSubmitting ? 'جاري الإضافة...' : 'إضافة الدرس'}
-                </Button>
-              </div>
-            </DialogContent>
-          </Dialog>
+        <div className="flex items-center gap-3">
+          <Badge variant={course.isPublished ? 'success' : 'warning'}>
+            {course.isPublished ? 'منشور' : 'مسودة'}
+          </Badge>
+          <Badge variant="secondary">
+            {course.level === 'beginner' && 'مبتدئ'}
+            {course.level === 'intermediate' && 'متوسط'}
+            {course.level === 'advanced' && 'متقدم'}
+          </Badge>
         </div>
       </div>
 
-      {/* Chapters List */}
-      <div className="space-y-3">
-        {course.chapters?.length === 0 ? (
-          <Card>
-            <CardContent className="text-center py-12">
-              <BookOpen className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-              <h3 className="text-lg font-semibold mb-2">لا توجد فصول</h3>
-              <p className="text-muted-foreground">أضف أول فصل للبدء في بناء الكورس</p>
-            </CardContent>
-          </Card>
-        ) : (
-          course.chapters?.map((chapter, index) => (
-            <Card key={chapter.id} className="overflow-hidden">
-              <div
-                className="flex items-center justify-between p-4 cursor-pointer hover:bg-muted/50 transition-colors"
-                onClick={() => toggleChapter(chapter.id)}
-              >
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10 text-primary font-semibold text-sm">
-                    {index + 1}
-                  </div>
-                  <div>
-                    <h3 className="font-medium">{chapter.title}</h3>
-                    {chapter.description && (
-                      <p className="text-sm text-muted-foreground">{chapter.description}</p>
-                    )}
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">
-                    {chapter.lessons?.length || 0} دروس
-                  </span>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDeleteChapter(chapter.id);
-                    }}
-                    className="min-h-[44px] min-w-[44px] text-danger hover:text-danger"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                  {expandedChapters.has(chapter.id) ? (
-                    <ChevronUp className="h-4 w-4 text-muted-foreground" />
-                  ) : (
-                    <ChevronDown className="h-4 w-4 text-muted-foreground" />
-                  )}
-                </div>
-              </div>
+      {/* Stats */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <Card>
+          <CardContent className="pt-4">
+            <p className="text-sm text-muted-foreground">الفصول</p>
+            <p className="text-2xl font-bold">{course.chapters?.length || 0}</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-4">
+            <p className="text-sm text-muted-foreground">الدروس</p>
+            <p className="text-2xl font-bold">
+              {course.chapters?.reduce((acc, c) => acc + (c.lessons?.length || 0), 0) || 0}
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-4">
+            <p className="text-sm text-muted-foreground">الطلاب</p>
+            <p className="text-2xl font-bold">{course.studentsCount || 0}</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-4">
+            <p className="text-sm text-muted-foreground">السعر</p>
+            <p className="text-2xl font-bold">{course.price === 0 ? 'مجاني' : `${course.price} ريال`}</p>
+          </CardContent>
+        </Card>
+      </div>
 
-              {expandedChapters.has(chapter.id) && (
-                <div className="border-t border-border p-4 space-y-2">
-                  {chapter.lessons?.length === 0 ? (
-                    <p className="text-sm text-muted-foreground text-center py-4">
-                      لا توجد دروس في هذا الفصل
-                    </p>
-                  ) : (
-                    chapter.lessons?.map((lesson) => (
-                      <div
-                        key={lesson.id}
-                        className="flex items-center justify-between p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors"
-                      >
-                        <div className="flex items-center gap-3 flex-1 min-w-0">
-                          <PlayCircle className="h-5 w-5 text-primary shrink-0" />
-                          <div className="min-w-0">
-                            <p className="font-medium truncate">{lesson.title}</p>
-                            {lesson.description && (
-                              <p className="text-sm text-muted-foreground truncate">
-                                {lesson.description}
-                              </p>
-                            )}
-                          </div>
-                          {lesson.isFree && (
-                            <Badge variant="success" className="shrink-0">مجاني</Badge>
-                          )}
-                          <Badge variant="outline" className="shrink-0">
-                            {lesson.videoSource === 'youtube' && 'YouTube'}
-                            {lesson.videoSource === 'vimeo' && 'Vimeo'}
-                            {lesson.videoSource === 'upload' && 'رفع مباشر'}
-                          </Badge>
-                        </div>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleDeleteLesson(chapter.id, lesson.id)}
-                          className="min-h-[44px] min-w-[44px] text-danger hover:text-danger shrink-0"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+      {/* Chapters Management */}
+      {isTeacher && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="font-semibold">الفصول والدروس</h3>
+            <Dialog open={isAddingChapter} onOpenChange={setIsAddingChapter}>
+              <DialogTrigger asChild>
+                <Button size="sm">
+                  <Plus className="ml-2 h-4 w-4 rtl:mr-2 rtl:ml-0" />
+                  إضافة فصل
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>إضافة فصل جديد</DialogTitle>
+                  <DialogDescription>أدخل تفاصيل الفصل الجديد</DialogDescription>
+                </DialogHeader>
+                <form onSubmit={chapterForm.handleSubmit(handleAddChapter)}>
+                  <div className="space-y-4 py-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="chapterTitle">عنوان الفصل</Label>
+                      <Input
+                        id="chapterTitle"
+                        placeholder="مثال: مقدمة في React"
+                        {...chapterForm.register('title')}
+                      />
+                      {chapterForm.formState.errors.title && (
+                        <p className="text-sm text-danger">
+                          {chapterForm.formState.errors.title.message}
+                        </p>
+                      )}
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="chapterDescription">الوصف (اختياري)</Label>
+                      <Input
+                        id="chapterDescription"
+                        placeholder="وصف الفصل"
+                        {...chapterForm.register('description')}
+                      />
+                    </div>
+                  </div>
+                  <DialogFooter>
+                    <Button type="button" variant="outline" onClick={() => setIsAddingChapter(false)}>
+                      إلغاء
+                    </Button>
+                    <Button type="submit" disabled={isSubmitting}>
+                      {isSubmitting ? 'جاري الإضافة...' : 'إضافة'}
+                    </Button>
+                  </DialogFooter>
+                </form>
+              </DialogContent>
+            </Dialog>
+          </div>
+
+          {/* Chapters List */}
+          <div className="space-y-4">
+            {course.chapters?.map((chapter) => (
+              <Card key={chapter.id}>
+                <CardContent className="pt-4">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <Badge variant="secondary">الفصل {chapter.order}</Badge>
+                        <h4 className="font-semibold">{chapter.title}</h4>
                       </div>
-                    ))
-                  )}
-                </div>
-              )}
-            </Card>
-          ))
-        )}
-      </div>
+                      {chapter.description && (
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {chapter.description}
+                        </p>
+                      )}
+                      <p className="text-sm text-muted-foreground mt-2">
+                        {chapter.lessons?.length || 0} دروس
+                      </p>
+
+                      {/* Lessons List */}
+                      <div className="mt-4 space-y-2">
+                        {chapter.lessons?.map((lesson) => (
+                          <div
+                            key={lesson.id}
+                            className="flex items-center justify-between p-2 rounded-lg bg-muted/50"
+                          >
+                            <div className="flex items-center gap-2">
+                              <Play className="h-4 w-4 text-muted-foreground" />
+                              <span className="text-sm">{lesson.title}</span>
+                              {lesson.isFree && (
+                                <Badge variant="success" className="text-xs">مجاني</Badge>
+                              )}
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Badge variant="outline" className="text-xs">
+                                {lesson.videoSource}
+                              </Badge>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="text-danger min-h-[36px] min-w-[36px]"
+                                onClick={() => handleDeleteLesson(chapter.id, lesson.id)}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <Dialog
+                        open={isAddingLesson && selectedChapterId === chapter.id}
+                        onOpenChange={(open) => {
+                          setIsAddingLesson(open);
+                          if (!open) setSelectedChapterId(null);
+                        }}
+                      >
+                        <DialogTrigger asChild>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setSelectedChapterId(chapter.id)}
+                          >
+                            <Plus className="ml-2 h-4 w-4 rtl:mr-2 rtl:ml-0" />
+                            إضافة درس
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+                          <DialogHeader>
+                            <DialogTitle>إضافة درس جديد</DialogTitle>
+                            <DialogDescription>
+                              أدخل تفاصيل الدرس الجديد في الفصل: {chapter.title}
+                            </DialogDescription>
+                          </DialogHeader>
+                          <form onSubmit={lessonForm.handleSubmit(handleAddLesson)}>
+                            <div className="space-y-4 py-4">
+                              <div className="space-y-2">
+                                <Label htmlFor="lessonTitle">عنوان الدرس</Label>
+                                <Input
+                                  id="lessonTitle"
+                                  placeholder="مثال: مقدمة في React"
+                                  {...lessonForm.register('title')}
+                                />
+                                {lessonForm.formState.errors.title && (
+                                  <p className="text-sm text-danger">
+                                    {lessonForm.formState.errors.title.message}
+                                  </p>
+                                )}
+                              </div>
+
+                              <div className="space-y-2">
+                                <Label htmlFor="lessonDescription">الوصف (اختياري)</Label>
+                                <Input
+                                  id="lessonDescription"
+                                  placeholder="وصف الدرس"
+                                  {...lessonForm.register('description')}
+                                />
+                              </div>
+
+                              <div className="space-y-2">
+                                <Label htmlFor="videoUrl">رابط الفيديو</Label>
+                                <Input
+                                  id="videoUrl"
+                                  placeholder="https://youtube.com/watch?v=..."
+                                  {...lessonForm.register('videoUrl')}
+                                />
+                                {lessonForm.formState.errors.videoUrl && (
+                                  <p className="text-sm text-danger">
+                                    {lessonForm.formState.errors.videoUrl.message}
+                                  </p>
+                                )}
+                              </div>
+
+                              <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                  <Label htmlFor="videoSource">مصدر الفيديو</Label>
+                                  <Select
+                                    onValueChange={(value) =>
+                                      lessonForm.setValue('videoSource', value as 'youtube' | 'vimeo' | 'upload')
+                                    }
+                                    defaultValue="youtube"
+                                  >
+                                    <SelectTrigger>
+                                      <SelectValue placeholder="اختر المصدر" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="youtube">YouTube</SelectItem>
+                                      <SelectItem value="vimeo">Vimeo</SelectItem>
+                                      <SelectItem value="upload">رفع ملف</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                                <div className="space-y-2">
+                                  <Label htmlFor="isFree">مجاني</Label>
+                                  <div className="flex items-center gap-2 pt-2">
+                                    <input
+                                      type="checkbox"
+                                      {...lessonForm.register('isFree')}
+                                      className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                                    />
+                                    <span className="text-sm">جعل هذا الدرس مجانياً</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <DialogFooter>
+                              <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() => {
+                                  setIsAddingLesson(false);
+                                  setSelectedChapterId(null);
+                                }}
+                              >
+                                إلغاء
+                              </Button>
+                              <Button type="submit" disabled={isSubmitting}>
+                                {isSubmitting ? 'جاري الإضافة...' : 'إضافة'}
+                              </Button>
+                            </DialogFooter>
+                          </form>
+                        </DialogContent>
+                      </Dialog>
+
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="text-danger min-h-[36px] min-w-[36px]"
+                        onClick={() => handleDeleteChapter(chapter.id)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
     </motion.div>
   );
 };

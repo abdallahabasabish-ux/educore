@@ -4,7 +4,7 @@ import path from 'path';
 
 export default defineConfig({
   plugins: [react()],
-  base: '/educore/', // ✅ يجب أن يكون اسم المستودع الخاص بك
+  base: '/educore/',
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -29,4 +29,6 @@ export default defineConfig({
     port: 3000,
     open: true,
   },
+  // ✅ تأكد من نسخ الملفات الثابتة من public إلى dist
+  publicDir: 'public',
 });

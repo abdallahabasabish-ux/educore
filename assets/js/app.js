@@ -20,7 +20,7 @@ const lenis = new Lenis({
   autoResize: true,
 });
 
-// ربط Lenis بـ requestAnimationFrame
+// ربط Lenis بـ requestAnimationFrame للحصول على تمرير سلس
 function raf(time) {
   lenis.raf(time);
   requestAnimationFrame(raf);
@@ -28,40 +28,43 @@ function raf(time) {
 requestAnimationFrame(raf);
 
 // ============================================================
-// 2. تهيئة GSAP + ScrollTrigger
+// 2. تهيئة GSAP + ScrollTrigger (للحركات الاحترافية)
 // ============================================================
 gsap.registerPlugin(ScrollTrigger);
 
-// أنيميشن الهيرو عند التمرير
-gsap.from("#hero h1", {
-  scrollTrigger: {
-    trigger: "#hero",
-    start: "top 80%",
-    end: "bottom 20%",
-    toggleActions: "play none none reverse",
-  },
-  opacity: 0,
-  y: 60,
-  duration: 1,
-  ease: "power3.out",
-});
+// أنيميشن الهيرو عند التمرير (اختياري - يعمل في index.html)
+const heroExists = document.querySelector("#hero");
+if (heroExists) {
+  gsap.from("#hero h1", {
+    scrollTrigger: {
+      trigger: "#hero",
+      start: "top 80%",
+      end: "bottom 20%",
+      toggleActions: "play none none reverse",
+    },
+    opacity: 0,
+    y: 60,
+    duration: 1,
+    ease: "power3.out",
+  });
 
-gsap.from("#hero p", {
-  scrollTrigger: {
-    trigger: "#hero",
-    start: "top 80%",
-    end: "bottom 20%",
-    toggleActions: "play none none reverse",
-  },
-  opacity: 0,
-  y: 40,
-  duration: 1,
-  delay: 0.2,
-  ease: "power3.out",
-});
+  gsap.from("#hero p", {
+    scrollTrigger: {
+      trigger: "#hero",
+      start: "top 80%",
+      end: "bottom 20%",
+      toggleActions: "play none none reverse",
+    },
+    opacity: 0,
+    y: 40,
+    duration: 1,
+    delay: 0.2,
+    ease: "power3.out",
+  });
+}
 
-// أنيميشن البطاقات (اختياري)
-document.querySelectorAll('.feature-card').forEach((card, i) => {
+// أنيميشن البطاقات (إذا وجدت في الصفحة)
+document.querySelectorAll('.feature-card, .card-hover').forEach((card, i) => {
   gsap.from(card, {
     scrollTrigger: {
       trigger: card,
@@ -90,7 +93,7 @@ AOS.init({
 });
 
 // ============================================================
-// 4. تفعيل زر القائمة للهواتف
+// 4. تفعيل زر القائمة للهواتف (في جميع الصفحات)
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
   const menuToggle = document.getElementById('menu-toggle');
@@ -117,10 +120,45 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ============================================================
-// 5. إعادة تهيئة AOS بعد تحميل المحتوى الديناميكي
+// 5. إعادة تهيئة AOS بعد تحميل المحتوى الديناميكي (اختياري)
 // ============================================================
 window.addEventListener('load', () => {
   AOS.refresh();
+  console.log('✅ AOS refreshed after page load');
 });
 
-console.log("✅ مداد العلم - App Module Loaded");
+// ============================================================
+// 6. إعادة تهيئة ScrollTrigger بعد تغيير الحجم (لتحديث المواقع)
+// ============================================================
+window.addEventListener('resize', () => {
+  ScrollTrigger.refresh();
+});
+
+// ============================================================
+// 7. منع التنقل الداخلي من إعادة تحميل الصفحة (للاستخدام مع Lenis)
+// ============================================================
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function (e) {
+    const href = this.getAttribute('href');
+    if (href === '#') return;
+    e.preventDefault();
+    const target = document.querySelector(href);
+    if (target) {
+      lenis.scrollTo(target, {
+        offset: -70,
+        duration: 1.2,
+      });
+    }
+  });
+});
+
+// ============================================================
+// 8. دالة مساعدة لإعادة تهيئة كل شيء (إذا دعت الحاجة)
+// ============================================================
+window.refreshAnimations = function() {
+  AOS.refresh();
+  ScrollTrigger.refresh();
+  console.log('✅ Animations refreshed');
+};
+
+console.log('✅ مداد العلم - App Module Loaded (Lenis + GSAP + AOS)');

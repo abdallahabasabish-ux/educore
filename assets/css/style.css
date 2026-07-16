@@ -147,3 +147,54 @@ td {
 .badge-warning { background: #fef9c3; color: #854d0e; }
 .badge-danger { background: #fee2e2; color: #991b1b; }
 .badge-info { background: #dbeafe; color: #1e40af; }
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Inter', 'Cairo', sans-serif;
+  direction: rtl;
+}
+
+/* تأثيرات الحركة */
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-up {
+  animation: fade-in-up 0.8s ease-out forwards;
+}
+
+/* تخصيص شريط التمرير */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+  background: #4B5563;
+  border-radius: 4px;
+}
+
+/* تأثيرات البطاقات */
+.card-hover {
+  transition: all 0.3s ease;
+}
+.card-hover:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px -10px rgba(0,0,0,0.1);
+}
+
+/* أزرار مخصصة */
+.btn-primary {
+  background: #4B5563;
+  color: white;
+  padding: 0.5rem 1.5rem;
+  border-radius: 9999px;
+  transition: all 0.3s;
+}
+.btn-primary:hover {
+  background: #3b4553;
+  box-shadow: 0 8px 16px -4px rgba(75, 85, 99, 0.3);
+}

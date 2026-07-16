@@ -1,171 +1,22 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Cairo:wght@400;500;600;700;800;900&display=swap');
-
-:root {
-  --primary: #4B5563;
-  --primary-dark: #3a4452;
-  --secondary: #F8FAFC;
-  --border: #E5E7EB;
-  --text: #111827;
-  --text-muted: #6B7280;
-}
-
+/* ===== BASE ===== */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-body {
-  font-family: 'Inter', 'Cairo', sans-serif;
-  background-color: #f8fafc;
-  color: var(--text);
-  -webkit-font-smoothing: antialiased;
+html {
+  scroll-behavior: smooth;
 }
-
-/* تخصيص شريط التمرير */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: var(--primary);
-  border-radius: 10px;
-}
-
-/* تأثيرات عامة */
-.glass {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.hover-lift {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.hover-lift:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 40px -12px rgba(0,0,0,0.1);
-}
-
-/* تنسيق القائمة الجانبية */
-#sidebar a {
-  transition: all 0.2s ease;
-  border-radius: 12px;
-  padding: 10px 16px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--text-muted);
-  font-weight: 500;
-}
-#sidebar a:hover {
-  background-color: #f1f5f9;
-  color: var(--text);
-}
-#sidebar a.active {
-  background-color: var(--primary);
-  color: white;
-  box-shadow: 0 4px 12px rgba(75,85,99,0.2);
-}
-
-/* تنسيق البطاقات */
-.card {
-  background: white;
-  border-radius: 16px;
-  border: 1px solid var(--border);
-  transition: all 0.25s ease;
-}
-.card:hover {
-  border-color: var(--primary);
-  box-shadow: 0 8px 30px rgba(0,0,0,0.05);
-}
-
-/* أزرار */
-.btn-primary {
-  background: var(--primary);
-  color: white;
-  padding: 10px 24px;
-  border-radius: 9999px;
-  font-weight: 600;
-  transition: all 0.2s ease;
-}
-.btn-primary:hover {
-  background: var(--primary-dark);
-  box-shadow: 0 8px 20px rgba(75,85,99,0.3);
-  transform: scale(1.02);
-}
-
-/* تنسيق الحقول */
-input, textarea, select {
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  padding: 10px 16px;
-  transition: all 0.2s ease;
-}
-input:focus, textarea:focus, select:focus {
-  outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(75,85,99,0.1);
-}
-
-/* تنسيق الجداول */
-.table-container {
-  overflow-x: auto;
-  border-radius: 16px;
-  border: 1px solid var(--border);
-}
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-th {
-  background: var(--secondary);
-  padding: 12px 16px;
-  text-align: right;
-  font-weight: 600;
-  color: var(--text-muted);
-  font-size: 0.875rem;
-}
-td {
-  padding: 12px 16px;
-  border-top: 1px solid var(--border);
-}
-
-/* تنسيق الإشعارات */
-.badge {
-  display: inline-block;
-  padding: 4px 12px;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  font-weight: 600;
-}
-.badge-success { background: #dcfce7; color: #166534; }
-.badge-warning { background: #fef9c3; color: #854d0e; }
-.badge-danger { background: #fee2e2; color: #991b1b; }
-.badge-info { background: #dbeafe; color: #1e40af; }
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 body {
   font-family: 'Inter', 'Cairo', sans-serif;
   direction: rtl;
+  overflow-x: hidden;
+  background: #f8fafc;
 }
 
-/* تأثيرات الحركة */
-@keyframes fade-in-up {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.animate-fade-in-up {
-  animation: fade-in-up 0.8s ease-out forwards;
-}
-
-/* تخصيص شريط التمرير */
+/* ===== SCROLLBAR ===== */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -176,25 +27,80 @@ body {
   background: #4B5563;
   border-radius: 4px;
 }
-
-/* تأثيرات البطاقات */
-.card-hover {
-  transition: all 0.3s ease;
-}
-.card-hover:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 20px 40px -10px rgba(0,0,0,0.1);
-}
-
-/* أزرار مخصصة */
-.btn-primary {
-  background: #4B5563;
-  color: white;
-  padding: 0.5rem 1.5rem;
-  border-radius: 9999px;
-  transition: all 0.3s;
-}
-.btn-primary:hover {
+::-webkit-scrollbar-thumb:hover {
   background: #3b4553;
-  box-shadow: 0 8px 16px -4px rgba(75, 85, 99, 0.3);
+}
+
+/* ===== AOS OVERRIDE ===== */
+[data-aos] {
+  pointer-events: none;
+}
+[data-aos].aos-animate {
+  pointer-events: auto;
+}
+
+/* ===== SMOOTH SCROLL WITH LENIS ===== */
+html.lenis {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* ===== GPU ACCELERATION ===== */
+.card-hover,
+.nav-link,
+.btn-primary,
+.hero-image {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-in-up {
+  animation: fade-in-up 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* ===== GLASS EFFECT ===== */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* ===== HOVER EFFECTS ===== */
+.hover-lift {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.hover-lift:hover {
+  transform: translateY(-6px);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
 }

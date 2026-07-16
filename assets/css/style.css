@@ -3,8 +3,10 @@
    الأنماط الرئيسية لمنصة مداد العلم
    ============================================================ */
 
-/* ----- BASE ----- */
-* {
+/* ----- RESET & BASE ----- */
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -12,6 +14,7 @@
 
 html {
   scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -19,24 +22,45 @@ body {
   direction: rtl;
   overflow-x: hidden;
   background: #f8fafc;
+  color: #111827;
+  line-height: 1.6;
 }
 
-/* ----- SCROLLBAR ----- */
+/* ----- TYPOGRAPHY ----- */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* ----- SCROLLBAR CUSTOM ----- */
 ::-webkit-scrollbar {
   width: 8px;
+  height: 8px;
 }
 ::-webkit-scrollbar-track {
   background: #f1f1f1;
+  border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb {
   background: #4B5563;
   border-radius: 4px;
+  transition: background 0.3s;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #3b4553;
 }
 
-/* ----- GPU ACCELERATION ----- */
+/* ----- GPU ACCELERATION (تحسين الأداء) ----- */
 .card-hover,
 .nav-link,
 .btn-primary,
@@ -47,12 +71,18 @@ body {
   backface-visibility: hidden;
 }
 
-/* ----- GLASS EFFECT ----- */
+/* ----- GLASS EFFECT (تأثير الزجاج) ----- */
 .glass {
   background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.3);
+}
+.glass-dark {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* ----- HOVER EFFECTS ----- */
@@ -63,15 +93,56 @@ body {
   transform: translateY(-6px);
 }
 
-/* ----- RESPONSIVE ----- */
-@media (max-width: 768px) {
-  .container {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
+.hover-scale {
+  transition: transform 0.3s ease;
+}
+.hover-scale:hover {
+  transform: scale(1.03);
 }
 
-/* ----- LENIS OVERRIDE (لمنع اختفاء المحتوى) ----- */
+.hover-glow {
+  transition: box-shadow 0.3s ease;
+}
+.hover-glow:hover {
+  box-shadow: 0 8px 30px rgba(75, 85, 99, 0.15);
+}
+
+/* ----- BUTTONS ----- */
+.btn-primary {
+  display: inline-block;
+  padding: 0.6rem 1.8rem;
+  background: #4B5563;
+  color: #fff;
+  border-radius: 9999px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+.btn-primary:hover {
+  background: #3b4553;
+  box-shadow: 0 8px 20px rgba(75, 85, 99, 0.3);
+  transform: translateY(-2px);
+}
+
+.btn-outline {
+  display: inline-block;
+  padding: 0.6rem 1.8rem;
+  background: transparent;
+  color: #4B5563;
+  border: 2px solid #4B5563;
+  border-radius: 9999px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+.btn-outline:hover {
+  background: #4B5563;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+/* ----- LENIS OVERRIDE (لمنع اختفاء المحتوى مع Lenis) ----- */
 html.lenis {
   height: auto;
 }
@@ -88,9 +159,9 @@ html.lenis {
   pointer-events: none;
 }
 
-/* ----- AOS OVERRIDE (ضمان ظهور العناصر) ----- */
+/* ----- AOS OVERRIDE (ضمان ظهور العناصر مع AOS) ----- */
 [data-aos] {
-  opacity: 1 !important; /* منع الاختفاء قبل التحميل */
+  opacity: 1 !important;
   pointer-events: auto !important;
 }
 [data-aos].aos-animate {
@@ -98,13 +169,32 @@ html.lenis {
   transform: none !important;
 }
 
-/* ----- تحسينات إضافية ----- */
+/* ----- SECTIONS PADDING ----- */
 .section-padding {
   padding-top: 5rem;
   padding-bottom: 5rem;
 }
+@media (max-width: 768px) {
+  .section-padding {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+}
 
-/* ----- أنيميشن مخصص ----- */
+/* ----- CONTAINER ----- */
+.container-custom {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+@media (max-width: 640px) {
+  .container-custom {
+    padding: 0 1rem;
+  }
+}
+
+/* ----- ANIMATIONS (مخصصة) ----- */
 @keyframes fade-in-up {
   from {
     opacity: 0;
@@ -117,4 +207,148 @@ html.lenis {
 }
 .animate-fade-in-up {
   animation: fade-in-up 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes fade-in-down {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-in-down {
+  animation: fade-in-down 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.animate-scale-in {
+  animation: scale-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* ----- CARDS ----- */
+.card {
+  background: #fff;
+  border-radius: 1rem;
+  border: 1px solid #e5e7eb;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+.card:hover {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+  transform: translateY(-4px);
+}
+
+.card-glass {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+.card-glass:hover {
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* ----- BADGE ----- */
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.badge-primary {
+  background: #4B5563;
+  color: #fff;
+}
+.badge-success {
+  background: #22C55E;
+  color: #fff;
+}
+.badge-warning {
+  background: #F59E0B;
+  color: #fff;
+}
+.badge-danger {
+  background: #EF4444;
+  color: #fff;
+}
+
+/* ----- FORMS ----- */
+.input-field {
+  width: 100%;
+  padding: 0.6rem 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  background: #f8fafc;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+}
+.input-field:focus {
+  outline: none;
+  border-color: #4B5563;
+  box-shadow: 0 0 0 3px rgba(75, 85, 99, 0.1);
+  background: #fff;
+}
+.input-field::placeholder {
+  color: #9ca3af;
+}
+
+/* ----- RESPONSIVE BREAKPOINTS ----- */
+@media (max-width: 1024px) {
+  .hide-lg {
+    display: none !important;
+  }
+}
+@media (max-width: 768px) {
+  .hide-md {
+    display: none !important;
+  }
+}
+@media (max-width: 640px) {
+  .hide-sm {
+    display: none !important;
+  }
+}
+
+/* ----- UTILITIES ----- */
+.text-balance {
+  text-wrap: balance;
+}
+.text-pretty {
+  text-wrap: pretty;
+}
+.rtl {
+  direction: rtl;
+}
+.ltr {
+  direction: ltr;
 }

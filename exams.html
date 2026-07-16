@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>الامتحانات – مداد العلم</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cairo&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="bg-gray-50">
+  <!-- القائمة الجانبية -->
+  <div class="fixed top-0 right-0 w-64 h-full bg-white border-l border-gray-200 p-4 overflow-y-auto z-40">
+    <a href="/" class="text-2xl font-extrabold text-[#4B5563] block mb-8"><i class="fas fa-feather-alt ml-2"></i>مداد العلم</a>
+    <nav class="space-y-1">
+      <a href="/dashboard" class="sidebar-link"><i class="fas fa-chart-pie ml-2"></i>لوحة التحكم</a>
+      <a href="/customers" class="sidebar-link"><i class="fas fa-users ml-2"></i>العملاء</a>
+      <a href="/cases" class="sidebar-link"><i class="fas fa-folder-open ml-2"></i>القضايا</a>
+      <a href="/courses" class="sidebar-link"><i class="fas fa-book-open ml-2"></i>الكورسات</a>
+      <a href="/students" class="sidebar-link"><i class="fas fa-user-graduate ml-2"></i>الطلاب</a>
+      <a href="/exams" class="sidebar-link active"><i class="fas fa-pencil-alt ml-2"></i>الامتحانات</a>
+      <a href="/sessions" class="sidebar-link"><i class="fas fa-calendar-check ml-2"></i>الجلسات</a>
+      <a href="/tasks" class="sidebar-link"><i class="fas fa-tasks ml-2"></i>المهام</a>
+      <a href="/notifications" class="sidebar-link"><i class="fas fa-bell ml-2"></i>الإشعارات</a>
+      <a href="/reports" class="sidebar-link"><i class="fas fa-chart-bar ml-2"></i>التقارير</a>
+      <a href="/settings" class="sidebar-link"><i class="fas fa-cog ml-2"></i>الإعدادات</a>
+      <a href="/profile" class="sidebar-link"><i class="fas fa-user ml-2"></i>الملف الشخصي</a>
+      <button id="logout-btn" class="sidebar-link text-red-600 hover:bg-red-50 w-full text-right"><i class="fas fa-sign-out-alt ml-2"></i>تسجيل الخروج</button>
+    </nav>
+  </div>
+
+  <div class="mr-64 p-6">
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-2xl font-bold">إدارة الامتحانات</h1>
+      <button id="add-exam-btn" class="bg-[#4B5563] text-white px-4 py-2 rounded-xl hover:bg-[#3b4553] transition flex items-center gap-2">
+        <i class="fas fa-plus"></i> إنشاء امتحان
+      </button>
+    </div>
+
+    <!-- إحصائيات سريعة -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+      <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+        <p class="text-sm text-gray-500">إجمالي الامتحانات</p>
+        <p class="text-2xl font-bold" id="total-exams">0</p>
+      </div>
+      <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+        <p class="text-sm text-gray-500">امتحانات نشطة</p>
+        <p class="text-2xl font-bold" id="active-exams">0</p>
+      </div>
+      <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+        <p class="text-sm text-gray-500">متوسط النتائج</p>
+        <p class="text-2xl font-bold" id="avg-score">0%</p>
+      </div>
+      <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+        <p class="text-sm text-gray-500">عدد المشاركين</p>
+        <p class="text-2xl font-bold" id="total-participants">0</p>
+      </div>
+    </div>
+
+    <!-- قائمة الامتحانات -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead class="bg-gray-50 border-b border-gray-200">
+            <tr>
+              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">الامتحان</th>
+              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">الكورس</th>
+              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">عدد الأسئلة</th>
+              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">المدة</th>
+              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">الحالة</th>
+              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">الإجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="exams-table-body" class="divide-y divide-gray-200">
+            <tr>
+              <td colspan="6" class="px-6 py-4 text-center text-gray-500">جاري التحميل...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- مودال إنشاء/تعديل امتحان -->
+  <div id="exam-modal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-2xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+      <h2 id="exam-modal-title" class="text-xl font-bold mb-4">إنشاء امتحان جديد</h2>
+      <form id="exam-form" class="space-y-4">
+        <input type="hidden" id="exam-id" />
+        <div>
+          <label class="block text-sm font-medium text-gray-700">عنوان الامتحان</label>
+          <input type="text" id="exam-title" required class="form-input" placeholder="امتحان منتصف الفصل" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">الكورس المرتبط</label>
+          <select id="exam-course" class="form-input">
+            <option value="">اختر كورس</option>
+          </select>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700">عدد الأسئلة</label>
+            <input type="number" id="exam-questions" required class="form-input" placeholder="10" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">المدة (دقائق)</label>
+            <input type="number" id="exam-duration" required class="form-input" placeholder="30" />
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">الحالة</label>
+          <select id="exam-status" class="form-input">
+            <option value="active">نشط</option>
+            <option value="draft">مسودة</option>
+            <option value="closed">مغلق</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">الوصف</label>
+          <textarea id="exam-description" rows="3" class="form-input" placeholder="وصف الامتحان..."></textarea>
+        </div>
+        <div class="flex gap-3">
+          <button type="submit" class="flex-1 bg-[#4B5563] text-white py-2 rounded-xl hover:bg-[#3b4553] transition">حفظ</button>
+          <button type="button" id="close-exam-modal" class="flex-1 border border-gray-300 py-2 rounded-xl hover:bg-gray-50 transition">إلغاء</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="https://unpkg.com/lenis@1.0.45/dist/lenis.min.js"></script>
+  <script>
+    AOS.init({ duration: 800, once: true });
+    const lenis = new Lenis({ duration: 1.2 });
+    function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+    requestAnimationFrame(raf);
+  </script>
+  <script type="module" src="assets/js/pages/exams.js"></script>
+</body>
+</html>

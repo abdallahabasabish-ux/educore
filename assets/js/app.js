@@ -66,6 +66,46 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
+  // ============================================================
+// assets/js/app.js - نسخة محسنة للتمرير السريع
+// ============================================================
+
+document.addEventListener("DOMContentLoaded", () => {
+  // تهيئة Lenis مع إعدادات سريعة
+  if (typeof Lenis !== "undefined") {
+    const lenis = new Lenis({
+      duration: 0.8,        // قلل المدة (كانت 1.2)
+      easing: (t) => t,     // منحنى خطي لإلغاء التباطؤ
+      orientation: "vertical",
+      smoothWheel: true,
+      wheelMultiplier: 0.8, // قلل الحساسية قليلاً للتحكم
+      touchMultiplier: 1,
+      autoResize: true,
+    });
+
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    // إلغاء التمرير السلس مؤقتاً عند استخدام عجلة الماوس بسرعة
+    document.addEventListener("wheel", () => {
+      lenis.stop();
+      setTimeout(() => lenis.start(), 100);
+    });
+  }
+
+  // إلغاء AOS على العناصر الثقيلة (أو تقليل عددها)
+  if (typeof AOS !== "undefined") {
+    AOS.init({
+      duration: 400,        // قلل مدة الأنيميشن
+      once: true,
+      offset: 30,
+      easing: "ease-out",
+      disable: window.innerWidth < 768,
+    });
+  }
 
   // ============================================================
   // تفعيل القائمة الجانبية

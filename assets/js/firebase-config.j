@@ -1,3 +1,8 @@
+// ============================================================
+// assets/js/firebase-config.js
+// إعداد Firebase لمنصة مداد العلم
+// ============================================================
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
@@ -19,3 +24,5 @@ const db = getFirestore(app);
 const storage = getStorage(app);
 
 export { auth, db, storage };
+
+console.log("✅ Firebase initialized successfully");

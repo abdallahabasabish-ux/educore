@@ -3,83 +3,86 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>لوحة التحكم – EduCore</title>
+  <title>لوحة التحكم – مداد العلم</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="assets/css/style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cairo&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
 </head>
-<body class="bg-gray-50/80">
-  <!-- القائمة الجانبية (ستظهر ديناميكياً عبر JS) -->
-  <div id="sidebar" class="fixed top-0 right-0 w-72 h-full bg-white/80 backdrop-blur-xl border-l border-gray-200/50 p-6 overflow-y-auto shadow-lg">
-    <div class="flex items-center gap-2 mb-8">
-      <span class="bg-[#4B5563] text-white w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold">E</span>
-      <span class="text-xl font-extrabold text-[#4B5563]">EduCore</span>
-    </div>
-    <nav class="space-y-1" id="sidebar-nav">
-      <!-- يتم إنشاء الروابط ديناميكياً -->
+<body class="bg-gray-50">
+  <!-- القائمة الجانبية -->
+  <div class="fixed top-0 right-0 w-64 h-full bg-white border-l border-gray-200 p-4 overflow-y-auto z-40">
+    <a href="/" class="text-2xl font-extrabold text-[#4B5563] block mb-8"><i class="fas fa-feather-alt ml-2"></i>مداد العلم</a>
+    <nav class="space-y-1">
+      <a href="/dashboard" class="sidebar-link active"><i class="fas fa-chart-pie ml-2"></i>لوحة التحكم</a>
+      <a href="/customers" class="sidebar-link"><i class="fas fa-users ml-2"></i>العملاء</a>
+      <a href="/cases" class="sidebar-link"><i class="fas fa-folder-open ml-2"></i>القضايا</a>
+      <a href="/sessions" class="sidebar-link"><i class="fas fa-calendar-check ml-2"></i>الجلسات</a>
+      <a href="/documents" class="sidebar-link"><i class="fas fa-file-alt ml-2"></i>المستندات</a>
+      <a href="/contracts" class="sidebar-link"><i class="fas fa-file-signature ml-2"></i>العقود</a>
+      <a href="/consultations" class="sidebar-link"><i class="fas fa-comments ml-2"></i>الاستشارات</a>
+      <a href="/tasks" class="sidebar-link"><i class="fas fa-tasks ml-2"></i>المهام</a>
+      <a href="/calendar" class="sidebar-link"><i class="fas fa-calendar-alt ml-2"></i>التقويم</a>
+      <a href="/notifications" class="sidebar-link"><i class="fas fa-bell ml-2"></i>الإشعارات</a>
+      <a href="/reports" class="sidebar-link"><i class="fas fa-chart-bar ml-2"></i>التقارير</a>
+      <a href="/accounting" class="sidebar-link"><i class="fas fa-coins ml-2"></i>المحاسبة</a>
+      <a href="/employees" class="sidebar-link"><i class="fas fa-user-tie ml-2"></i>الموظفون</a>
+      <a href="/settings" class="sidebar-link"><i class="fas fa-cog ml-2"></i>الإعدادات</a>
+      <a href="/profile" class="sidebar-link"><i class="fas fa-user ml-2"></i>الملف الشخصي</a>
+      <button id="logout-btn" class="sidebar-link text-red-600 hover:bg-red-50 w-full text-right"><i class="fas fa-sign-out-alt ml-2"></i>تسجيل الخروج</button>
     </nav>
-    <hr class="my-4 border-gray-200" />
-    <button id="logout-btn" class="w-full text-right px-4 py-2.5 rounded-xl text-red-600 hover:bg-red-50 transition font-medium flex items-center gap-2">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-      تسجيل الخروج
-    </button>
   </div>
 
   <!-- المحتوى الرئيسي -->
-  <div class="mr-72 p-6 min-h-screen">
-    <!-- الهيدر -->
-    <div class="flex justify-between items-center mb-8">
-      <div>
-        <h1 class="text-2xl font-extrabold text-gray-800">لوحة التحكم</h1>
-        <p class="text-sm text-gray-500">نظرة عامة على نشاط منصتك</p>
-      </div>
+  <div class="mr-64 p-6">
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-2xl font-bold">لوحة التحكم</h1>
       <div class="flex items-center gap-4">
-        <span id="user-name" class="text-sm font-medium text-gray-700">مرحباً، مستخدم</span>
-        <img id="user-avatar" src="" alt="صورة المستخدم" class="w-10 h-10 rounded-full border-2 border-gray-200" />
+        <span id="user-name" class="text-sm font-medium">مرحباً، مستخدم</span>
+        <img id="user-avatar" src="https://ui-avatars.com/api/?name=U&size=40" alt="صورة المستخدم" class="w-10 h-10 rounded-full border-2 border-gray-200" />
       </div>
     </div>
 
     <!-- بطاقات الإحصائيات -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-      <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200/80 hover:shadow-md transition">
-        <div class="flex items-center justify-between">
-          <p class="text-sm text-gray-500">إجمالي العملاء</p>
-          <span class="p-2 bg-[#4B5563]/10 rounded-xl"><svg class="w-5 h-5 text-[#4B5563]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg></span>
-        </div>
-        <p class="text-3xl font-extrabold mt-2" id="total-customers">0</p>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition" data-aos="fade-up" data-aos-delay="100">
+        <p class="text-sm text-gray-500">إجمالي العملاء</p>
+        <p class="text-2xl font-bold" id="total-customers">0</p>
       </div>
-      <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200/80 hover:shadow-md transition">
-        <div class="flex items-center justify-between">
-          <p class="text-sm text-gray-500">القضايا النشطة</p>
-          <span class="p-2 bg-yellow-100 rounded-xl"><svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg></span>
-        </div>
-        <p class="text-3xl font-extrabold mt-2" id="active-cases">0</p>
+      <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition" data-aos="fade-up" data-aos-delay="150">
+        <p class="text-sm text-gray-500">القضايا النشطة</p>
+        <p class="text-2xl font-bold" id="active-cases">0</p>
       </div>
-      <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200/80 hover:shadow-md transition">
-        <div class="flex items-center justify-between">
-          <p class="text-sm text-gray-500">الجلسات اليوم</p>
-          <span class="p-2 bg-blue-100 rounded-xl"><svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg></span>
-        </div>
-        <p class="text-3xl font-extrabold mt-2" id="today-sessions">0</p>
+      <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition" data-aos="fade-up" data-aos-delay="200">
+        <p class="text-sm text-gray-500">الجلسات اليوم</p>
+        <p class="text-2xl font-bold" id="today-sessions">0</p>
       </div>
-      <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200/80 hover:shadow-md transition">
-        <div class="flex items-center justify-between">
-          <p class="text-sm text-gray-500">المهام المعلقة</p>
-          <span class="p-2 bg-red-100 rounded-xl"><svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></span>
-        </div>
-        <p class="text-3xl font-extrabold mt-2" id="pending-tasks">0</p>
+      <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition" data-aos="fade-up" data-aos-delay="250">
+        <p class="text-sm text-gray-500">المهام المعلقة</p>
+        <p class="text-2xl font-bold" id="pending-tasks">0</p>
       </div>
     </div>
 
-    <!-- جدول آخر النشاطات -->
-    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200/80">
-      <h2 class="text-lg font-bold mb-4">آخر النشاطات</h2>
-      <div id="recent-activity" class="divide-y divide-gray-100">
-        <p class="text-sm text-gray-500 py-4 text-center">لا توجد أنشطة حديثة</p>
+    <!-- آخر النشاطات -->
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+      <h2 class="text-lg font-semibold mb-4">آخر النشاطات</h2>
+      <div id="recent-activity" class="space-y-2">
+        <p class="text-sm text-gray-500">لا توجد أنشطة حديثة</p>
       </div>
     </div>
   </div>
 
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="https://unpkg.com/lenis@1.0.45/dist/lenis.min.js"></script>
+  <script>
+    AOS.init({ duration: 800, once: true });
+    const lenis = new Lenis({ duration: 1.2 });
+    function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+    requestAnimationFrame(raf);
+  </script>
   <script type="module" src="assets/js/dashboard.js"></script>
 </body>
 </html>

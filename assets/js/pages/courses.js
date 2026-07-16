@@ -1,6 +1,6 @@
 // ============================================================
 // assets/js/pages/courses.js
-// إدارة الكورسات - عرض، إضافة، تعديل، حذف
+// إدارة الكورسات
 // ============================================================
 
 import { auth, db } from "../auth.js";
@@ -22,7 +22,6 @@ let academyId = null;
 let coursesRef = null;
 let unsubscribe = null;
 
-// دوال مساعدة للرسائل (نستخدم نفس الدوال من auth.js ولكنها غير مصدرة، لذا نعيد تعريفها)
 function showToast(message, type = "error") {
   Toastify({
     text: message,
@@ -38,37 +37,11 @@ function showToast(message, type = "error") {
     stopOnFocus: true,
   }).showToast();
 }
+function showSuccess(message) { Swal.fire({ icon: "success", title: "نجاح", text: message, confirmButtonColor: "#4B5563", confirmButtonText: "حسناً", timer: 3000, timerProgressBar: true }); }
+function showError(message) { Swal.fire({ icon: "error", title: "خطأ", text: message, confirmButtonColor: "#EF4444", confirmButtonText: "حسناً" }); }
 
-function showSuccess(message) {
-  Swal.fire({
-    icon: "success",
-    title: "نجاح",
-    text: message,
-    confirmButtonColor: "#4B5563",
-    confirmButtonText: "حسناً",
-    timer: 3000,
-    timerProgressBar: true,
-  });
-}
-
-function showError(message) {
-  Swal.fire({
-    icon: "error",
-    title: "خطأ",
-    text: message,
-    confirmButtonColor: "#EF4444",
-    confirmButtonText: "حسناً",
-  });
-}
-
-// ============================================================
-// تحميل البيانات عند تسجيل الدخول
-// ============================================================
 onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-    window.location.href = "login.html";
-    return;
-  }
+  if (!user) { window.location.href = "login.html"; return; }
   const userDoc = await getDoc(doc(db, "users", user.uid));
   if (userDoc.exists()) {
     academyId = userDoc.data().academyId || user.uid;
@@ -77,9 +50,6 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
-// ============================================================
-// عرض الكورسات (Realtime)
-// ============================================================
 function loadCourses() {
   if (unsubscribe) unsubscribe();
   const q = query(coursesRef, where("academyId", "==", academyId), orderBy("createdAt", "desc"));
@@ -93,7 +63,7 @@ function loadCourses() {
     snapshot.forEach((doc) => {
       const data = doc.data();
       html += `
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all hover:-translate-y-1">
+        <div class="course-card bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
           <div class="h-40 bg-gradient-to-br from-[#4B5563]/20 to-[#4B5563]/5 flex items-center justify-center">
             <i class="fas fa-book-open text-5xl text-[#4B5563]/40"></i>
           </div>
@@ -108,6 +78,7 @@ function loadCourses() {
             <div class="flex items-center justify-between mt-3 text-sm text-gray-500">
               <span><i class="fas fa-user-graduate ml-1"></i> ${data.studentCount || 0} طالب</span>
               <span><i class="fas fa-clock ml-1"></i> ${data.duration || "غير محدد"} ساعة</span>
+              <span><i class="fas fa-dollar-sign ml-1"></i> ${data.price || "مجاني"}</span>
             </div>
             <div class="flex gap-2 mt-4">
               <button onclick="editCourse('${doc.id}')" class="flex-1 px-3 py-1.5 border border-gray-300 rounded-lg text-sm hover:bg-gray-50 transition">
@@ -125,9 +96,6 @@ function loadCourses() {
   });
 }
 
-// ============================================================
-// إضافة كورس
-// ============================================================
 document.getElementById("course-form")?.addEventListener("submit", async (e) => {
   e.preventDefault();
   const id = document.getElementById("course-id").value;
@@ -136,30 +104,19 @@ document.getElementById("course-form")?.addEventListener("submit", async (e) => 
     description: document.getElementById("course-description").value.trim(),
     teacher: document.getElementById("course-teacher").value.trim(),
     duration: document.getElementById("course-duration").value || "0",
+    price: document.getElementById("course-price").value || "0",
     status: document.getElementById("course-status").value,
     academyId: academyId,
     studentCount: 0,
     updatedAt: new Date().toISOString(),
   };
-
   try {
-    if (id) {
-      await updateDoc(doc(db, "courses", id), data);
-      showSuccess("تم تحديث الكورس بنجاح");
-    } else {
-      data.createdAt = new Date().toISOString();
-      await addDoc(coursesRef, data);
-      showSuccess("تم إضافة الكورس بنجاح");
-    }
+    if (id) { await updateDoc(doc(db, "courses", id), data); showSuccess("تم تحديث الكورس بنجاح"); }
+    else { data.createdAt = new Date().toISOString(); await addDoc(coursesRef, data); showSuccess("تم إضافة الكورس بنجاح"); }
     document.getElementById("course-modal").classList.remove("show");
-  } catch (error) {
-    showError("فشل حفظ الكورس: " + error.message);
-  }
+  } catch (error) { showError("فشل حفظ الكورس: " + error.message); }
 });
 
-// ============================================================
-// تعديل كورس
-// ============================================================
 window.editCourse = async (id) => {
   const docSnap = await getDoc(doc(db, "courses", id));
   if (docSnap.exists()) {
@@ -169,33 +126,15 @@ window.editCourse = async (id) => {
     document.getElementById("course-description").value = data.description || "";
     document.getElementById("course-teacher").value = data.teacher || "";
     document.getElementById("course-duration").value = data.duration || "";
+    document.getElementById("course-price").value = data.price || "";
     document.getElementById("course-status").value = data.status || "active";
     document.getElementById("modal-title").textContent = "تعديل الكورس";
     document.getElementById("course-modal").classList.add("show");
   }
 };
 
-// ============================================================
-// حذف كورس
-// ============================================================
 window.deleteCourse = async (id) => {
-  const result = await Swal.fire({
-    title: "هل أنت متأكد؟",
-    text: "لن تتمكن من استعادة هذا الكورس!",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#EF4444",
-    confirmButtonText: "نعم، احذف",
-    cancelButtonText: "إلغاء",
-  });
-  if (result.isConfirmed) {
-    try {
-      await deleteDoc(doc(db, "courses", id));
-      showSuccess("تم حذف الكورس بنجاح");
-    } catch (error) {
-      showError("فشل حذف الكورس: " + error.message);
-    }
-  }
+  const result = await Swal.fire({ title: "هل أنت متأكد؟", text: "لن تتمكن من استعادة هذا الكورس!", icon: "warning", showCancelButton: true, confirmButtonColor: "#EF4444", confirmButtonText: "نعم، احذف", cancelButtonText: "إلغاء" });
+  if (result.isConfirmed) { try { await deleteDoc(doc(db, "courses", id)); showSuccess("تم حذف الكورس بنجاح"); } catch (error) { showError("فشل حذف الكورس: " + error.message); } }
 };
-
 console.log("✅ Courses Module Loaded");

@@ -1,6 +1,6 @@
 // ============================================================
 // assets/js/auth.js
-// نظام المصادقة الكامل + منع إعادة تحميل الصفحة
+// نظام المصادقة الكامل مع تصدير auth و db للاستخدام في الصفحات
 // ============================================================
 
 import { initializeApp } from "firebase/app";
@@ -20,6 +20,14 @@ import {
   setDoc,
   getDoc,
   updateDoc,
+  collection,
+  query,
+  where,
+  getDocs,
+  addDoc,
+  deleteDoc,
+  onSnapshot,
+  orderBy,
 } from "firebase/firestore";
 
 // إعداد Firebase
@@ -37,8 +45,11 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
+// تصدير auth و db لاستخدامها في الصفحات الأخرى
+export { auth, db };
+
 // ============================================================
-// دوال مساعدة للرسائل (بدون alert)
+// دوال مساعدة للرسائل
 // ============================================================
 function showToast(message, type = "error") {
   Toastify({
@@ -113,7 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ============================================================
-  // 2. التسجيل (إنشاء حساب)
+  // 2. التسجيل
   // ============================================================
   const registerForm = document.getElementById("registerForm");
   if (registerForm) {
@@ -128,7 +139,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const confirm = document.getElementById("registerConfirm").value;
       const terms = document.getElementById("registerTerms").checked;
 
-      // التحقق
       if (!name || !academy || !email || !password || !confirm) {
         showToast("يرجى ملء جميع الحقول المطلوبة");
         return;
@@ -154,7 +164,6 @@ document.addEventListener("DOMContentLoaded", () => {
         );
         const user = userCredential.user;
 
-        // حفظ في Firestore
         await setDoc(doc(db, "users", user.uid), {
           fullName: name,
           academyName: academy,
@@ -346,4 +355,4 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-console.log("✅ مداد العلم - Auth Module Loaded (بدون إعادة تحميل)");
+console.log("✅ مداد العلم - Auth Module Loaded (مع تصدير auth و db)");

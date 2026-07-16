@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>الكورسات – مداد العلم</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cairo&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="bg-gray-50">
+  <!-- القائمة الجانبية (نفس القائمة مع إضافة "الكورسات" في الروابط) -->
+  <div class="fixed top-0 right-0 w-64 h-full bg-white border-l border-gray-200 p-4 overflow-y-auto z-40">
+    <a href="/" class="text-2xl font-extrabold text-[#4B5563] block mb-8"><i class="fas fa-feather-alt ml-2"></i>مداد العلم</a>
+    <nav class="space-y-1">
+      <a href="/dashboard" class="sidebar-link"><i class="fas fa-chart-pie ml-2"></i>لوحة التحكم</a>
+      <a href="/customers" class="sidebar-link"><i class="fas fa-users ml-2"></i>العملاء</a>
+      <a href="/cases" class="sidebar-link"><i class="fas fa-folder-open ml-2"></i>القضايا</a>
+      <a href="/courses" class="sidebar-link active"><i class="fas fa-book-open ml-2"></i>الكورسات</a>
+      <a href="/students" class="sidebar-link"><i class="fas fa-user-graduate ml-2"></i>الطلاب</a>
+      <a href="/exams" class="sidebar-link"><i class="fas fa-pencil-alt ml-2"></i>الامتحانات</a>
+      <a href="/sessions" class="sidebar-link"><i class="fas fa-calendar-check ml-2"></i>الجلسات</a>
+      <a href="/documents" class="sidebar-link"><i class="fas fa-file-alt ml-2"></i>المستندات</a>
+      <a href="/tasks" class="sidebar-link"><i class="fas fa-tasks ml-2"></i>المهام</a>
+      <a href="/notifications" class="sidebar-link"><i class="fas fa-bell ml-2"></i>الإشعارات</a>
+      <a href="/reports" class="sidebar-link"><i class="fas fa-chart-bar ml-2"></i>التقارير</a>
+      <a href="/settings" class="sidebar-link"><i class="fas fa-cog ml-2"></i>الإعدادات</a>
+      <a href="/profile" class="sidebar-link"><i class="fas fa-user ml-2"></i>الملف الشخصي</a>
+      <button id="logout-btn" class="sidebar-link text-red-600 hover:bg-red-50 w-full text-right"><i class="fas fa-sign-out-alt ml-2"></i>تسجيل الخروج</button>
+    </nav>
+  </div>
+
+  <div class="mr-64 p-6">
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-2xl font-bold">إدارة الكورسات</h1>
+      <button id="add-course-btn" class="bg-[#4B5563] text-white px-4 py-2 rounded-xl hover:bg-[#3b4553] transition flex items-center gap-2">
+        <i class="fas fa-plus"></i> إضافة كورس
+      </button>
+    </div>
+
+    <!-- عرض الكورسات على شكل بطاقات -->
+    <div id="courses-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="col-span-full text-center text-gray-500 py-8">جاري التحميل...</div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="https://unpkg.com/lenis@1.0.45/dist/lenis.min.js"></script>
+  <script>
+    AOS.init({ duration: 800, once: true });
+    const lenis = new Lenis({ duration: 1.2 });
+    function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+    requestAnimationFrame(raf);
+  </script>
+  <script type="module" src="assets/js/pages/courses.js"></script>
+</body>
+</html>

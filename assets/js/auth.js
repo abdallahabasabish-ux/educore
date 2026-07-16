@@ -83,4 +83,29 @@ function showToast(message, type = 'info') {
     toast.style.transform = 'translateY(100px)';
     setTimeout(() => toast.remove(), 300);
   }, 4000);
+  // تسجيل حساب جديد
+const registerForm = document.getElementById("register-form");
+if (registerForm) {
+  registerForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const fullName = document.getElementById("fullName").value;
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      // حفظ بيانات المستخدم في Firestore
+      await setDoc(doc(db, "users", userCredential.user.uid), {
+        fullName,
+        email,
+        academyId: 'default', // يمكن تعديلها لاحقاً
+        role: 'owner',
+        status: 'active',
+        createdAt: new Date().toISOString()
+      });
+      window.location.href = "/dashboard";
+    } catch (error) {
+      showToast("فشل إنشاء الحساب: " + error.message, "error");
+    }
+  });
 }
+

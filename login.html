@@ -11,7 +11,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <style>
-    /* تنسيقات مخصصة */
     body {
       font-family: 'Inter', 'Cairo', sans-serif;
       direction: rtl;
@@ -117,29 +116,24 @@
       font-weight: 500;
       white-space: nowrap;
     }
-    /* تنسيق الصورة في الهاتف */
-    .mobile-bg {
-      background: linear-gradient(135deg, #4B5563 0%, #1f2937 100%);
-      position: relative;
-      padding: 2rem 1.5rem;
-      text-align: center;
-      border-radius: 1.5rem 1.5rem 0 0;
-    }
-    .mobile-bg .icon {
-      font-size: 4rem;
-      color: white;
-      opacity: 0.9;
-    }
-    .mobile-bg h2 {
-      color: white;
-      font-size: 1.5rem;
-      font-weight: 700;
+    /* تنسيق الرسائل في الواجهة */
+    .message-box {
+      display: none;
+      padding: 0.75rem 1rem;
+      border-radius: 0.75rem;
+      font-size: 0.9rem;
       margin-top: 0.5rem;
+      background: #fef2f2;
+      color: #dc2626;
+      border: 1px solid #fecaca;
     }
-    .mobile-bg p {
-      color: rgba(255,255,255,0.7);
-      font-size: 0.95rem;
-      margin-top: 0.25rem;
+    .message-box.success {
+      background: #f0fdf4;
+      color: #16a34a;
+      border: 1px solid #bbf7d0;
+    }
+    .message-box.show {
+      display: block;
     }
     @media (max-width: 768px) {
       .login-card {
@@ -154,13 +148,11 @@
 </head>
 <body>
 
-  <!-- حاوية رئيسية تأخذ كامل الشاشة -->
   <div class="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-gray-50 to-gray-100">
 
-    <!-- بطاقة تسجيل الدخول -->
     <div class="w-full max-w-5xl flex flex-col md:flex-row rounded-3xl overflow-hidden shadow-2xl login-card" data-aos="zoom-in" data-aos-duration="800">
 
-      <!-- ====== الجانب الأيمن: الصورة (يظهر على الكمبيوتر) ====== -->
+      <!-- ====== الجانب الأيمن: الصورة ====== -->
       <div class="login-image hidden md:flex md:w-1/2 items-center justify-center p-12 text-white">
         <div class="content text-center">
           <div class="text-7xl mb-6">
@@ -171,18 +163,9 @@
             منصة تعليمية متكاملة لإدارة الكورسات والطلاب والامتحانات بكل احترافية.
           </p>
           <div class="mt-8 flex justify-center gap-6 text-sm">
-            <div>
-              <i class="fas fa-check-circle text-green-400 ml-1"></i>
-              <span class="text-white/80">آمنة</span>
-            </div>
-            <div>
-              <i class="fas fa-check-circle text-green-400 ml-1"></i>
-              <span class="text-white/80">سريعة</span>
-            </div>
-            <div>
-              <i class="fas fa-check-circle text-green-400 ml-1"></i>
-              <span class="text-white/80">متطورة</span>
-            </div>
+            <div><i class="fas fa-check-circle text-green-400 ml-1"></i><span class="text-white/80">آمنة</span></div>
+            <div><i class="fas fa-check-circle text-green-400 ml-1"></i><span class="text-white/80">سريعة</span></div>
+            <div><i class="fas fa-check-circle text-green-400 ml-1"></i><span class="text-white/80">متطورة</span></div>
           </div>
           <div class="mt-8 flex justify-center gap-4">
             <span class="text-white/50 text-sm">© 2026 مداد العلم</span>
@@ -190,16 +173,15 @@
         </div>
       </div>
 
-      <!-- ====== الجانب الأيسر: نموذج تسجيل الدخول ====== -->
+      <!-- ====== الجانب الأيسر: النموذج ====== -->
       <div class="w-full md:w-1/2 p-8 md:p-12 bg-white/80 backdrop-blur-sm md:backdrop-blur-none">
 
-        <!-- شعار في الهاتف (يظهر فقط على الشاشات الصغيرة) -->
+        <!-- شعار الهاتف -->
         <div class="md:hidden flex items-center justify-center mb-6">
           <i class="fas fa-feather-alt text-3xl text-[#4B5563] ml-2"></i>
           <span class="text-2xl font-extrabold text-[#4B5563]">مداد العلم</span>
         </div>
 
-        <!-- عنوان النموذج -->
         <div class="text-center md:text-right mb-8">
           <h2 class="text-2xl font-bold text-gray-800">مرحباً بعودتك</h2>
           <p class="text-gray-500 text-sm mt-1">سجل الدخول إلى حسابك لمواصلة رحلتك التعليمية</p>
@@ -207,7 +189,6 @@
 
         <!-- نموذج تسجيل الدخول -->
         <form id="login-form" class="space-y-5">
-          <!-- البريد الإلكتروني -->
           <div>
             <label for="email" class="block text-sm font-medium text-gray-700 mb-1">البريد الإلكتروني</label>
             <div class="relative">
@@ -215,8 +196,6 @@
               <input type="email" id="email" required class="input-field" placeholder="example@email.com" />
             </div>
           </div>
-
-          <!-- كلمة المرور -->
           <div>
             <label for="password" class="block text-sm font-medium text-gray-700 mb-1">كلمة المرور</label>
             <div class="relative">
@@ -224,8 +203,6 @@
               <input type="password" id="password" required class="input-field" placeholder="••••••••" />
             </div>
           </div>
-
-          <!-- خيارات إضافية -->
           <div class="flex items-center justify-between text-sm">
             <label class="flex items-center gap-2 cursor-pointer text-gray-600">
               <input type="checkbox" id="remember" class="rounded border-gray-300 text-[#4B5563] focus:ring-[#4B5563]" />
@@ -234,24 +211,21 @@
             <a href="forgot-password.html" class="text-[#4B5563] hover:underline font-medium">نسيت كلمة المرور؟</a>
           </div>
 
-          <!-- زر تسجيل الدخول -->
+          <!-- مكان عرض الرسائل (مدمج في الصفحة) -->
+          <div id="login-message" class="message-box"></div>
+
           <button type="submit" class="btn-primary">
             <i class="fas fa-sign-in-alt ml-2"></i> تسجيل الدخول
           </button>
         </form>
 
-        <!-- الفاصل -->
-        <div class="divider">
-          <span>أو</span>
-        </div>
+        <div class="divider"><span>أو</span></div>
 
-        <!-- زر Google -->
         <button id="google-login" class="btn-google">
           <i class="fab fa-google text-red-500 text-lg"></i>
           تسجيل الدخول بواسطة Google
         </button>
 
-        <!-- رابط إنشاء حساب -->
         <p class="text-center text-sm text-gray-500 mt-6">
           ليس لديك حساب؟ <a href="register.html" class="text-[#4B5563] font-semibold hover:underline">إنشاء حساب</a>
         </p>
@@ -259,7 +233,6 @@
     </div>
   </div>
 
-  <!-- ====== سكريبتات ====== -->
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script src="https://unpkg.com/lenis@1.0.45/dist/lenis.min.js"></script>
   <script>
@@ -268,8 +241,6 @@
     function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
     requestAnimationFrame(raf);
   </script>
-
-  <!-- رابط auth.js (نظام المصادقة) -->
   <script type="module" src="assets/js/auth.js"></script>
 </body>
 </html>

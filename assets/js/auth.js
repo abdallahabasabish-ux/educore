@@ -1,6 +1,6 @@
 // ============================================================
 // assets/js/auth.js
-// نظام المصادقة الكامل لمنصة مداد العلم
+// نظام المصادقة الكامل مع رسائل واضحة
 // ============================================================
 
 import { auth, db } from "./firebase-config.js";
@@ -38,7 +38,7 @@ if (loginForm) {
       } else {
         localStorage.removeItem("rememberMe");
       }
-      window.location.href = "/dashboard";
+      window.location.href = "dashboard.html";
     } catch (error) {
       let msg = "فشل تسجيل الدخول";
       if (error.code === "auth/user-not-found") msg = "البريد الإلكتروني غير مسجل";
@@ -51,17 +51,21 @@ if (loginForm) {
 }
 
 // ============================================================
-// 2. تسجيل الدخول بواسطة Google
+// 2. تسجيل الدخول بواسطة Google (مع رسائل واضحة)
 // ============================================================
 const googleLogin = document.getElementById("google-login");
 if (googleLogin) {
   googleLogin.addEventListener("click", async () => {
+    console.log("✅ تم النقر على زر Google");
     const provider = new GoogleAuthProvider();
     try {
       const result = await signInWithPopup(auth, provider);
+      console.log("✅ تم تسجيل الدخول بنجاح:", result.user);
       const user = result.user;
+      // التحقق من وجود المستخدم في Firestore
       const userDoc = await getDoc(doc(db, "users", user.uid));
       if (!userDoc.exists()) {
+        console.log("📝 إنشاء مستخدم جديد في Firestore");
         await setDoc(doc(db, "users", user.uid), {
           fullName: user.displayName || "مستخدم",
           email: user.email,
@@ -78,11 +82,25 @@ if (googleLogin) {
           createdAt: new Date().toISOString(),
         });
       }
-      window.location.href = "/dashboard";
+      // التوجيه إلى لوحة التحكم
+      window.location.href = "dashboard.html";
     } catch (error) {
-      alert("فشل تسجيل الدخول بواسطة Google: " + error.message);
+      console.error("❌ خطأ في Google Login:", error);
+      let msg = "فشل تسجيل الدخول بواسطة Google";
+      if (error.code === "auth/popup-closed-by-user") {
+        msg = "تم إغلاق النافذة المنبثقة قبل إكمال التسجيل";
+      } else if (error.code === "auth/cancelled-popup-request") {
+        msg = "تم إلغاء طلب تسجيل الدخول";
+      } else if (error.code === "auth/account-exists-with-different-credential") {
+        msg = "يوجد حساب بنفس البريد الإلكتروني باستخدام طريقة أخرى";
+      } else {
+        msg = error.message;
+      }
+      alert(msg);
     }
   });
+} else {
+  console.warn("⚠️ لم يتم العثور على زر Google (id='google-login')");
 }
 
 // ============================================================
@@ -138,7 +156,7 @@ if (registerForm) {
         currency: "SAR",
       });
 
-      window.location.href = "/dashboard";
+      window.location.href = "dashboard.html";
     } catch (error) {
       let msg = "فشل إنشاء الحساب";
       if (error.code === "auth/email-already-in-use") msg = "البريد الإلكتروني مستخدم بالفعل";
@@ -151,7 +169,7 @@ if (registerForm) {
 }
 
 // ============================================================
-// 4. استعادة كلمة المرور (نسيت كلمة المرور)
+// 4. استعادة كلمة المرور
 // ============================================================
 const forgotForm = document.getElementById("forgot-password-form");
 if (forgotForm) {
@@ -166,7 +184,7 @@ if (forgotForm) {
       await sendPasswordResetEmail(auth, email);
       alert("تم إرسال رابط استعادة كلمة المرور إلى بريدك الإلكتروني");
       setTimeout(() => {
-        window.location.href = "/login";
+        window.location.href = "login.html";
       }, 3000);
     } catch (error) {
       let msg = "فشل إرسال رابط الاستعادة";
@@ -187,7 +205,7 @@ document.addEventListener("click", (e) => {
     signOut(auth)
       .then(() => {
         localStorage.removeItem("rememberMe");
-        window.location.href = "/login";
+        window.location.href = "login.html";
       })
       .catch((error) => {
         alert("فشل تسجيل الخروج: " + error.message);
@@ -199,30 +217,18 @@ document.addEventListener("click", (e) => {
 // 6. مراقبة حالة المصادقة
 // ============================================================
 onAuthStateChanged(auth, async (user) => {
-  const currentPath = window.location.pathname;
+  const currentPath = window.location.pathname.split("/").pop(); // اسم الملف الحالي
 
-  const publicPaths = [
-    "/",
-    "/login",
-    "/register",
-    "/forgot-password",
-    "/contact",
-    "/about",
-    "/blog",
-    "/faq",
-    "/privacy-policy",
-    "/terms",
-    "/index.html",
-  ];
-  const isPublic = publicPaths.includes(currentPath) || currentPath === "";
+  const publicPages = ["login.html", "register.html", "forgot-password.html", "index.html", ""];
+  const isPublic = publicPages.includes(currentPath);
 
-  if (!user && !isPublic) {
-    window.location.href = "/login";
+  if (!user && !isPublic && !currentPath.includes("index")) {
+    window.location.href = "login.html";
     return;
   }
 
-  if (user && (currentPath === "/login" || currentPath === "/register" || currentPath === "/forgot-password")) {
-    window.location.href = "/dashboard";
+  if (user && (currentPath === "login.html" || currentPath === "register.html" || currentPath === "forgot-password.html")) {
+    window.location.href = "dashboard.html";
     return;
   }
 
@@ -245,27 +251,5 @@ onAuthStateChanged(auth, async (user) => {
     }
   }
 });
-
-// ============================================================
-// 7. دوال مساعدة للاستخدام في صفحات أخرى
-// ============================================================
-export async function getUserData(uid) {
-  if (!uid) return null;
-  try {
-    const docSnap = await getDoc(doc(db, "users", uid));
-    return docSnap.exists() ? docSnap.data() : null;
-  } catch (error) {
-    console.error("خطأ في جلب بيانات المستخدم:", error);
-    return null;
-  }
-}
-
-export async function updateUserProfile(uid, data) {
-  if (!uid) throw new Error("uid مطلوب");
-  await updateDoc(doc(db, "users", uid), {
-    ...data,
-    updatedAt: new Date().toISOString(),
-  });
-}
 
 console.log("✅ مداد العلم - Auth Module Loaded");

@@ -10,12 +10,33 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
   <style>
-    /* نفس التنسيقات السابقة (القائمة الجانبية والمودال) */
-    .sidebar { transition: transform 0.3s ease; transform: translateX(100%); position: fixed; top: 0; right: 0; width: 280px; height: 100%; background: white; border-left: 1px solid #e5e7eb; padding: 1.5rem; overflow-y: auto; z-index: 40; }
+    /* تنسيقات القائمة الجانبية والمودال */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', 'Cairo', sans-serif; direction: rtl; background: #f8fafc; }
+    .sidebar {
+      transition: transform 0.3s ease;
+      transform: translateX(100%);
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 280px;
+      height: 100%;
+      background: white;
+      border-left: 1px solid #e5e7eb;
+      padding: 1.5rem;
+      overflow-y: auto;
+      z-index: 40;
+    }
     .sidebar.open { transform: translateX(0); }
-    @media (min-width: 768px) { .sidebar { transform: translateX(0) !important; position: fixed; top: 0; right: 0; width: 280px; height: 100%; border-left: 1px solid #e5e7eb; padding: 1.5rem; overflow-y: auto; z-index: 40; background: white; } .sidebar-overlay { display: none !important; } }
+    @media (min-width: 768px) {
+      .sidebar { transform: translateX(0) !important; position: fixed; top: 0; right: 0; width: 280px; height: 100%; border-left: 1px solid #e5e7eb; padding: 1.5rem; overflow-y: auto; z-index: 40; background: white; }
+      .sidebar-overlay { display: none !important; }
+    }
     .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 39; display: none; }
     .sidebar-overlay.show { display: block; }
     .sidebar-link { display: block; padding: 0.625rem 1rem; border-radius: 0.75rem; transition: all 0.2s; color: #4b5563; text-decoration: none; font-size: 0.9rem; }
@@ -26,14 +47,22 @@
     @media (min-width: 768px) { .main-content { margin-right: 280px; padding: 2rem; } }
     .form-input { width: 100%; padding: 0.5rem 1rem; border: 1px solid #e5e7eb; border-radius: 0.75rem; background: #f9fafb; transition: all 0.2s; font-size: 0.9rem; }
     .form-input:focus { outline: none; border-color: #4b5563; box-shadow: 0 0 0 3px rgba(75,85,99,0.15); background: white; }
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 50; display: none; align-items: center; justify-content: center; }
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 50; display: none; align-items: center; justify-content: center; padding: 1rem; }
     .modal-overlay.show { display: flex; }
-    .modal-box { background: white; border-radius: 1.5rem; padding: 2rem; max-width: 550px; width: 90%; max-height: 90vh; overflow-y: auto; }
+    .modal-box { background: white; border-radius: 1.5rem; padding: 2rem; max-width: 550px; width: 100%; max-height: 90vh; overflow-y: auto; }
+    .btn-primary { background: #4b5563; color: white; padding: 0.5rem 1.5rem; border-radius: 0.75rem; font-weight: 600; transition: all 0.3s; border: none; cursor: pointer; }
+    .btn-primary:hover { background: #3b4553; transform: translateY(-2px); box-shadow: 0 8px 16px -4px rgba(75,85,99,0.3); }
+    .btn-danger { background: #ef4444; color: white; padding: 0.5rem 1.5rem; border-radius: 0.75rem; font-weight: 600; transition: all 0.3s; border: none; cursor: pointer; }
+    .btn-danger:hover { background: #dc2626; }
+    .status-badge { padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; }
+    .status-active { background: #d1fae5; color: #065f46; }
+    .status-inactive { background: #fee2e2; color: #dc2626; }
+    .status-pending { background: #fef3c7; color: #92400e; }
   </style>
 </head>
 <body>
 
-  <!-- نفس القائمة الجانبية الموجودة في courses.html (اختصار) -->
+  <!-- ===== القائمة الجانبية ===== -->
   <div id="sidebar-overlay" class="sidebar-overlay"></div>
   <div id="sidebar" class="sidebar">
     <div class="flex justify-between items-center mb-8 md:hidden">
@@ -59,6 +88,7 @@
     </nav>
   </div>
 
+  <!-- ===== المحتوى الرئيسي ===== -->
   <div class="main-content">
     <div class="flex justify-between items-center mb-6 md:hidden">
       <button id="open-sidebar" class="text-gray-600 hover:text-[#4B5563] text-2xl"><i class="fas fa-bars"></i></button>
@@ -68,16 +98,16 @@
 
     <div class="flex justify-between items-center mb-6">
       <h1 class="text-2xl font-bold">إدارة الطلاب</h1>
-      <button id="add-student-btn" class="bg-[#4B5563] text-white px-4 py-2 rounded-xl hover:bg-[#3b4553] transition flex items-center gap-2">
-        <i class="fas fa-plus"></i> إضافة طالب
-      </button>
+      <button id="add-student-btn" class="btn-primary flex items-center gap-2"><i class="fas fa-plus"></i> إضافة طالب</button>
     </div>
 
+    <!-- جدول الطلاب -->
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
       <div class="overflow-x-auto">
         <table class="w-full">
           <thead class="bg-gray-50 border-b border-gray-200">
             <tr>
+              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">#</th>
               <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">الاسم</th>
               <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">البريد الإلكتروني</th>
               <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">الهاتف</th>
@@ -87,14 +117,14 @@
             </tr>
           </thead>
           <tbody id="students-table-body" class="divide-y divide-gray-200">
-            <tr><td colspan="6" class="px-6 py-4 text-center text-gray-500">جاري التحميل...</td></tr>
+            <tr><td colspan="7" class="px-6 py-4 text-center text-gray-500">جاري التحميل...</td></tr>
           </tbody>
         </table>
       </div>
     </div>
   </div>
 
-  <!-- مودال إضافة/تعديل طالب -->
+  <!-- ===== مودال إضافة/تعديل طالب ===== -->
   <div id="student-modal" class="modal-overlay">
     <div class="modal-box">
       <div class="flex justify-between items-center mb-4">
@@ -127,14 +157,13 @@
             <option value="pending">معلق</option>
           </select>
         </div>
-        <button type="submit" class="bg-[#4B5563] text-white px-4 py-2 rounded-xl hover:bg-[#3b4553] transition w-full">حفظ</button>
+        <button type="submit" class="btn-primary w-full">حفظ</button>
       </form>
     </div>
   </div>
 
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script>
-    AOS.init({ duration: 800, once: true });
+    // القائمة الجانبية
     document.addEventListener("DOMContentLoaded", function () {
       const sidebar = document.getElementById("sidebar");
       const overlay = document.getElementById("sidebar-overlay");
@@ -147,6 +176,7 @@
       if (overlay) overlay.addEventListener("click", closeSidebar);
       document.querySelectorAll("#sidebar a").forEach(link => link.addEventListener("click", closeSidebar));
 
+      // المودال
       const modal = document.getElementById("student-modal");
       const closeModalBtn = document.getElementById("close-modal");
       const addBtn = document.getElementById("add-student-btn");

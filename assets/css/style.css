@@ -1,9 +1,29 @@
 /* ============================================================
    assets/css/style.css
-   الأنماط الرئيسية لمنصة مداد العلم
+   التنسيق الرئيسي لمنصة مداد العلم
    ============================================================ */
 
-/* ----- BASE ----- */
+/* ----- استيراد Tailwind عبر CDN (مضمن في HTML) ----- */
+/* ولكن هنا نضيف تخصيصات إضافية */
+
+:root {
+  --primary: #2563EB;
+  --primary-dark: #1D4ED8;
+  --secondary: #0F172A;
+  --success: #22C55E;
+  --warning: #F59E0B;
+  --danger: #EF4444;
+  --background: #F8FAFC;
+  --foreground: #0F172A;
+  --muted: #64748B;
+  --border: #E2E8F0;
+  --card: #FFFFFF;
+  --radius: 12px;
+  --shadow: 0 4px 24px -8px rgba(0,0,0,0.08);
+  --shadow-lg: 0 16px 48px -12px rgba(0,0,0,0.15);
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -17,252 +37,163 @@ html {
 body {
   font-family: 'Inter', 'Cairo', sans-serif;
   direction: rtl;
-  overflow-x: hidden;
-  background: #f8fafc;
+  background: var(--background);
+  color: var(--foreground);
+  min-height: 100vh;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
-/* ----- SCROLLBAR ----- */
-::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-::-webkit-scrollbar-thumb {
-  background: #4B5563;
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #3b4553;
-}
+/* ===== شريط التمرير ===== */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--background); }
+::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 3px; }
 
-/* ----- GPU ACCELERATION ----- */
-.card-hover,
-.nav-link,
-.btn-primary,
-.hero-image,
-[data-aos] {
-  will-change: transform, opacity;
-  transform: translateZ(0);
-  backface-visibility: hidden;
-}
-
-/* ----- GLASS EFFECT ----- */
-.glass {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-/* ----- HOVER EFFECTS ----- */
-.hover-lift {
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-.hover-lift:hover {
-  transform: translateY(-6px);
-}
-
-/* ----- RESPONSIVE ----- */
-@media (max-width: 768px) {
-  .container {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-}
-
-/* ----- LENIS OVERRIDE (لمنع اختفاء المحتوى) ----- */
-html.lenis {
-  height: auto;
-}
-.lenis.lenis-smooth {
-  scroll-behavior: auto;
-}
-.lenis.lenis-smooth [data-lenis-prevent] {
-  overscroll-behavior: contain;
-}
-.lenis.lenis-stopped {
-  overflow: hidden;
-}
-.lenis.lenis-scrolling iframe {
-  pointer-events: none;
-}
-
-/* ----- AOS OVERRIDE (ضمان ظهور العناصر) ----- */
-[data-aos] {
-  opacity: 1 !important;
-  pointer-events: auto !important;
-}
-[data-aos].aos-animate {
-  opacity: 1 !important;
-  transform: none !important;
-}
-
-/* ----- تحسينات إضافية ----- */
-.section-padding {
-  padding-top: 5rem;
-  padding-bottom: 5rem;
-}
-
-/* ----- أنيميشن مخصص ----- */
-@keyframes fade-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-.animate-fade-in-up {
-  animation: fade-in-up 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-}
-
-/* ----- تحسينات للطباعة ----- */
-h1, h2, h3, h4, h5, h6 {
-  font-weight: 800;
-  line-height: 1.3;
-}
-p {
-  line-height: 1.7;
-}
-
-/* ----- أزرار مخصصة ----- */
-.btn-primary {
-  background: #4B5563;
-  color: white;
-  padding: 0.5rem 1.5rem;
-  border-radius: 9999px;
-  transition: all 0.3s;
-}
-.btn-primary:hover {
-  background: #3b4553;
-  box-shadow: 0 8px 16px -4px rgba(75, 85, 99, 0.3);
-  transform: translateY(-2px);
-}
-
-/* ----- تنسيق البطاقات ----- */
-.card-shadow {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-}
-.card-shadow:hover {
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
-}
-
-/* ----- تنسيق الجداول ----- */
-.table-responsive {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-/* ----- تنسيق النماذج ----- */
-.form-input {
-  width: 100%;
-  padding: 0.625rem 1rem;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.75rem;
-  background: #f9fafb;
-  transition: all 0.2s;
-}
-.form-input:focus {
-  outline: none;
-  border-color: #4B5563;
-  box-shadow: 0 0 0 3px rgba(75, 85, 99, 0.15);
-  background: white;
-}
-
-/* ----- تنسيق الروابط ----- */
-.link-hover {
-  transition: color 0.2s;
-}
-.link-hover:hover {
-  color: #4B5563;
-}
-
-/* ----- تنسيق الصور ----- */
-img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-}
-
-/* ----- تنسيق الشهادات ----- */
-.testimonial-quote {
-  position: relative;
-}
-.testimonial-quote::before {
-  content: '"';
-  font-size: 4rem;
-  position: absolute;
-  top: -1.5rem;
-  right: -0.5rem;
-  color: #4B5563;
-  opacity: 0.15;
-  font-family: serif;
-}
-
-/* ----- تنسيق القائمة الجانبية (Dashboard) ----- */
-.sidebar-link {
-  display: block;
-  padding: 0.625rem 1rem;
-  border-radius: 0.75rem;
-  transition: all 0.2s;
-  color: #4b5563;
-}
-.sidebar-link:hover {
-  background: #f3f4f6;
-}
-.sidebar-link.active {
-  background: #4B5563;
-  color: white;
-}
-.sidebar-link i {
-  width: 1.5rem;
-  text-align: center;
-}
-
-/* ----- تنسيق الإشعارات ----- */
-.notification-badge {
-  position: relative;
-}
-.notification-badge::after {
-  content: '';
-  position: absolute;
+/* ===== القائمة الجانبية ===== */
+.sidebar {
+  position: fixed;
   top: 0;
   right: 0;
-  width: 0.5rem;
-  height: 0.5rem;
-  background: #ef4444;
-  border-radius: 50%;
-  border: 2px solid white;
+  width: 280px;
+  height: 100%;
+  background: white;
+  border-left: 1px solid var(--border);
+  padding: 1.5rem;
+  overflow-y: auto;
+  z-index: 40;
+  transition: transform 0.3s ease;
+  transform: translateX(100%);
+}
+.sidebar.open { transform: translateX(0); }
+
+@media (min-width: 768px) {
+  .sidebar { transform: translateX(0) !important; }
+  .sidebar-overlay { display: none !important; }
 }
 
-/* ----- تنسيق التحميل ----- */
-.spinner {
-  border: 3px solid #f3f4f6;
-  border-top: 3px solid #4B5563;
-  border-radius: 50%;
-  width: 2.5rem;
-  height: 2.5rem;
-  animation: spin 0.8s linear infinite;
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(4px);
+  z-index: 39;
+  display: none;
 }
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+.sidebar-overlay.show { display: block; }
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 1rem;
+  border-radius: var(--radius);
+  color: var(--muted);
+  text-decoration: none;
+  transition: var(--transition);
+  font-size: 0.9rem;
+}
+.sidebar-link:hover {
+  background: var(--background);
+  color: var(--foreground);
+}
+.sidebar-link.active {
+  background: var(--primary);
+  color: white;
+}
+.sidebar-link i { width: 1.25rem; text-align: center; }
+
+/* ===== المحتوى الرئيسي ===== */
+.main-content {
+  margin-right: 0;
+  padding: 1.5rem;
+  min-height: 100vh;
+}
+@media (min-width: 768px) {
+  .main-content {
+    margin-right: 280px;
+    padding: 2rem;
+  }
 }
 
-/* ----- تحسين للشاشات الصغيرة ----- */
-@media (max-width: 640px) {
-  .text-4xl {
-    font-size: 2rem;
-  }
-  .text-5xl {
-    font-size: 2.5rem;
-  }
-  .text-6xl {
-    font-size: 3rem;
-  }
+/* ===== المودال ===== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(4px);
+  z-index: 50;
+  display: none;
+  align-items: center;
+  justify-content: center;
 }
+.modal-overlay.show { display: flex; }
+.modal-box {
+  background: white;
+  border-radius: 1.5rem;
+  padding: 2rem;
+  max-width: 560px;
+  width: 92%;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: modalIn 0.3s ease;
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.95) translateY(20px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* ===== الحقول ===== */
+.form-control {
+  width: 100%;
+  padding: 0.625rem 1rem;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  background: white;
+  font-size: 0.9rem;
+  transition: var(--transition);
+}
+.form-control:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+}
+
+/* ===== البطاقات ===== */
+.card-hover {
+  transition: var(--transition);
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* ===== شارات ===== */
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.badge-active { background: #DCFCE7; color: #166534; }
+.badge-inactive { background: #FEE2E2; color: #991B1B; }
+.badge-pending { background: #FEF3C7; color: #92400E; }
+.badge-primary { background: #DBEAFE; color: #1E40AF; }
+.badge-success { background: #D1FAE5; color: #065F46; }
+
+/* ===== تأثيرات إضافية ===== */
+.glass {
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.3);
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, var(--primary), #7C3AED);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ===== تحسينات RTL ===== */
+[dir="rtl"] .ml-auto { margin-left: auto; margin-right: 0; }
+[dir="rtl"] .mr-auto { margin-right: auto; margin-left: 0; }

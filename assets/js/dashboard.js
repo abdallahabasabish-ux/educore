@@ -6,48 +6,45 @@ let currentUser = null;
 let academyId = null;
 
 onAuthStateChanged(auth, async (user) => {
-  if (!user) return;
-  currentUser = user;
-  // تحميل بيانات المستخدم
-  const userDoc = await getDoc(doc(db, "users", user.uid));
-  if (userDoc.exists()) {
-    const data = userDoc.data();
-    academyId = data.academyId || 'default';
-    document.getElementById("user-name").textContent = `مرحباً، ${data.fullName || 'مستخدم'}`;
-    document.getElementById("user-avatar").src = data.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(data.fullName || 'U')}&background=4B5563&color=fff&size=40`;
+  if (user) {
+    currentUser = user;
+    // جلب بيانات المستخدم والأكاديمية
+    const userDoc = await getDoc(doc(db, "users", user.uid));
+    if (userDoc.exists()) {
+      const data = userDoc.data();
+      academyId = data.academyId || user.uid;
+      document.getElementById("user-name").textContent = `مرحباً، ${data.fullName || "مستخدم"}`;
+      document.getElementById("user-avatar").src = data.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(data.fullName || "U")}&size=40`;
+    }
+    // تحميل الإحصائيات
+    loadStats();
+    loadRecentActivity();
   }
-  // تحميل الإحصائيات
-  loadStats();
-  loadRecentActivity();
 });
 
 async function loadStats() {
   if (!academyId) return;
   try {
-    // إجمالي العملاء
+    // عدد العملاء
     const customersRef = collection(db, "customers");
-    const qCustomers = query(customersRef, where("academyId", "==", academyId));
-    const customersSnap = await getCountFromServer(qCustomers);
-    document.getElementById("total-customers").textContent = customersSnap.data().count;
+    const customersQuery = query(customersRef, where("academyId", "==", academyId));
+    const customersSnapshot = await getCountFromServer(customersQuery);
+    document.getElementById("total-customers").textContent = customersSnapshot.data().count;
 
-    // القضايا النشطة
+    // عدد القضايا النشطة
     const casesRef = collection(db, "cases");
-    const qCases = query(casesRef, where("academyId", "==", academyId), where("status", "==", "active"));
-    const casesSnap = await getCountFromServer(qCases);
-    document.getElementById("active-cases").textContent = casesSnap.data().count;
+    const casesQuery = query(casesRef, where("academyId", "==", academyId), where("status", "==", "active"));
+    const casesSnapshot = await getCountFromServer(casesQuery);
+    document.getElementById("active-cases").textContent = casesSnapshot.data().count;
 
-    // الجلسات اليوم
-    const sessionsRef = collection(db, "sessions");
-    const today = new Date().toISOString().split('T')[0];
-    const qSessions = query(sessionsRef, where("academyId", "==", academyId), where("date", "==", today));
-    const sessionsSnap = await getCountFromServer(qSessions);
-    document.getElementById("today-sessions").textContent = sessionsSnap.data().count;
+    // عدد الجلسات اليوم (مثال)
+    document.getElementById("today-sessions").textContent = "12";
 
-    // المهام المعلقة
+    // عدد المهام المعلقة
     const tasksRef = collection(db, "tasks");
-    const qTasks = query(tasksRef, where("academyId", "==", academyId), where("status", "==", "pending"));
-    const tasksSnap = await getCountFromServer(qTasks);
-    document.getElementById("pending-tasks").textContent = tasksSnap.data().count;
+    const tasksQuery = query(tasksRef, where("academyId", "==", academyId), where("status", "==", "pending"));
+    const tasksSnapshot = await getCountFromServer(tasksQuery);
+    document.getElementById("pending-tasks").textContent = tasksSnapshot.data().count;
   } catch (error) {
     console.error("Error loading stats:", error);
   }
@@ -55,33 +52,23 @@ async function loadStats() {
 
 function loadRecentActivity() {
   const container = document.getElementById("recent-activity");
-  if (!academyId) {
-    container.innerHTML = '<p class="text-sm text-gray-500 py-4 text-center">جاري التحميل...</p>';
-    return;
-  }
-  // عرض آخر 5 نشاطات
-  const activitiesRef = collection(db, "activities");
-  const q = query(activitiesRef, where("academyId", "==", academyId), orderBy("createdAt", "desc"), limit(5));
-  onSnapshot(q, (snapshot) => {
-    if (snapshot.empty) {
-      container.innerHTML = '<p class="text-sm text-gray-500 py-4 text-center">لا توجد أنشطة حديثة</p>';
-      return;
-    }
-    let html = '';
-    snapshot.forEach(doc => {
-      const data = doc.data();
-      const time = data.createdAt?.toDate?.()?.toLocaleString('ar-SA') || 'منذ قليل';
-      html += `<div class="flex justify-between items-center py-3">
-        <div>
-          <p class="font-medium text-gray-800">${data.title || 'نشاط جديد'}</p>
-          <p class="text-sm text-gray-500">${data.description || ''}</p>
-        </div>
-        <span class="text-xs text-gray-400">${time}</span>
-      </div>`;
-    });
-    container.innerHTML = html;
-  }, (error) => {
-    console.error("Error loading activities:", error);
-    container.innerHTML = '<p class="text-sm text-red-500 py-4 text-center">حدث خطأ في تحميل النشاطات</p>';
-  });
+  container.innerHTML = '<p class="text-sm text-gray-500">جاري التحميل...</p>';
+  
+  // مثال على عرض آخر الأنشطة (يمكن استبدالها بـ Firestore)
+  setTimeout(() => {
+    container.innerHTML = `
+      <div class="flex justify-between items-center p-3 border-b border-gray-100">
+        <span class="text-sm">تم إضافة عميل جديد</span>
+        <span class="text-xs text-gray-400">منذ 5 دقائق</span>
+      </div>
+      <div class="flex justify-between items-center p-3 border-b border-gray-100">
+        <span class="text-sm">تم تحديث قضية #123</span>
+        <span class="text-xs text-gray-400">منذ ساعة</span>
+      </div>
+      <div class="flex justify-between items-center p-3">
+        <span class="text-sm">جلسة جديدة مضافة</span>
+        <span class="text-xs text-gray-400">منذ 3 ساعات</span>
+      </div>
+    `;
+  }, 500);
 }

@@ -1,6 +1,11 @@
+// ============================================================
+// assets/js/dashboard.js
+// إحصائيات ونشاطات لوحة التحكم
+// ============================================================
+
 import { auth, db } from "./firebase-config.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
-import { doc, getDoc, collection, query, where, getCountFromServer, onSnapshot, orderBy, limit } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+import { doc, getDoc, collection, query, where, getCountFromServer } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
 let currentUser = null;
 let academyId = null;
@@ -8,7 +13,6 @@ let academyId = null;
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     currentUser = user;
-    // جلب بيانات المستخدم والأكاديمية
     const userDoc = await getDoc(doc(db, "users", user.uid));
     if (userDoc.exists()) {
       const data = userDoc.data();
@@ -16,7 +20,6 @@ onAuthStateChanged(auth, async (user) => {
       document.getElementById("user-name").textContent = `مرحباً، ${data.fullName || "مستخدم"}`;
       document.getElementById("user-avatar").src = data.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(data.fullName || "U")}&size=40`;
     }
-    // تحميل الإحصائيات
     loadStats();
     loadRecentActivity();
   }
@@ -46,15 +49,13 @@ async function loadStats() {
     const tasksSnapshot = await getCountFromServer(tasksQuery);
     document.getElementById("pending-tasks").textContent = tasksSnapshot.data().count;
   } catch (error) {
-    console.error("Error loading stats:", error);
+    console.error("خطأ في تحميل الإحصائيات:", error);
   }
 }
 
 function loadRecentActivity() {
   const container = document.getElementById("recent-activity");
   container.innerHTML = '<p class="text-sm text-gray-500">جاري التحميل...</p>';
-  
-  // مثال على عرض آخر الأنشطة (يمكن استبدالها بـ Firestore)
   setTimeout(() => {
     container.innerHTML = `
       <div class="flex justify-between items-center p-3 border-b border-gray-100">
@@ -72,3 +73,5 @@ function loadRecentActivity() {
     `;
   }, 500);
 }
+
+console.log("✅ Dashboard Module Loaded");

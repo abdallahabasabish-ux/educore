@@ -6,20 +6,28 @@
   <title>إنشاء حساب – مداد العلم</title>
 
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
-  
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cairo:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"
+  />
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css">
-  
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+
   <style>
-    /* نفس التنسيقات السابقة ... */
     body {
-      font-family: 'Inter', 'Cairo', sans-serif;
+      font-family: "Inter", "Cairo", sans-serif;
       direction: rtl;
       background: #f8fafc;
       margin: 0;
@@ -40,28 +48,39 @@
       border: 1px solid rgba(255, 255, 255, 0.3);
       border-radius: 2rem;
       overflow: hidden;
-      box-shadow: 0 25px 60px -12px rgba(0,0,0,0.25);
+      box-shadow: 0 25px 60px -12px rgba(0, 0, 0, 0.25);
       width: 100%;
       max-width: 1100px;
     }
     .login-image {
-      background: linear-gradient(135deg, #4B5563 0%, #1f2937 100%);
+      background: linear-gradient(135deg, #4b5563 0%, #1f2937 100%);
       position: relative;
       overflow: hidden;
     }
     .login-image::after {
-      content: '';
+      content: "";
       position: absolute;
       top: -50%;
       right: -50%;
       width: 200%;
       height: 200%;
-      background: radial-gradient(circle at 30% 50%, rgba(255,255,255,0.05) 0%, transparent 60%);
+      background: radial-gradient(
+        circle at 30% 50%,
+        rgba(255, 255, 255, 0.05) 0%,
+        transparent 60%
+      );
       animation: pulse 8s ease-in-out infinite;
     }
     @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 0.3; }
-      50% { transform: scale(1.2); opacity: 0.6; }
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 0.3;
+      }
+      50% {
+        transform: scale(1.2);
+        opacity: 0.6;
+      }
     }
     .login-image .content {
       position: relative;
@@ -86,12 +105,12 @@
     }
     .input-field:focus {
       outline: none;
-      border-color: #4B5563;
+      border-color: #4b5563;
       box-shadow: 0 0 0 3px rgba(75, 85, 99, 0.15);
       background: white;
     }
     .btn-primary {
-      background: #4B5563;
+      background: #4b5563;
       color: white;
       padding: 0.75rem 1.5rem;
       border-radius: 0.75rem;
@@ -122,7 +141,7 @@
     }
     .btn-google:hover {
       background: #f9fafb;
-      border-color: #4B5563;
+      border-color: #4b5563;
     }
     .divider {
       display: flex;
@@ -130,8 +149,9 @@
       gap: 1rem;
       margin: 1.5rem 0;
     }
-    .divider::before, .divider::after {
-      content: '';
+    .divider::before,
+    .divider::after {
+      content: "";
       flex: 1;
       height: 1px;
       background: #e5e7eb;
@@ -243,25 +263,46 @@
 <body>
 
   <div class="page-wrapper">
-    <div class="login-card flex flex-col md:flex-row" data-aos="zoom-in" data-aos-duration="800">
+    <div
+      class="login-card flex flex-col md:flex-row"
+      data-aos="zoom-in"
+      data-aos-duration="800"
+    >
 
-      <!-- الجانب الأيمن: الصورة -->
-      <div class="login-image hidden md:flex md:w-1/2 items-center justify-center p-12 text-white">
+      <!-- صورة جانبية -->
+      <div
+        class="login-image hidden md:flex md:w-1/2 items-center justify-center p-12 text-white"
+      >
         <div class="content text-center">
           <div class="text-7xl mb-6"><i class="fas fa-user-plus"></i></div>
           <h1 class="text-3xl font-bold mb-2">انضم إلينا</h1>
-          <p class="text-white/70 text-lg max-w-sm mx-auto">أنشئ حسابك الآن وابدأ رحلتك التعليمية مع مداد العلم.</p>
+          <p class="text-white/70 text-lg max-w-sm mx-auto">
+            أنشئ حسابك الآن وابدأ رحلتك التعليمية مع مداد العلم.
+          </p>
           <div class="mt-8 flex justify-center gap-6 text-sm">
-            <div><i class="fas fa-check-circle text-green-400 ml-1"></i><span class="text-white/80">مجاني</span></div>
-            <div><i class="fas fa-check-circle text-green-400 ml-1"></i><span class="text-white/80">آمن</span></div>
-            <div><i class="fas fa-check-circle text-green-400 ml-1"></i><span class="text-white/80">سريع</span></div>
+            <div>
+              <i class="fas fa-check-circle text-green-400 ml-1"></i>
+              <span class="text-white/80">مجاني</span>
+            </div>
+            <div>
+              <i class="fas fa-check-circle text-green-400 ml-1"></i>
+              <span class="text-white/80">آمن</span>
+            </div>
+            <div>
+              <i class="fas fa-check-circle text-green-400 ml-1"></i>
+              <span class="text-white/80">سريع</span>
+            </div>
           </div>
-          <div class="mt-8"><span class="text-white/50 text-sm">© 2026 مداد العلم</span></div>
+          <div class="mt-8">
+            <span class="text-white/50 text-sm">© 2026 مداد العلم</span>
+          </div>
         </div>
       </div>
 
-      <!-- الجانب الأيسر: النموذج -->
-      <div class="w-full md:w-1/2 form-side bg-white/80 backdrop-blur-sm md:backdrop-blur-none">
+      <!-- النموذج -->
+      <div
+        class="w-full md:w-1/2 form-side bg-white/80 backdrop-blur-sm md:backdrop-blur-none"
+      >
 
         <!-- شعار الهاتف -->
         <div class="md:hidden flex items-center justify-center mb-4">
@@ -271,64 +312,108 @@
 
         <div class="text-center md:text-right mb-4">
           <h2 class="text-2xl font-bold text-gray-800">إنشاء حساب جديد</h2>
-          <p class="text-gray-500 text-sm mt-1">ابدأ رحلتك التعليمية مع مداد العلم</p>
+          <p class="text-gray-500 text-sm mt-1">
+            ابدأ رحلتك التعليمية مع مداد العلم
+          </p>
         </div>
 
-        <!-- نموذج التسجيل -->
+        <!-- ✅ نموذج التسجيل -->
         <form id="registerForm" class="space-y-3">
-          <!-- الاسم الكامل -->
           <div class="form-group">
             <label for="registerName">الاسم الكامل</label>
             <div class="relative">
               <i class="fas fa-user input-icon"></i>
-              <input type="text" class="input-field" id="registerName" placeholder="أحمد محمد" required />
+              <input
+                type="text"
+                class="input-field"
+                id="registerName"
+                placeholder="أحمد محمد"
+                required
+              />
             </div>
           </div>
-          <!-- اسم الأكاديمية -->
           <div class="form-group">
             <label for="registerAcademy">اسم الأكاديمية</label>
             <div class="relative">
               <i class="fas fa-building input-icon"></i>
-              <input type="text" class="input-field" id="registerAcademy" placeholder="أكاديمية المستقبل" required />
+              <input
+                type="text"
+                class="input-field"
+                id="registerAcademy"
+                placeholder="أكاديمية المستقبل"
+                required
+              />
             </div>
           </div>
-          <!-- البريد الإلكتروني -->
           <div class="form-group">
             <label for="registerEmail">البريد الإلكتروني</label>
             <div class="relative">
               <i class="fas fa-envelope input-icon"></i>
-              <input type="email" class="input-field" id="registerEmail" placeholder="example@email.com" required />
+              <input
+                type="email"
+                class="input-field"
+                id="registerEmail"
+                placeholder="example@email.com"
+                required
+              />
             </div>
           </div>
-          <!-- رقم الهاتف -->
           <div class="form-group">
             <label for="registerPhone">رقم الهاتف</label>
             <div class="relative">
               <i class="fas fa-phone input-icon"></i>
-              <input type="tel" class="input-field" id="registerPhone" placeholder="+966 55 123 4567" />
+              <input
+                type="tel"
+                class="input-field"
+                id="registerPhone"
+                placeholder="+966 55 123 4567"
+              />
             </div>
           </div>
-          <!-- كلمة المرور -->
           <div class="form-group">
             <label for="registerPassword">كلمة المرور</label>
             <div class="relative">
               <i class="fas fa-lock input-icon"></i>
-              <input type="password" class="input-field" id="registerPassword" placeholder="••••••••" required minlength="6" />
+              <input
+                type="password"
+                class="input-field"
+                id="registerPassword"
+                placeholder="••••••••"
+                required
+                minlength="6"
+              />
             </div>
           </div>
-          <!-- تأكيد كلمة المرور -->
           <div class="form-group">
             <label for="registerConfirm">تأكيد كلمة المرور</label>
             <div class="relative">
               <i class="fas fa-check-circle input-icon"></i>
-              <input type="password" class="input-field" id="registerConfirm" placeholder="••••••••" required minlength="6" />
+              <input
+                type="password"
+                class="input-field"
+                id="registerConfirm"
+                placeholder="••••••••"
+                required
+                minlength="6"
+              />
             </div>
           </div>
-          <!-- الموافقة على الشروط -->
           <div class="flex items-center gap-2">
-            <input type="checkbox" id="registerTerms" class="rounded border-gray-300 text-[#4B5563] focus:ring-[#4B5563]" required />
+            <input
+              type="checkbox"
+              id="registerTerms"
+              class="rounded border-gray-300 text-[#4B5563] focus:ring-[#4B5563]"
+              required
+            />
             <label for="registerTerms" class="text-sm text-gray-600">
-              أوافق على <a href="terms.html" class="text-[#4B5563] hover:underline">الشروط والأحكام</a> و <a href="privacy-policy.html" class="text-[#4B5563] hover:underline">سياسة الخصوصية</a>
+              أوافق على
+              <a href="terms.html" class="text-[#4B5563] hover:underline"
+                >الشروط والأحكام</a
+              >
+              و
+              <a href="privacy-policy.html" class="text-[#4B5563] hover:underline"
+                >سياسة الخصوصية</a
+              >
             </label>
           </div>
 
@@ -341,17 +426,37 @@
         <div class="divider"><span>أو</span></div>
 
         <button class="btn-google" id="googleRegisterBtn">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 48 48">
-            <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
-            <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
-            <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
-            <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 48 48"
+          >
+            <path
+              fill="#EA4335"
+              d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"
+            />
+            <path
+              fill="#4285F4"
+              d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"
+            />
+            <path
+              fill="#FBBC05"
+              d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"
+            />
+            <path
+              fill="#34A853"
+              d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
+            />
           </svg>
           التسجيل عبر Google
         </button>
 
         <p class="text-center text-sm text-gray-500 mt-4">
-          لديك حساب بالفعل؟ <a href="login.html" class="text-[#4B5563] font-semibold hover:underline">تسجيل الدخول</a>
+          لديك حساب بالفعل؟
+          <a href="login.html" class="text-[#4B5563] font-semibold hover:underline"
+            >تسجيل الدخول</a
+          >
         </p>
       </div>
     </div>
@@ -378,7 +483,10 @@
   <script>
     AOS.init({ duration: 800, once: true, disable: window.innerWidth < 768 });
     const lenis = new Lenis({ duration: 1.2 });
-    function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
     requestAnimationFrame(raf);
   </script>
 

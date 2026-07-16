@@ -4,7 +4,7 @@
 // ============================================================
 
 import { auth, db } from "../firebase-config.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import {
   collection,
   query,
@@ -17,18 +17,15 @@ import {
   onSnapshot,
   orderBy,
   getDoc,
-} from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 let academyId = null;
 let coursesRef = null;
 let unsubscribe = null;
 
-// ============================================================
-// 1. تهيئة الصفحة
-// ============================================================
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
-    window.location.href = "/login";
+    window.location.href = "/login.html";
     return;
   }
   const userDoc = await getDoc(doc(db, "users", user.uid));
@@ -39,9 +36,6 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
-// ============================================================
-// 2. تحميل الكورسات
-// ============================================================
 function loadCourses() {
   if (unsubscribe) unsubscribe();
   const q = query(coursesRef, where("academyId", "==", academyId), orderBy("createdAt", "desc"));
@@ -62,8 +56,8 @@ function loadCourses() {
           <div class="p-4">
             <div class="flex items-start justify-between">
               <h3 class="text-lg font-bold">${data.title || "بدون عنوان"}</h3>
-              <span class="text-xs px-2 py-1 rounded-full ${data.status === 'published' ? 'bg-green-50 text-green-600' : 'bg-yellow-50 text-yellow-600'}">
-                ${data.status === 'published' ? 'منشور' : 'مسودة'}
+              <span class="text-xs px-2 py-1 rounded-full ${data.status === 'active' ? 'bg-green-50 text-green-600' : 'bg-yellow-50 text-yellow-600'}">
+                ${data.status === 'active' ? 'نشط' : 'مسودة'}
               </span>
             </div>
             <p class="text-sm text-gray-500 mt-1 line-clamp-2">${data.description || "لا يوجد وصف"}</p>
@@ -87,16 +81,10 @@ function loadCourses() {
   });
 }
 
-// ============================================================
-// 3. إضافة كورس
-// ============================================================
 document.getElementById("add-course-btn")?.addEventListener("click", () => {
-  alert("سيتم فتح نموذج إضافة كورس");
+  alert("سيتم فتح نموذج إضافة كورس جديد");
 });
 
-// ============================================================
-// 4. تعديل وحذف الكورسات
-// ============================================================
 window.editCourse = (id) => {
   alert(`تعديل الكورس: ${id}`);
 };

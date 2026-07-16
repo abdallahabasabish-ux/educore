@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>لوحة التحكم – EduCore</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cairo&display=swap" rel="stylesheet" />
+</head>
+<body class="bg-gray-50">
+  <!-- القائمة الجانبية (سيتم تضمينها عبر JS) -->
+  <div id="sidebar" class="fixed top-0 right-0 w-64 h-full bg-white border-l border-gray-200 p-4 overflow-y-auto">
+    <a href="/" class="text-2xl font-bold text-[#4B5563] block mb-8">EduCore</a>
+    <nav class="space-y-2">
+      <a href="/dashboard" class="block px-4 py-2 rounded-lg bg-[#4B5563] text-white">لوحة التحكم</a>
+      <a href="/customers" class="block px-4 py-2 rounded-lg hover:bg-gray-100 transition">العملاء</a>
+      <a href="/cases" class="block px-4 py-2 rounded-lg hover:bg-gray-100 transition">القضايا</a>
+      <a href="/sessions" class="block px-4 py-2 rounded-lg hover:bg-gray-100 transition">الجلسات</a>
+      <a href="/documents" class="block px-4 py-2 rounded-lg hover:bg-gray-100 transition">المستندات</a>
+      <a href="/contracts" class="block px-4 py-2 rounded-lg hover:bg-gray-100 transition">العقود</a>
+      <a href="/consultations" class="block px-4 py-2 rounded-lg hover:bg-gray-100 transition">الاستشارات</a>
+      <a href="/tasks" class="block px-4 py-2 rounded-lg hover:bg-gray-100 transition">المهام</a>
+      <a href="/calendar" class="block px-4 py-2 rounded-lg hover:bg-gray-100 transition">التقويم</a>
+      <a href="/notifications" class="block px-4 py-2 rounded-lg hover:bg-gray-100 transition">الإشعارات</a>
+      <a href="/reports" class="block px-4 py-2 rounded-lg hover:bg-gray-100 transition">التقارير</a>
+      <a href="/accounting" class="block px-4 py-2 rounded-lg hover:bg-gray-100 transition">المحاسبة</a>
+      <a href="/employees" class="block px-4 py-2 rounded-lg hover:bg-gray-100 transition">الموظفون</a>
+      <a href="/settings" class="block px-4 py-2 rounded-lg hover:bg-gray-100 transition">الإعدادات</a>
+      <a href="/profile" class="block px-4 py-2 rounded-lg hover:bg-gray-100 transition">الملف الشخصي</a>
+      <button id="logout-btn" class="block w-full text-right px-4 py-2 rounded-lg text-red-600 hover:bg-red-50 transition">تسجيل الخروج</button>
+    </nav>
+  </div>
+
+  <!-- المحتوى الرئيسي -->
+  <div class="mr-64 p-6">
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-2xl font-bold">لوحة التحكم</h1>
+      <div class="flex items-center gap-4">
+        <span id="user-name" class="text-sm font-medium">مرحباً، مستخدم</span>
+        <img id="user-avatar" src="" alt="صورة المستخدم" class="w-8 h-8 rounded-full border border-gray-300" />
+      </div>
+    </div>
+
+    <!-- بطاقات إحصاءات -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+        <p class="text-sm text-gray-500">إجمالي العملاء</p>
+        <p class="text-2xl font-bold" id="total-customers">0</p>
+      </div>
+      <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+        <p class="text-sm text-gray-500">القضايا النشطة</p>
+        <p class="text-2xl font-bold" id="active-cases">0</p>
+      </div>
+      <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+        <p class="text-sm text-gray-500">الجلسات اليوم</p>
+        <p class="text-2xl font-bold" id="today-sessions">0</p>
+      </div>
+      <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+        <p class="text-sm text-gray-500">المهام المعلقة</p>
+        <p class="text-2xl font-bold" id="pending-tasks">0</p>
+      </div>
+    </div>
+
+    <!-- جدول آخر النشاطات -->
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+      <h2 class="text-lg font-semibold mb-4">آخر النشاطات</h2>
+      <div id="recent-activity" class="space-y-2">
+        <p class="text-sm text-gray-500">لا توجد أنشطة حديثة</p>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="assets/js/dashboard.js"></script>
+</body>
+</html>

@@ -194,3 +194,17 @@ body {
 /* ===== تحسينات RTL ===== */
 [dir="rtl"] .ml-auto { margin-left: auto; margin-right: 0; }
 [dir="rtl"] .mr-auto { margin-right: auto; margin-left: 0; }
+/* تسريع الأداء العام */
+* {
+  scroll-behavior: auto !important; /* إلغاء التمرير المضمن */
+}
+
+html, body {
+  overflow-x: hidden;
+  overscroll-behavior: none; /* منع التمرير الزائد */
+}
+
+/* تقليل استخدام will-change على العناصر غير الضرورية */
+[data-aos] {
+  will-change: auto !important; /* إلغاء التسريع الزائد */
+}

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>تواصل معنا – EduCore</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cairo&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+  <!-- Navbar -->
+  <nav class="bg-white shadow-sm border-b border-gray-200">
+    <div class="container mx-auto px-4 flex justify-between items-center h-16">
+      <a href="/" class="text-2xl font-extrabold text-[#4B5563]"><i class="fas fa-graduation-cap ml-2"></i>EduCore</a>
+      <a href="/" class="text-sm text-[#4B5563] hover:underline">العودة للرئيسية</a>
+    </div>
+  </nav>
+
+  <div class="container mx-auto px-4 py-12 flex-1">
+    <h1 class="text-3xl font-extrabold text-center mb-8">تواصل معنا</h1>
+    <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+      <!-- نموذج التواصل -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+        <form id="contact-form" class="space-y-4">
+          <div>
+            <label for="contactName" class="block text-sm font-medium text-gray-700">الاسم الكامل</label>
+            <input type="text" id="contactName" required class="w-full rounded-xl border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-[#4B5563] focus:outline-none" placeholder="أحمد محمد" />
+          </div>
+          <div>
+            <label for="contactEmail" class="block text-sm font-medium text-gray-700">البريد الإلكتروني</label>
+            <input type="email" id="contactEmail" required class="w-full rounded-xl border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-[#4B5563] focus:outline-none" placeholder="example@email.com" />
+          </div>
+          <div>
+            <label for="contactSubject" class="block text-sm font-medium text-gray-700">الموضوع</label>
+            <input type="text" id="contactSubject" required class="w-full rounded-xl border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-[#4B5563] focus:outline-none" placeholder="موضوع الرسالة" />
+          </div>
+          <div>
+            <label for="contactMessage" class="block text-sm font-medium text-gray-700">الرسالة</label>
+            <textarea id="contactMessage" rows="5" required class="w-full rounded-xl border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-[#4B5563] focus:outline-none" placeholder="اكتب رسالتك هنا..."></textarea>
+          </div>
+          <button type="submit" class="w-full bg-[#4B5563] text-white py-2.5 rounded-xl hover:bg-[#3b4553] transition font-semibold">إرسال الرسالة</button>
+        </form>
+      </div>
+
+      <!-- معلومات التواصل -->
+      <div class="space-y-6">
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+          <h3 class="font-bold text-lg mb-4">معلومات التواصل</h3>
+          <div class="space-y-3">
+            <div class="flex items-center gap-3"><i class="fas fa-envelope text-[#4B5563] w-5"></i> support@educore.com</div>
+            <div class="flex items-center gap-3"><i class="fas fa-phone text-[#4B5563] w-5"></i> +966 55 123 4567</div>
+            <div class="flex items-center gap-3"><i class="fas fa-map-marker-alt text-[#4B5563] w-5"></i> الرياض، المملكة العربية السعودية</div>
+          </div>
+        </div>
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+          <h3 class="font-bold text-lg mb-4">تابعنا على</h3>
+          <div class="flex gap-4">
+            <a href="#" class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-[#4B5563] hover:text-white transition"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-[#4B5563] hover:text-white transition"><i class="fab fa-facebook"></i></a>
+            <a href="#" class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-[#4B5563] hover:text-white transition"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-[#4B5563] hover:text-white transition"><i class="fab fa-youtube"></i></a>
+            <a href="#" class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-[#4B5563] hover:text-white transition"><i class="fab fa-linkedin"></i></a>
+          </div>
+        </div>
+        <!-- خريطة وهمية -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+          <h3 class="font-bold text-lg mb-4">موقعنا</h3>
+          <div class="bg-gray-200 h-48 rounded-xl flex items-center justify-center text-gray-500">
+            <i class="fas fa-map-marked-alt text-4xl text-[#4B5563]"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-gray-400 py-4 text-center text-sm">
+    &copy; 2026 EduCore. جميع الحقوق محفوظة.
+  </footer>
+
+  <script type="module" src="assets/js/app.js"></script>
+</body>
+</html>

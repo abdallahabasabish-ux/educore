@@ -3,21 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>إنشاء حساب – EduCore</title>
+  <title>إنشاء حساب – مداد العلم</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cairo&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body class="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 p-4">
-  <div class="w-full max-w-md">
+  <div class="w-full max-w-md" data-aos="zoom-in" data-aos-duration="800">
     <div class="bg-white/80 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/30 p-8 transform transition-all hover:scale-[1.02] duration-300">
       <div class="text-center mb-8">
-        <a href="/" class="text-3xl font-extrabold text-[#4B5563]"><i class="fas fa-graduation-cap ml-2"></i>EduCore</a>
+        <a href="/" class="text-3xl font-extrabold text-[#4B5563]"><i class="fas fa-feather-alt ml-2"></i>مداد العلم</a>
         <h2 class="text-2xl font-bold mt-4">إنشاء حساب جديد</h2>
-        <p class="text-gray-500 text-sm">ابدأ رحلتك مع EduCore</p>
+        <p class="text-gray-500 text-sm">ابدأ رحلتك مع مداد العلم</p>
       </div>
 
       <form id="register-form" class="space-y-4">
@@ -25,42 +26,42 @@
           <label for="fullName" class="block text-sm font-medium text-gray-700">الاسم الكامل</label>
           <div class="relative">
             <i class="fas fa-user absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-            <input type="text" id="fullName" required class="w-full rounded-xl border border-gray-300 bg-gray-50/50 pl-4 pr-10 py-2.5 focus:ring-2 focus:ring-[#4B5563] focus:border-transparent transition" placeholder="أحمد محمد" />
+            <input type="text" id="fullName" required class="form-input pr-10" placeholder="أحمد محمد" />
           </div>
         </div>
         <div>
           <label for="academyName" class="block text-sm font-medium text-gray-700">اسم الأكاديمية</label>
           <div class="relative">
             <i class="fas fa-building absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-            <input type="text" id="academyName" required class="w-full rounded-xl border border-gray-300 bg-gray-50/50 pl-4 pr-10 py-2.5 focus:ring-2 focus:ring-[#4B5563] focus:border-transparent transition" placeholder="أكاديمية المستقبل" />
+            <input type="text" id="academyName" required class="form-input pr-10" placeholder="أكاديمية المستقبل" />
           </div>
         </div>
         <div>
           <label for="email" class="block text-sm font-medium text-gray-700">البريد الإلكتروني</label>
           <div class="relative">
             <i class="fas fa-envelope absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-            <input type="email" id="email" required class="w-full rounded-xl border border-gray-300 bg-gray-50/50 pl-4 pr-10 py-2.5 focus:ring-2 focus:ring-[#4B5563] focus:border-transparent transition" placeholder="example@email.com" />
+            <input type="email" id="email" required class="form-input pr-10" placeholder="example@email.com" />
           </div>
         </div>
         <div>
           <label for="phone" class="block text-sm font-medium text-gray-700">رقم الهاتف</label>
           <div class="relative">
             <i class="fas fa-phone absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-            <input type="tel" id="phone" class="w-full rounded-xl border border-gray-300 bg-gray-50/50 pl-4 pr-10 py-2.5 focus:ring-2 focus:ring-[#4B5563] focus:border-transparent transition" placeholder="+966 55 123 4567" />
+            <input type="tel" id="phone" class="form-input pr-10" placeholder="+966 55 123 4567" />
           </div>
         </div>
         <div>
           <label for="password" class="block text-sm font-medium text-gray-700">كلمة المرور</label>
           <div class="relative">
             <i class="fas fa-lock absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-            <input type="password" id="password" required class="w-full rounded-xl border border-gray-300 bg-gray-50/50 pl-4 pr-10 py-2.5 focus:ring-2 focus:ring-[#4B5563] focus:border-transparent transition" placeholder="••••••••" />
+            <input type="password" id="password" required class="form-input pr-10" placeholder="••••••••" />
           </div>
         </div>
         <div>
           <label for="confirmPassword" class="block text-sm font-medium text-gray-700">تأكيد كلمة المرور</label>
           <div class="relative">
             <i class="fas fa-check-circle absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-            <input type="password" id="confirmPassword" required class="w-full rounded-xl border border-gray-300 bg-gray-50/50 pl-4 pr-10 py-2.5 focus:ring-2 focus:ring-[#4B5563] focus:border-transparent transition" placeholder="••••••••" />
+            <input type="password" id="confirmPassword" required class="form-input pr-10" placeholder="••••••••" />
           </div>
         </div>
         <div class="flex items-center gap-2">
@@ -86,6 +87,14 @@
     </div>
   </div>
 
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="https://unpkg.com/lenis@1.0.45/dist/lenis.min.js"></script>
+  <script>
+    AOS.init({ duration: 800, once: true });
+    const lenis = new Lenis({ duration: 1.2 });
+    function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+    requestAnimationFrame(raf);
+  </script>
   <script type="module" src="assets/js/auth.js"></script>
 </body>
 </html>

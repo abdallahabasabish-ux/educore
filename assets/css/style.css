@@ -3,10 +3,8 @@
    الأنماط الرئيسية لمنصة مداد العلم
    ============================================================ */
 
-/* ----- RESET & BASE ----- */
-*,
-*::before,
-*::after {
+/* ----- BASE ----- */
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -14,7 +12,6 @@
 
 html {
   scroll-behavior: smooth;
-  -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -22,45 +19,26 @@ body {
   direction: rtl;
   overflow-x: hidden;
   background: #f8fafc;
-  color: #111827;
-  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* ----- TYPOGRAPHY ----- */
-h1, h2, h3, h4, h5, h6 {
-  font-weight: 700;
-  line-height: 1.2;
-}
-
-a {
-  text-decoration: none;
-  color: inherit;
-}
-
-img {
-  max-width: 100%;
-  display: block;
-}
-
-/* ----- SCROLLBAR CUSTOM ----- */
+/* ----- SCROLLBAR ----- */
 ::-webkit-scrollbar {
   width: 8px;
-  height: 8px;
 }
 ::-webkit-scrollbar-track {
   background: #f1f1f1;
-  border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb {
   background: #4B5563;
   border-radius: 4px;
-  transition: background 0.3s;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #3b4553;
 }
 
-/* ----- GPU ACCELERATION (تحسين الأداء) ----- */
+/* ----- GPU ACCELERATION ----- */
 .card-hover,
 .nav-link,
 .btn-primary,
@@ -71,18 +49,12 @@ img {
   backface-visibility: hidden;
 }
 
-/* ----- GLASS EFFECT (تأثير الزجاج) ----- */
+/* ----- GLASS EFFECT ----- */
 .glass {
   background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.3);
-}
-.glass-dark {
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* ----- HOVER EFFECTS ----- */
@@ -93,56 +65,15 @@ img {
   transform: translateY(-6px);
 }
 
-.hover-scale {
-  transition: transform 0.3s ease;
-}
-.hover-scale:hover {
-  transform: scale(1.03);
-}
-
-.hover-glow {
-  transition: box-shadow 0.3s ease;
-}
-.hover-glow:hover {
-  box-shadow: 0 8px 30px rgba(75, 85, 99, 0.15);
+/* ----- RESPONSIVE ----- */
+@media (max-width: 768px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
 }
 
-/* ----- BUTTONS ----- */
-.btn-primary {
-  display: inline-block;
-  padding: 0.6rem 1.8rem;
-  background: #4B5563;
-  color: #fff;
-  border-radius: 9999px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  border: none;
-  cursor: pointer;
-}
-.btn-primary:hover {
-  background: #3b4553;
-  box-shadow: 0 8px 20px rgba(75, 85, 99, 0.3);
-  transform: translateY(-2px);
-}
-
-.btn-outline {
-  display: inline-block;
-  padding: 0.6rem 1.8rem;
-  background: transparent;
-  color: #4B5563;
-  border: 2px solid #4B5563;
-  border-radius: 9999px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-.btn-outline:hover {
-  background: #4B5563;
-  color: #fff;
-  transform: translateY(-2px);
-}
-
-/* ----- LENIS OVERRIDE (لمنع اختفاء المحتوى مع Lenis) ----- */
+/* ----- LENIS OVERRIDE (لمنع اختفاء المحتوى) ----- */
 html.lenis {
   height: auto;
 }
@@ -159,7 +90,7 @@ html.lenis {
   pointer-events: none;
 }
 
-/* ----- AOS OVERRIDE (ضمان ظهور العناصر مع AOS) ----- */
+/* ----- AOS OVERRIDE (ضمان ظهور العناصر) ----- */
 [data-aos] {
   opacity: 1 !important;
   pointer-events: auto !important;
@@ -169,32 +100,13 @@ html.lenis {
   transform: none !important;
 }
 
-/* ----- SECTIONS PADDING ----- */
+/* ----- تحسينات إضافية ----- */
 .section-padding {
   padding-top: 5rem;
   padding-bottom: 5rem;
 }
-@media (max-width: 768px) {
-  .section-padding {
-    padding-top: 3rem;
-    padding-bottom: 3rem;
-  }
-}
 
-/* ----- CONTAINER ----- */
-.container-custom {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1.5rem;
-}
-@media (max-width: 640px) {
-  .container-custom {
-    padding: 0 1rem;
-  }
-}
-
-/* ----- ANIMATIONS (مخصصة) ----- */
+/* ----- أنيميشن مخصص ----- */
 @keyframes fade-in-up {
   from {
     opacity: 0;
@@ -209,146 +121,148 @@ html.lenis {
   animation: fade-in-up 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
-@keyframes fade-in-down {
-  from {
-    opacity: 0;
-    transform: translateY(-30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* ----- تحسينات للطباعة ----- */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 800;
+  line-height: 1.3;
 }
-.animate-fade-in-down {
-  animation: fade-in-down 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+p {
+  line-height: 1.7;
 }
 
-@keyframes scale-in {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-.animate-scale-in {
-  animation: scale-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-}
-
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-.animate-float {
-  animation: float 3s ease-in-out infinite;
-}
-
-/* ----- CARDS ----- */
-.card {
-  background: #fff;
-  border-radius: 1rem;
-  border: 1px solid #e5e7eb;
-  padding: 1.5rem;
-  transition: all 0.3s ease;
-}
-.card:hover {
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
-  transform: translateY(-4px);
-}
-
-.card-glass {
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 1rem;
-  padding: 1.5rem;
-  transition: all 0.3s ease;
-}
-.card-glass:hover {
-  background: rgba(255, 255, 255, 0.8);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-}
-
-/* ----- BADGE ----- */
-.badge {
-  display: inline-block;
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  font-weight: 600;
-}
-.badge-primary {
+/* ----- أزرار مخصصة ----- */
+.btn-primary {
   background: #4B5563;
-  color: #fff;
+  color: white;
+  padding: 0.5rem 1.5rem;
+  border-radius: 9999px;
+  transition: all 0.3s;
 }
-.badge-success {
-  background: #22C55E;
-  color: #fff;
-}
-.badge-warning {
-  background: #F59E0B;
-  color: #fff;
-}
-.badge-danger {
-  background: #EF4444;
-  color: #fff;
+.btn-primary:hover {
+  background: #3b4553;
+  box-shadow: 0 8px 16px -4px rgba(75, 85, 99, 0.3);
+  transform: translateY(-2px);
 }
 
-/* ----- FORMS ----- */
-.input-field {
+/* ----- تنسيق البطاقات ----- */
+.card-shadow {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+.card-shadow:hover {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+}
+
+/* ----- تنسيق الجداول ----- */
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ----- تنسيق النماذج ----- */
+.form-input {
   width: 100%;
-  padding: 0.6rem 1rem;
+  padding: 0.625rem 1rem;
   border: 1px solid #e5e7eb;
   border-radius: 0.75rem;
-  background: #f8fafc;
-  transition: all 0.3s ease;
-  font-size: 1rem;
+  background: #f9fafb;
+  transition: all 0.2s;
 }
-.input-field:focus {
+.form-input:focus {
   outline: none;
   border-color: #4B5563;
-  box-shadow: 0 0 0 3px rgba(75, 85, 99, 0.1);
-  background: #fff;
-}
-.input-field::placeholder {
-  color: #9ca3af;
+  box-shadow: 0 0 0 3px rgba(75, 85, 99, 0.15);
+  background: white;
 }
 
-/* ----- RESPONSIVE BREAKPOINTS ----- */
-@media (max-width: 1024px) {
-  .hide-lg {
-    display: none !important;
-  }
+/* ----- تنسيق الروابط ----- */
+.link-hover {
+  transition: color 0.2s;
 }
-@media (max-width: 768px) {
-  .hide-md {
-    display: none !important;
-  }
+.link-hover:hover {
+  color: #4B5563;
 }
+
+/* ----- تنسيق الصور ----- */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ----- تنسيق الشهادات ----- */
+.testimonial-quote {
+  position: relative;
+}
+.testimonial-quote::before {
+  content: '"';
+  font-size: 4rem;
+  position: absolute;
+  top: -1.5rem;
+  right: -0.5rem;
+  color: #4B5563;
+  opacity: 0.15;
+  font-family: serif;
+}
+
+/* ----- تنسيق القائمة الجانبية (Dashboard) ----- */
+.sidebar-link {
+  display: block;
+  padding: 0.625rem 1rem;
+  border-radius: 0.75rem;
+  transition: all 0.2s;
+  color: #4b5563;
+}
+.sidebar-link:hover {
+  background: #f3f4f6;
+}
+.sidebar-link.active {
+  background: #4B5563;
+  color: white;
+}
+.sidebar-link i {
+  width: 1.5rem;
+  text-align: center;
+}
+
+/* ----- تنسيق الإشعارات ----- */
+.notification-badge {
+  position: relative;
+}
+.notification-badge::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 0.5rem;
+  height: 0.5rem;
+  background: #ef4444;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+
+/* ----- تنسيق التحميل ----- */
+.spinner {
+  border: 3px solid #f3f4f6;
+  border-top: 3px solid #4B5563;
+  border-radius: 50%;
+  width: 2.5rem;
+  height: 2.5rem;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ----- تحسين للشاشات الصغيرة ----- */
 @media (max-width: 640px) {
-  .hide-sm {
-    display: none !important;
+  .text-4xl {
+    font-size: 2rem;
   }
-}
-
-/* ----- UTILITIES ----- */
-.text-balance {
-  text-wrap: balance;
-}
-.text-pretty {
-  text-wrap: pretty;
-}
-.rtl {
-  direction: rtl;
-}
-.ltr {
-  direction: ltr;
+  .text-5xl {
+    font-size: 2.5rem;
+  }
+  .text-6xl {
+    font-size: 3rem;
+  }
 }

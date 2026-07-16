@@ -8,85 +8,293 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cairo&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    /* نفس التنسيقات المستخدمة في login */
+    body {
+      font-family: 'Inter', 'Cairo', sans-serif;
+      direction: rtl;
+      background: #f8fafc;
+    }
+    .login-card {
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    .login-image {
+      background: linear-gradient(135deg, #4B5563 0%, #1f2937 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .login-image::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at 30% 50%, rgba(255,255,255,0.05) 0%, transparent 60%);
+      animation: pulse 8s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.3; }
+      50% { transform: scale(1.2); opacity: 0.6; }
+    }
+    .login-image .content {
+      position: relative;
+      z-index: 2;
+    }
+    .input-icon {
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #9ca3af;
+    }
+    .input-field {
+      width: 100%;
+      padding: 0.75rem 1rem 0.75rem 2.5rem;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.75rem;
+      background: #f9fafb;
+      transition: all 0.2s;
+      font-size: 0.95rem;
+    }
+    .input-field:focus {
+      outline: none;
+      border-color: #4B5563;
+      box-shadow: 0 0 0 3px rgba(75, 85, 99, 0.15);
+      background: white;
+    }
+    .btn-primary {
+      background: #4B5563;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.75rem;
+      font-weight: 600;
+      transition: all 0.3s;
+      width: 100%;
+    }
+    .btn-primary:hover {
+      background: #3b4553;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px -4px rgba(75, 85, 99, 0.3);
+    }
+    .btn-google {
+      border: 1px solid #e5e7eb;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.75rem;
+      background: white;
+      font-weight: 500;
+      transition: all 0.2s;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    .btn-google:hover {
+      background: #f9fafb;
+      border-color: #4B5563;
+    }
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #e5e7eb;
+    }
+    .divider span {
+      color: #9ca3af;
+      font-size: 0.8rem;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    /* تنسيق الصورة في الهاتف */
+    .mobile-bg {
+      background: linear-gradient(135deg, #4B5563 0%, #1f2937 100%);
+      position: relative;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      border-radius: 1.5rem 1.5rem 0 0;
+    }
+    .mobile-bg .icon {
+      font-size: 4rem;
+      color: white;
+      opacity: 0.9;
+    }
+    .mobile-bg h2 {
+      color: white;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-top: 0.5rem;
+    }
+    .mobile-bg p {
+      color: rgba(255,255,255,0.7);
+      font-size: 0.95rem;
+      margin-top: 0.25rem;
+    }
+    @media (max-width: 768px) {
+      .login-card {
+        backdrop-filter: none;
+        background: white;
+        border: none;
+        border-radius: 1.5rem;
+        box-shadow: 0 20px 60px -12px rgba(0,0,0,0.15);
+      }
+    }
+  </style>
 </head>
-<body class="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 p-4">
-  <div class="w-full max-w-md" data-aos="zoom-in" data-aos-duration="800">
-    <div class="bg-white/80 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/30 p-8 transform transition-all hover:scale-[1.02] duration-300">
-      <div class="text-center mb-8">
-        <a href="/" class="text-3xl font-extrabold text-[#4B5563]"><i class="fas fa-feather-alt ml-2"></i>مداد العلم</a>
-        <h2 class="text-2xl font-bold mt-4">إنشاء حساب جديد</h2>
-        <p class="text-gray-500 text-sm">ابدأ رحلتك مع مداد العلم</p>
+<body>
+
+  <!-- حاوية رئيسية تأخذ كامل الشاشة -->
+  <div class="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-gray-50 to-gray-100">
+
+    <!-- بطاقة التسجيل -->
+    <div class="w-full max-w-5xl flex flex-col md:flex-row rounded-3xl overflow-hidden shadow-2xl login-card" data-aos="zoom-in" data-aos-duration="800">
+
+      <!-- ====== الجانب الأيمن: الصورة (يظهر على الكمبيوتر) ====== -->
+      <div class="login-image hidden md:flex md:w-1/2 items-center justify-center p-12 text-white">
+        <div class="content text-center">
+          <div class="text-7xl mb-6">
+            <i class="fas fa-user-plus"></i>
+          </div>
+          <h1 class="text-3xl font-bold mb-2">انضم إلينا</h1>
+          <p class="text-white/70 text-lg max-w-sm mx-auto">
+            أنشئ حسابك الآن وابدأ رحلتك التعليمية مع مداد العلم.
+          </p>
+          <div class="mt-8 flex justify-center gap-6 text-sm">
+            <div>
+              <i class="fas fa-check-circle text-green-400 ml-1"></i>
+              <span class="text-white/80">مجاني</span>
+            </div>
+            <div>
+              <i class="fas fa-check-circle text-green-400 ml-1"></i>
+              <span class="text-white/80">آمن</span>
+            </div>
+            <div>
+              <i class="fas fa-check-circle text-green-400 ml-1"></i>
+              <span class="text-white/80">سريع</span>
+            </div>
+          </div>
+          <div class="mt-8 flex justify-center gap-4">
+            <span class="text-white/50 text-sm">© 2026 مداد العلم</span>
+          </div>
+        </div>
       </div>
 
-      <form id="register-form" class="space-y-4">
-        <div>
-          <label for="fullName" class="block text-sm font-medium text-gray-700">الاسم الكامل</label>
-          <div class="relative">
-            <i class="fas fa-user absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-            <input type="text" id="fullName" required class="form-input pr-10" placeholder="أحمد محمد" />
-          </div>
-        </div>
-        <div>
-          <label for="academyName" class="block text-sm font-medium text-gray-700">اسم الأكاديمية</label>
-          <div class="relative">
-            <i class="fas fa-building absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-            <input type="text" id="academyName" required class="form-input pr-10" placeholder="أكاديمية المستقبل" />
-          </div>
-        </div>
-        <div>
-          <label for="email" class="block text-sm font-medium text-gray-700">البريد الإلكتروني</label>
-          <div class="relative">
-            <i class="fas fa-envelope absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-            <input type="email" id="email" required class="form-input pr-10" placeholder="example@email.com" />
-          </div>
-        </div>
-        <div>
-          <label for="phone" class="block text-sm font-medium text-gray-700">رقم الهاتف</label>
-          <div class="relative">
-            <i class="fas fa-phone absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-            <input type="tel" id="phone" class="form-input pr-10" placeholder="+966 55 123 4567" />
-          </div>
-        </div>
-        <div>
-          <label for="password" class="block text-sm font-medium text-gray-700">كلمة المرور</label>
-          <div class="relative">
-            <i class="fas fa-lock absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-            <input type="password" id="password" required class="form-input pr-10" placeholder="••••••••" />
-          </div>
-        </div>
-        <div>
-          <label for="confirmPassword" class="block text-sm font-medium text-gray-700">تأكيد كلمة المرور</label>
-          <div class="relative">
-            <i class="fas fa-check-circle absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-            <input type="password" id="confirmPassword" required class="form-input pr-10" placeholder="••••••••" />
-          </div>
-        </div>
-        <div class="flex items-center gap-2">
-          <input type="checkbox" id="terms" required class="rounded border-gray-300 text-[#4B5563] focus:ring-[#4B5563]" />
-          <label for="terms" class="text-sm text-gray-600">أوافق على <a href="/terms" class="text-[#4B5563] hover:underline">الشروط والأحكام</a> و <a href="/privacy-policy" class="text-[#4B5563] hover:underline">سياسة الخصوصية</a></label>
-        </div>
-        <button type="submit" class="w-full bg-[#4B5563] text-white py-2.5 rounded-xl hover:bg-[#3b4553] transition font-semibold shadow-md hover:shadow-lg">إنشاء الحساب</button>
-      </form>
+      <!-- ====== الجانب الأيسر: نموذج التسجيل ====== -->
+      <div class="w-full md:w-1/2 p-8 md:p-12 bg-white/80 backdrop-blur-sm md:backdrop-blur-none">
 
-      <div class="relative my-6">
-        <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-gray-200"></div></div>
-        <div class="relative flex justify-center text-xs text-gray-400 bg-white/80 px-2">أو</div>
+        <!-- شعار في الهاتف (يظهر فقط على الشاشات الصغيرة) -->
+        <div class="md:hidden flex items-center justify-center mb-6">
+          <i class="fas fa-feather-alt text-3xl text-[#4B5563] ml-2"></i>
+          <span class="text-2xl font-extrabold text-[#4B5563]">مداد العلم</span>
+        </div>
+
+        <!-- عنوان النموذج -->
+        <div class="text-center md:text-right mb-8">
+          <h2 class="text-2xl font-bold text-gray-800">إنشاء حساب جديد</h2>
+          <p class="text-gray-500 text-sm mt-1">ابدأ رحلتك التعليمية مع مداد العلم</p>
+        </div>
+
+        <!-- نموذج التسجيل -->
+        <form id="register-form" class="space-y-4">
+          <!-- الاسم الكامل -->
+          <div>
+            <label for="fullName" class="block text-sm font-medium text-gray-700 mb-1">الاسم الكامل</label>
+            <div class="relative">
+              <i class="fas fa-user input-icon"></i>
+              <input type="text" id="fullName" required class="input-field" placeholder="أحمد محمد" />
+            </div>
+          </div>
+
+          <!-- اسم الأكاديمية -->
+          <div>
+            <label for="academyName" class="block text-sm font-medium text-gray-700 mb-1">اسم الأكاديمية</label>
+            <div class="relative">
+              <i class="fas fa-building input-icon"></i>
+              <input type="text" id="academyName" required class="input-field" placeholder="أكاديمية المستقبل" />
+            </div>
+          </div>
+
+          <!-- البريد الإلكتروني -->
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">البريد الإلكتروني</label>
+            <div class="relative">
+              <i class="fas fa-envelope input-icon"></i>
+              <input type="email" id="email" required class="input-field" placeholder="example@email.com" />
+            </div>
+          </div>
+
+          <!-- رقم الهاتف -->
+          <div>
+            <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">رقم الهاتف</label>
+            <div class="relative">
+              <i class="fas fa-phone input-icon"></i>
+              <input type="tel" id="phone" class="input-field" placeholder="+966 55 123 4567" />
+            </div>
+          </div>
+
+          <!-- كلمة المرور -->
+          <div>
+            <label for="password" class="block text-sm font-medium text-gray-700 mb-1">كلمة المرور</label>
+            <div class="relative">
+              <i class="fas fa-lock input-icon"></i>
+              <input type="password" id="password" required class="input-field" placeholder="••••••••" />
+            </div>
+          </div>
+
+          <!-- تأكيد كلمة المرور -->
+          <div>
+            <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-1">تأكيد كلمة المرور</label>
+            <div class="relative">
+              <i class="fas fa-check-circle input-icon"></i>
+              <input type="password" id="confirmPassword" required class="input-field" placeholder="••••••••" />
+            </div>
+          </div>
+
+          <!-- الموافقة على الشروط -->
+          <div class="flex items-center gap-2">
+            <input type="checkbox" id="terms" required class="rounded border-gray-300 text-[#4B5563] focus:ring-[#4B5563]" />
+            <label for="terms" class="text-sm text-gray-600">
+              أوافق على <a href="terms.html" class="text-[#4B5563] hover:underline">الشروط والأحكام</a> و <a href="privacy-policy.html" class="text-[#4B5563] hover:underline">سياسة الخصوصية</a>
+            </label>
+          </div>
+
+          <!-- زر إنشاء الحساب -->
+          <button type="submit" class="btn-primary">
+            <i class="fas fa-user-plus ml-2"></i> إنشاء الحساب
+          </button>
+        </form>
+
+        <!-- الفاصل -->
+        <div class="divider">
+          <span>أو</span>
+        </div>
+
+        <!-- زر Google (نفس زر تسجيل الدخول) -->
+        <button id="google-login" class="btn-google">
+          <i class="fab fa-google text-red-500 text-lg"></i>
+          التسجيل بواسطة Google
+        </button>
+
+        <!-- رابط تسجيل الدخول -->
+        <p class="text-center text-sm text-gray-500 mt-6">
+          لديك حساب بالفعل؟ <a href="login.html" class="text-[#4B5563] font-semibold hover:underline">تسجيل الدخول</a>
+        </p>
       </div>
-
-      <button id="google-register" class="w-full border border-gray-300 py-2.5 rounded-xl hover:bg-gray-50 transition flex items-center justify-center gap-2 font-medium text-gray-700">
-        <i class="fab fa-google text-red-500 text-lg"></i>
-        التسجيل بواسطة Google
-      </button>
-
-      <p class="text-center text-sm text-gray-500 mt-6">
-        لديك حساب بالفعل؟ <a href="/login" class="text-[#4B5563] font-semibold hover:underline">تسجيل الدخول</a>
-      </p>
     </div>
   </div>
 
+  <!-- ====== سكريبتات ====== -->
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script src="https://unpkg.com/lenis@1.0.45/dist/lenis.min.js"></script>
   <script>
@@ -95,6 +303,8 @@
     function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
     requestAnimationFrame(raf);
   </script>
+
+  <!-- رابط auth.js (نظام المصادقة) -->
   <script type="module" src="assets/js/auth.js"></script>
 </body>
 </html>

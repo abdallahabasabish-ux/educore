@@ -4,11 +4,12 @@
 // ============================================================
 
 import { auth, db } from "../firebase-config.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import {
   collection,
   query,
   where,
+  getDocs,
   addDoc,
   updateDoc,
   deleteDoc,
@@ -16,7 +17,7 @@ import {
   onSnapshot,
   orderBy,
   getDoc,
-} from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 let academyId = null;
 let studentsRef = null;
@@ -24,7 +25,7 @@ let unsubscribe = null;
 
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
-    window.location.href = "/login";
+    window.location.href = "/login.html";
     return;
   }
   const userDoc = await getDoc(doc(db, "users", user.uid));
@@ -41,7 +42,7 @@ function loadStudents() {
   unsubscribe = onSnapshot(q, (snapshot) => {
     const tbody = document.getElementById("students-table-body");
     if (snapshot.empty) {
-      tbody.innerHTML = `<tr><td colspan="5" class="px-6 py-4 text-center text-gray-500">لا يوجد طلاب</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-4 text-center text-gray-500">لا يوجد طلاب</td></tr>`;
       return;
     }
     let html = "";
@@ -56,6 +57,7 @@ function loadStudents() {
         <tr>
           <td class="px-6 py-4 font-medium">${data.fullName || "غير محدد"}</td>
           <td class="px-6 py-4">${data.email || "-"}</td>
+          <td class="px-6 py-4">${data.phone || "-"}</td>
           <td class="px-6 py-4">${data.courseName || "-"}</td>
           <td class="px-6 py-4">
             <span class="px-2 py-1 rounded-full text-xs font-semibold ${statusColors[data.status] || "bg-gray-50 text-gray-600"}">
@@ -78,7 +80,7 @@ function loadStudents() {
 }
 
 document.getElementById("add-student-btn")?.addEventListener("click", () => {
-  alert("سيتم فتح نموذج إضافة طالب");
+  alert("سيتم فتح نموذج إضافة طالب جديد");
 });
 
 window.editStudent = (id) => {

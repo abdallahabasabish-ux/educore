@@ -17,6 +17,7 @@
   <link rel="stylesheet" href="assets/css/style.css">
   
   <style>
+    /* نفس التنسيقات السابقة ... */
     body {
       font-family: 'Inter', 'Cairo', sans-serif;
       direction: rtl;
@@ -24,7 +25,6 @@
       margin: 0;
       padding: 0;
     }
-    
     .page-wrapper {
       min-height: 100vh;
       display: flex;
@@ -33,7 +33,6 @@
       padding: 1rem;
       background: linear-gradient(135deg, #f8fafc 0%, #e5e7eb 100%);
     }
-    
     .login-card {
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
@@ -45,7 +44,6 @@
       width: 100%;
       max-width: 1100px;
     }
-    
     .login-image {
       background: linear-gradient(135deg, #4B5563 0%, #1f2937 100%);
       position: relative;
@@ -69,7 +67,6 @@
       position: relative;
       z-index: 2;
     }
-    
     .input-icon {
       position: absolute;
       right: 1rem;
@@ -93,7 +90,6 @@
       box-shadow: 0 0 0 3px rgba(75, 85, 99, 0.15);
       background: white;
     }
-    
     .btn-primary {
       background: #4B5563;
       color: white;
@@ -146,7 +142,6 @@
       font-weight: 500;
       white-space: nowrap;
     }
-    
     .form-group {
       margin-bottom: 1rem;
     }
@@ -157,14 +152,12 @@
       color: #374151;
       margin-bottom: 0.25rem;
     }
-    
     .form-side {
       display: flex;
       flex-direction: column;
       justify-content: center;
       padding: 2rem 2.5rem;
     }
-    
     @media (min-width: 768px) {
       .page-wrapper {
         min-height: 100vh;
@@ -175,6 +168,7 @@
       .login-card {
         max-height: 95vh;
         overflow: hidden;
+        border-radius: 2rem;
       }
       .login-card > .flex-col {
         max-height: 95vh;
@@ -221,7 +215,6 @@
         margin: 1rem 0;
       }
     }
-    
     @media (max-width: 767px) {
       .page-wrapper {
         min-height: 100vh;
@@ -250,27 +243,20 @@
 <body>
 
   <div class="page-wrapper">
-
     <div class="login-card flex flex-col md:flex-row" data-aos="zoom-in" data-aos-duration="800">
 
       <!-- الجانب الأيمن: الصورة -->
       <div class="login-image hidden md:flex md:w-1/2 items-center justify-center p-12 text-white">
         <div class="content text-center">
-          <div class="text-7xl mb-6">
-            <i class="fas fa-user-plus"></i>
-          </div>
+          <div class="text-7xl mb-6"><i class="fas fa-user-plus"></i></div>
           <h1 class="text-3xl font-bold mb-2">انضم إلينا</h1>
-          <p class="text-white/70 text-lg max-w-sm mx-auto">
-            أنشئ حسابك الآن وابدأ رحلتك التعليمية مع مداد العلم.
-          </p>
+          <p class="text-white/70 text-lg max-w-sm mx-auto">أنشئ حسابك الآن وابدأ رحلتك التعليمية مع مداد العلم.</p>
           <div class="mt-8 flex justify-center gap-6 text-sm">
             <div><i class="fas fa-check-circle text-green-400 ml-1"></i><span class="text-white/80">مجاني</span></div>
             <div><i class="fas fa-check-circle text-green-400 ml-1"></i><span class="text-white/80">آمن</span></div>
             <div><i class="fas fa-check-circle text-green-400 ml-1"></i><span class="text-white/80">سريع</span></div>
           </div>
-          <div class="mt-8 flex justify-center gap-4">
-            <span class="text-white/50 text-sm">© 2026 مداد العلم</span>
-          </div>
+          <div class="mt-8"><span class="text-white/50 text-sm">© 2026 مداد العلم</span></div>
         </div>
       </div>
 
@@ -290,6 +276,7 @@
 
         <!-- نموذج التسجيل -->
         <form id="registerForm" class="space-y-3">
+          <!-- الاسم الكامل -->
           <div class="form-group">
             <label for="registerName">الاسم الكامل</label>
             <div class="relative">
@@ -297,6 +284,7 @@
               <input type="text" class="input-field" id="registerName" placeholder="أحمد محمد" required />
             </div>
           </div>
+          <!-- اسم الأكاديمية -->
           <div class="form-group">
             <label for="registerAcademy">اسم الأكاديمية</label>
             <div class="relative">
@@ -304,6 +292,7 @@
               <input type="text" class="input-field" id="registerAcademy" placeholder="أكاديمية المستقبل" required />
             </div>
           </div>
+          <!-- البريد الإلكتروني -->
           <div class="form-group">
             <label for="registerEmail">البريد الإلكتروني</label>
             <div class="relative">
@@ -311,6 +300,7 @@
               <input type="email" class="input-field" id="registerEmail" placeholder="example@email.com" required />
             </div>
           </div>
+          <!-- رقم الهاتف -->
           <div class="form-group">
             <label for="registerPhone">رقم الهاتف</label>
             <div class="relative">
@@ -318,6 +308,7 @@
               <input type="tel" class="input-field" id="registerPhone" placeholder="+966 55 123 4567" />
             </div>
           </div>
+          <!-- كلمة المرور -->
           <div class="form-group">
             <label for="registerPassword">كلمة المرور</label>
             <div class="relative">
@@ -325,6 +316,7 @@
               <input type="password" class="input-field" id="registerPassword" placeholder="••••••••" required minlength="6" />
             </div>
           </div>
+          <!-- تأكيد كلمة المرور -->
           <div class="form-group">
             <label for="registerConfirm">تأكيد كلمة المرور</label>
             <div class="relative">
@@ -332,6 +324,7 @@
               <input type="password" class="input-field" id="registerConfirm" placeholder="••••••••" required minlength="6" />
             </div>
           </div>
+          <!-- الموافقة على الشروط -->
           <div class="flex items-center gap-2">
             <input type="checkbox" id="registerTerms" class="rounded border-gray-300 text-[#4B5563] focus:ring-[#4B5563]" required />
             <label for="registerTerms" class="text-sm text-gray-600">

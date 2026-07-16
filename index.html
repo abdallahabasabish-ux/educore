@@ -3,26 +3,37 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>EduCore – منصة تعليمية متكاملة</title>
+  <title>مداد العلم – منصة تعليمية متكاملة</title>
+  
+  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- AOS -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  
+  <!-- Custom CSS -->
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
 
   <!-- ========== NAVBAR ========== -->
-  <nav class="fixed top-0 right-0 left-0 z-50 bg-white/70 backdrop-blur-lg border-b border-gray-200/50">
+  <nav class="fixed top-0 right-0 left-0 z-50 bg-white/70 backdrop-blur-lg border-b border-gray-200/50" data-aos="fade-down" data-aos-duration="600">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
       <a href="/" class="flex items-center gap-2 text-2xl font-extrabold text-[#4B5563]">
-        <i class="fas fa-graduation-cap text-2xl"></i> EduCore
+        <i class="fas fa-feather-alt text-2xl"></i> مداد العلم
       </a>
       <div class="hidden md:flex items-center gap-6">
         <a href="#features" class="text-sm font-medium text-gray-700 hover:text-[#4B5563] transition">المميزات</a>
         <a href="#testimonials" class="text-sm font-medium text-gray-700 hover:text-[#4B5563] transition">آراء العملاء</a>
-        <a href="/blog" class="text-sm font-medium text-gray-700 hover:text-[#4B5563] transition">المدونة</a>
+        <a href="#blog" class="text-sm font-medium text-gray-700 hover:text-[#4B5563] transition">المدونة</a>
         <a href="#pricing" class="text-sm font-medium text-gray-700 hover:text-[#4B5563] transition">الأسعار</a>
         <a href="#faq" class="text-sm font-medium text-gray-700 hover:text-[#4B5563] transition">الأسئلة الشائعة</a>
         <a href="/contact" class="text-sm font-medium text-gray-700 hover:text-[#4B5563] transition">تواصل معنا</a>
@@ -34,26 +45,26 @@
   </nav>
 
   <!-- ========== HERO ========== -->
-  <section class="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-white to-gray-100 pt-20 pb-10">
+  <section class="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-white to-gray-100 pt-20 pb-10 overflow-hidden" id="hero">
     <div class="container mx-auto px-4 grid md:grid-cols-2 gap-12 items-center">
-      <div class="text-center md:text-right animate-fade-in-up">
+      <div class="text-center md:text-right" data-aos="fade-up" data-aos-duration="800" data-aos-delay="100">
         <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight">
-          أنشئ منصتك التعليمية <span class="text-[#4B5563]">في دقائق</span>
+          اكتب مستقبلك التعليمي <span class="text-[#4B5563]">بمداد العلم</span>
         </h1>
         <p class="mt-4 text-lg text-gray-600 max-w-lg mx-auto md:mx-0">
-          EduCore منصة SaaS متطورة لإدارة الكورسات والطلاب والامتحانات بكل سهولة واحترافية.
+          منصة تعليمية متكاملة تتيح لك إنشاء وإدارة كورساتك وطلابك بكل احترافية وسلاسة.
         </p>
         <div class="mt-8 flex flex-wrap gap-4 justify-center md:justify-start">
           <a href="/register" class="px-6 py-3 bg-[#4B5563] text-white rounded-full text-base font-semibold hover:bg-[#3b4553] shadow-lg hover:shadow-xl transition-all">ابدأ الآن مجاناً <i class="fas fa-arrow-left mr-2"></i></a>
-          <a href="#demo" class="px-6 py-3 border border-gray-300 rounded-full text-base font-medium hover:bg-white shadow-sm transition-all"><i class="fas fa-play ml-2"></i> مشاهدة العرض</a>
+          <a href="#features" class="px-6 py-3 border border-gray-300 rounded-full text-base font-medium hover:bg-white shadow-sm transition-all"><i class="fas fa-play ml-2"></i> اكتشف المزيد</a>
         </div>
         <div class="mt-8 flex justify-center md:justify-start gap-6 text-sm text-gray-500">
           <span><i class="fas fa-check-circle text-[#4B5563] ml-1"></i> لا حاجة لخبرة تقنية</span>
           <span><i class="fas fa-check-circle text-[#4B5563] ml-1"></i> دعم فني 24/7</span>
         </div>
       </div>
-      <div class="relative flex justify-center">
-        <div class="w-full max-w-md bg-white/60 backdrop-blur-sm rounded-3xl shadow-2xl border border-white/30 p-6 transform rotate-1 hover:rotate-0 transition-transform duration-500">
+      <div class="relative flex justify-center" data-aos="fade-left" data-aos-duration="800" data-aos-delay="200">
+        <div class="w-full max-w-md bg-white/60 backdrop-blur-sm rounded-3xl shadow-2xl border border-white/30 p-6 transform hover:scale-105 transition-transform duration-500">
           <div class="bg-[#4B5563]/5 rounded-2xl p-4">
             <div class="h-8 w-3/4 bg-[#4B5563]/20 rounded mb-4"></div>
             <div class="h-4 w-1/2 bg-[#4B5563]/10 rounded mb-2"></div>
@@ -68,8 +79,8 @@
     </div>
   </section>
 
-  <!-- ========== CLIENTS / BRANDS ========== -->
-  <section class="py-12 border-y border-gray-200/50 bg-white">
+  <!-- ========== CLIENTS ========== -->
+  <section class="py-12 border-y border-gray-200/50 bg-white" data-aos="fade-up" data-aos-duration="600">
     <div class="container mx-auto px-4">
       <p class="text-center text-sm font-semibold text-gray-400 uppercase tracking-wider">يثق بنا آلاف المعلمين والأكاديميات</p>
       <div class="flex flex-wrap justify-center items-center gap-8 md:gap-12 mt-4">
@@ -78,7 +89,6 @@
         <span class="text-gray-400 font-bold text-xl"><i class="fas fa-cloud ml-2"></i>Amazon</span>
         <span class="text-gray-400 font-bold text-xl"><i class="fas fa-globe ml-2"></i>Meta</span>
         <span class="text-gray-400 font-bold text-xl"><i class="fab fa-apple ml-2"></i>Apple</span>
-        <span class="text-gray-400 font-bold text-xl"><i class="fab fa-google ml-2"></i>Google</span>
       </div>
     </div>
   </section>
@@ -86,31 +96,31 @@
   <!-- ========== FEATURES ========== -->
   <section id="features" class="py-20 bg-gray-50/50">
     <div class="container mx-auto px-4 text-center">
-      <h2 class="text-3xl md:text-4xl font-extrabold">مميزات المنصة</h2>
-      <p class="text-gray-500 mt-2">كل ما تحتاجه لإدارة منصة تعليمية احترافية</p>
+      <h2 class="text-3xl md:text-4xl font-extrabold" data-aos="fade-up">مميزات المنصة</h2>
+      <p class="text-gray-500 mt-2" data-aos="fade-up" data-aos-delay="100">كل ما تحتاجه لإدارة منصة تعليمية احترافية</p>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 hover:shadow-xl transition-all duration-300 group">
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 hover:shadow-xl transition-all duration-300 group" data-aos="fade-up" data-aos-delay="100">
           <div class="w-14 h-14 bg-[#4B5563]/10 rounded-2xl flex items-center justify-center mx-auto group-hover:bg-[#4B5563] transition-colors">
             <i class="fas fa-tachometer-alt text-2xl text-[#4B5563] group-hover:text-white transition-colors"></i>
           </div>
           <h3 class="text-lg font-bold mt-4">لوحة تحكم متطورة</h3>
           <p class="text-sm text-gray-500 mt-2">إدارة كاملة لمنصتك من مكان واحد.</p>
         </div>
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 hover:shadow-xl transition-all duration-300 group">
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 hover:shadow-xl transition-all duration-300 group" data-aos="fade-up" data-aos-delay="150">
           <div class="w-14 h-14 bg-[#4B5563]/10 rounded-2xl flex items-center justify-center mx-auto group-hover:bg-[#4B5563] transition-colors">
             <i class="fas fa-users text-2xl text-[#4B5563] group-hover:text-white transition-colors"></i>
           </div>
           <h3 class="text-lg font-bold mt-4">إدارة الطلاب والمدرسين</h3>
           <p class="text-sm text-gray-500 mt-2">متابعة وتقييم متقدم.</p>
         </div>
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 hover:shadow-xl transition-all duration-300 group">
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 hover:shadow-xl transition-all duration-300 group" data-aos="fade-up" data-aos-delay="200">
           <div class="w-14 h-14 bg-[#4B5563]/10 rounded-2xl flex items-center justify-center mx-auto group-hover:bg-[#4B5563] transition-colors">
             <i class="fas fa-book-open text-2xl text-[#4B5563] group-hover:text-white transition-colors"></i>
           </div>
           <h3 class="text-lg font-bold mt-4">نظام الكورسات المتكامل</h3>
           <p class="text-sm text-gray-500 mt-2">دروس، اختبارات، ومواد تعليمية.</p>
         </div>
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 hover:shadow-xl transition-all duration-300 group">
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 hover:shadow-xl transition-all duration-300 group" data-aos="fade-up" data-aos-delay="250">
           <div class="w-14 h-14 bg-[#4B5563]/10 rounded-2xl flex items-center justify-center mx-auto group-hover:bg-[#4B5563] transition-colors">
             <i class="fas fa-shield-alt text-2xl text-[#4B5563] group-hover:text-white transition-colors"></i>
           </div>
@@ -124,45 +134,42 @@
   <!-- ========== TESTIMONIALS ========== -->
   <section id="testimonials" class="py-20 bg-white">
     <div class="container mx-auto px-4 text-center">
-      <h2 class="text-3xl md:text-4xl font-extrabold">آراء عملائنا</h2>
-      <p class="text-gray-500 mt-2">ما يقوله المستخدمون عن تجربتهم</p>
+      <h2 class="text-3xl md:text-4xl font-extrabold" data-aos="fade-up">آراء عملائنا</h2>
+      <p class="text-gray-500 mt-2" data-aos="fade-up" data-aos-delay="100">ما يقوله المستخدمون عن تجربتهم</p>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 max-w-5xl mx-auto">
-        <!-- شهادة 1 -->
-        <div class="bg-gray-50 rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-lg transition-all">
+        <div class="bg-gray-50 rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-lg transition-all" data-aos="flip-up" data-aos-delay="100">
           <div class="flex justify-center text-[#F59E0B]">
             <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
           </div>
-          <p class="mt-4 text-gray-600 text-sm">"EduCore غيرت طريقة تدريسي بالكامل. أصبحت أستطيع إدارة جميع طلابي بسهولة."</p>
+          <p class="mt-4 text-gray-600 text-sm">"مداد العلم غيرت طريقة تدريسي بالكامل. أصبحت أستطيع إدارة جميع طلابي بسهولة."</p>
           <div class="flex items-center justify-center gap-3 mt-4">
-            <img src="https://i.pravatar.cc/50?img=1" class="w-10 h-10 rounded-full border-2 border-[#4B5563]/20" />
+            <img src="https://i.pravatar.cc/50?img=1" loading="lazy" class="w-10 h-10 rounded-full border-2 border-[#4B5563]/20" />
             <div>
               <p class="font-bold text-sm">أحمد محمد</p>
               <p class="text-xs text-gray-500">مدرس رياضيات</p>
             </div>
           </div>
         </div>
-        <!-- شهادة 2 -->
-        <div class="bg-gray-50 rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-lg transition-all">
+        <div class="bg-gray-50 rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-lg transition-all" data-aos="flip-up" data-aos-delay="200">
           <div class="flex justify-center text-[#F59E0B]">
             <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
           </div>
           <p class="mt-4 text-gray-600 text-sm">"منصة رائعة وسهلة الاستخدام. وفرت علينا الكثير من الوقت والجهد في الإدارة."</p>
           <div class="flex items-center justify-center gap-3 mt-4">
-            <img src="https://i.pravatar.cc/50?img=2" class="w-10 h-10 rounded-full border-2 border-[#4B5563]/20" />
+            <img src="https://i.pravatar.cc/50?img=2" loading="lazy" class="w-10 h-10 rounded-full border-2 border-[#4B5563]/20" />
             <div>
               <p class="font-bold text-sm">سارة علي</p>
               <p class="text-xs text-gray-500">مديرة أكاديمية</p>
             </div>
           </div>
         </div>
-        <!-- شهادة 3 -->
-        <div class="bg-gray-50 rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-lg transition-all">
+        <div class="bg-gray-50 rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-lg transition-all" data-aos="flip-up" data-aos-delay="300">
           <div class="flex justify-center text-[#F59E0B]">
             <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
           </div>
-          <p class="mt-4 text-gray-600 text-sm">"من أفضل القرارات التي اتخذتها هي استخدام EduCore. منصة متكاملة ومستقرة."</p>
+          <p class="mt-4 text-gray-600 text-sm">"من أفضل القرارات التي اتخذتها هي استخدام مداد العلم. منصة متكاملة ومستقرة."</p>
           <div class="flex items-center justify-center gap-3 mt-4">
-            <img src="https://i.pravatar.cc/50?img=3" class="w-10 h-10 rounded-full border-2 border-[#4B5563]/20" />
+            <img src="https://i.pravatar.cc/50?img=3" loading="lazy" class="w-10 h-10 rounded-full border-2 border-[#4B5563]/20" />
             <div>
               <p class="font-bold text-sm">خالد بن سلمان</p>
               <p class="text-xs text-gray-500">مؤسس منصة تعليمية</p>
@@ -173,30 +180,30 @@
     </div>
   </section>
 
-  <!-- ========== BLOG (المقالات) ========== -->
+  <!-- ========== BLOG ========== -->
   <section id="blog" class="py-20 bg-gray-50/50">
     <div class="container mx-auto px-4 text-center">
-      <h2 class="text-3xl md:text-4xl font-extrabold">المقالات والأخبار</h2>
-      <p class="text-gray-500 mt-2">آخر المستجدات في عالم التعليم الإلكتروني</p>
+      <h2 class="text-3xl md:text-4xl font-extrabold" data-aos="fade-up">المقالات والأخبار</h2>
+      <p class="text-gray-500 mt-2" data-aos="fade-up" data-aos-delay="100">آخر المستجدات في عالم التعليم الإلكتروني</p>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 max-w-5xl mx-auto">
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all">
-          <img src="https://picsum.photos/seed/1/400/200" class="w-full h-48 object-cover" />
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all" data-aos="fade-up" data-aos-delay="100">
+          <img src="https://picsum.photos/seed/1/400/200" loading="lazy" class="w-full h-48 object-cover" />
           <div class="p-4 text-right">
             <h3 class="font-bold">أفضل استراتيجيات التعليم عن بعد</h3>
             <p class="text-sm text-gray-500 mt-1">نصائح عملية لتحسين تجربة الطلاب.</p>
             <a href="#" class="text-[#4B5563] text-sm font-semibold hover:underline">اقرأ المزيد <i class="fas fa-arrow-left mr-1"></i></a>
           </div>
         </div>
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all">
-          <img src="https://picsum.photos/seed/2/400/200" class="w-full h-48 object-cover" />
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all" data-aos="fade-up" data-aos-delay="200">
+          <img src="https://picsum.photos/seed/2/400/200" loading="lazy" class="w-full h-48 object-cover" />
           <div class="p-4 text-right">
             <h3 class="font-bold">كيف تبني منصة تعليمية ناجحة</h3>
             <p class="text-sm text-gray-500 mt-1">خطوات عملية لبناء منصة احترافية.</p>
             <a href="#" class="text-[#4B5563] text-sm font-semibold hover:underline">اقرأ المزيد <i class="fas fa-arrow-left mr-1"></i></a>
           </div>
         </div>
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all">
-          <img src="https://picsum.photos/seed/3/400/200" class="w-full h-48 object-cover" />
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all" data-aos="fade-up" data-aos-delay="300">
+          <img src="https://picsum.photos/seed/3/400/200" loading="lazy" class="w-full h-48 object-cover" />
           <div class="p-4 text-right">
             <h3 class="font-bold">مستقبل التعليم الإلكتروني</h3>
             <p class="text-sm text-gray-500 mt-1">توجهات جديدة في مجال التعليم الرقمي.</p>
@@ -210,9 +217,9 @@
   <!-- ========== PRICING ========== -->
   <section id="pricing" class="py-20 bg-white">
     <div class="container mx-auto px-4 text-center">
-      <h2 class="text-3xl md:text-4xl font-extrabold">اختر الباقة المناسبة</h2>
+      <h2 class="text-3xl md:text-4xl font-extrabold" data-aos="fade-up">اختر الباقة المناسبة</h2>
       <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto mt-12">
-        <div class="border border-gray-200 rounded-2xl p-6 hover:shadow-xl transition-all">
+        <div class="border border-gray-200 rounded-2xl p-6 hover:shadow-xl transition-all" data-aos="flip-left" data-aos-delay="100">
           <h3 class="text-xl font-bold">Starter</h3>
           <p class="text-3xl font-extrabold mt-2">$0<span class="text-sm font-normal text-gray-500">/شهر</span></p>
           <ul class="mt-4 space-y-2 text-sm text-gray-600">
@@ -222,7 +229,7 @@
           </ul>
           <a href="/register" class="mt-6 inline-block px-6 py-2 border border-[#4B5563] text-[#4B5563] rounded-full hover:bg-[#4B5563] hover:text-white transition">ابدأ مجاناً</a>
         </div>
-        <div class="border-2 border-[#4B5563] rounded-2xl p-6 shadow-lg relative">
+        <div class="border-2 border-[#4B5563] rounded-2xl p-6 shadow-lg relative" data-aos="flip-left" data-aos-delay="200">
           <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#4B5563] text-white text-xs px-3 py-1 rounded-full">الأكثر شيوعاً</span>
           <h3 class="text-xl font-bold">Professional</h3>
           <p class="text-3xl font-extrabold mt-2">$49<span class="text-sm font-normal text-gray-500">/شهر</span></p>
@@ -234,7 +241,7 @@
           </ul>
           <a href="/register" class="mt-6 inline-block px-6 py-2 bg-[#4B5563] text-white rounded-full hover:bg-[#3b4553] transition">ابدأ الآن</a>
         </div>
-        <div class="border border-gray-200 rounded-2xl p-6 hover:shadow-xl transition-all">
+        <div class="border border-gray-200 rounded-2xl p-6 hover:shadow-xl transition-all" data-aos="flip-left" data-aos-delay="300">
           <h3 class="text-xl font-bold">Enterprise</h3>
           <p class="text-3xl font-extrabold mt-2">$99<span class="text-sm font-normal text-gray-500">/شهر</span></p>
           <ul class="mt-4 space-y-2 text-sm text-gray-600">
@@ -251,26 +258,26 @@
   <!-- ========== FAQ ========== -->
   <section id="faq" class="py-20 bg-gray-50/50">
     <div class="container mx-auto px-4 max-w-3xl">
-      <h2 class="text-3xl md:text-4xl font-extrabold text-center">الأسئلة الشائعة</h2>
+      <h2 class="text-3xl md:text-4xl font-extrabold text-center" data-aos="fade-up">الأسئلة الشائعة</h2>
       <div class="space-y-4 mt-8">
-        <div class="bg-white rounded-xl border border-gray-200 p-4">
+        <div class="bg-white rounded-xl border border-gray-200 p-4" data-aos="fade-up" data-aos-delay="100">
           <button class="flex justify-between items-center w-full text-right font-semibold" onclick="this.nextElementSibling.classList.toggle('hidden')">
             <span>هل يمكنني استخدام المنصة مجاناً؟</span>
-            <i class="fas fa-chevron-down text-[#4B5563]"></i>
+            <i class="fas fa-chevron-down text-[#4B5563] transition-transform duration-200"></i>
           </button>
-          <p class="hidden mt-2 text-gray-600 text-sm">نعم، توفر EduCore باقة Starter مجانية مع مميزات أساسية.</p>
+          <p class="hidden mt-2 text-gray-600 text-sm">نعم، توفر مداد العلم باقة Starter مجانية مع مميزات أساسية.</p>
         </div>
-        <div class="bg-white rounded-xl border border-gray-200 p-4">
+        <div class="bg-white rounded-xl border border-gray-200 p-4" data-aos="fade-up" data-aos-delay="150">
           <button class="flex justify-between items-center w-full text-right font-semibold" onclick="this.nextElementSibling.classList.toggle('hidden')">
             <span>هل أحتاج إلى خبرة تقنية لاستخدام المنصة؟</span>
-            <i class="fas fa-chevron-down text-[#4B5563]"></i>
+            <i class="fas fa-chevron-down text-[#4B5563] transition-transform duration-200"></i>
           </button>
           <p class="hidden mt-2 text-gray-600 text-sm">لا، تم تصميم المنصة لتكون سهلة الاستخدام ولا تحتاج إلى خبرة تقنية.</p>
         </div>
-        <div class="bg-white rounded-xl border border-gray-200 p-4">
+        <div class="bg-white rounded-xl border border-gray-200 p-4" data-aos="fade-up" data-aos-delay="200">
           <button class="flex justify-between items-center w-full text-right font-semibold" onclick="this.nextElementSibling.classList.toggle('hidden')">
             <span>ما هي طرق الدفع المتاحة؟</span>
-            <i class="fas fa-chevron-down text-[#4B5563]"></i>
+            <i class="fas fa-chevron-down text-[#4B5563] transition-transform duration-200"></i>
           </button>
           <p class="hidden mt-2 text-gray-600 text-sm">ندعم جميع طرق الدفع الرئيسية مثل البطاقات الائتمانية والتحويل البنكي.</p>
         </div>
@@ -279,10 +286,10 @@
   </section>
 
   <!-- ========== CTA ========== -->
-  <section class="py-16 bg-[#4B5563]">
+  <section class="py-16 bg-[#4B5563]" data-aos="zoom-in" data-aos-duration="800">
     <div class="container mx-auto px-4 text-center">
       <h2 class="text-3xl font-extrabold text-white">جاهز لبدء رحلتك التعليمية؟</h2>
-      <p class="text-white/80 mt-2">انضم إلى آلاف المعلمين الذين يثقون في EduCore</p>
+      <p class="text-white/80 mt-2">انضم إلى آلاف المعلمين الذين يثقون في مداد العلم</p>
       <a href="/register" class="mt-6 inline-block px-8 py-3 bg-white text-[#4B5563] rounded-full font-bold shadow-lg hover:shadow-xl transition-all">ابدأ مجاناً</a>
     </div>
   </section>
@@ -290,9 +297,8 @@
   <!-- ========== FOOTER ========== -->
   <footer class="bg-gray-900 text-gray-400">
     <div class="container mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
-      <!-- العمود 1: الشعار والوصف -->
       <div>
-        <h3 class="text-white font-bold text-xl"><i class="fas fa-graduation-cap ml-2"></i>EduCore</h3>
+        <h3 class="text-white font-bold text-xl"><i class="fas fa-feather-alt ml-2"></i>مداد العلم</h3>
         <p class="text-sm mt-2">منصة تعليمية متكاملة لإدارة المنصات التعليمية بكل احترافية وسهولة.</p>
         <div class="flex gap-4 mt-4">
           <a href="#" class="text-gray-400 hover:text-white transition-all"><i class="fab fa-twitter text-xl"></i></a>
@@ -302,7 +308,6 @@
           <a href="#" class="text-gray-400 hover:text-white transition-all"><i class="fab fa-linkedin text-xl"></i></a>
         </div>
       </div>
-      <!-- العمود 2: المنصة -->
       <div>
         <h4 class="text-white font-semibold">المنصة</h4>
         <ul class="mt-2 space-y-2 text-sm">
@@ -312,7 +317,6 @@
           <li><a href="#blog" class="hover:text-white transition">المدونة</a></li>
         </ul>
       </div>
-      <!-- العمود 3: الدعم والقانونية -->
       <div>
         <h4 class="text-white font-semibold">الدعم</h4>
         <ul class="mt-2 space-y-2 text-sm">
@@ -322,7 +326,6 @@
           <li><a href="/terms" class="hover:text-white transition">الشروط والأحكام</a></li>
         </ul>
       </div>
-      <!-- العمود 4: تواصل -->
       <div>
         <h4 class="text-white font-semibold">ابقَ على تواصل</h4>
         <p class="text-sm mt-2">اشترك في النشرة البريدية</p>
@@ -332,12 +335,23 @@
         </form>
       </div>
     </div>
-    <!-- حقوق النشر -->
     <div class="border-t border-gray-800 py-4 text-center text-sm">
-      &copy; 2026 EduCore. جميع الحقوق محفوظة.
+      &copy; 2026 مداد العلم. جميع الحقوق محفوظة.
     </div>
   </footer>
 
+  <!-- ========== SCRIPTS ========== -->
+  <!-- AOS -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  
+  <!-- Lenis -->
+  <script src="https://unpkg.com/lenis@1.0.45/dist/lenis.min.js"></script>
+  
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <!-- Custom JS -->
   <script type="module" src="assets/js/app.js"></script>
 </body>
 </html>

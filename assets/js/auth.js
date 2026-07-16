@@ -2,13 +2,16 @@ import { auth } from "./firebase-config.js";
 import { 
   signInWithEmailAndPassword, 
   signInWithPopup, 
-  GoogleAuthProvider,
+  GoogleAuthProvider, 
+  createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
   onAuthStateChanged,
-  signOut,
-  sendPasswordResetEmail
+  signOut
 } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+import { db } from "./firebase-config.js";
+import { doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
-// تسجيل الدخول
+// ===== تسجيل الدخول =====
 const loginForm = document.getElementById("login-form");
 if (loginForm) {
   loginForm.addEventListener("submit", async (e) => {
@@ -19,93 +22,116 @@ if (loginForm) {
       await signInWithEmailAndPassword(auth, email, password);
       window.location.href = "/dashboard";
     } catch (error) {
-      showToast("فشل تسجيل الدخول: " + error.message, "error");
+      alert("فشل تسجيل الدخول: " + error.message);
     }
   });
 }
 
-// تسجيل الدخول بواسطة Google
-const googleBtn = document.getElementById("google-login");
-if (googleBtn) {
-  googleBtn.addEventListener("click", async () => {
+// ===== تسجيل الدخول بـ Google =====
+const googleLogin = document.getElementById("google-login");
+if (googleLogin) {
+  googleLogin.addEventListener("click", async () => {
+    const provider = new GoogleAuthProvider();
     try {
-      await signInWithPopup(auth, new GoogleAuthProvider());
+      await signInWithPopup(auth, provider);
       window.location.href = "/dashboard";
     } catch (error) {
-      showToast("فشل تسجيل الدخول بواسطة Google: " + error.message, "error");
+      alert("فشل تسجيل الدخول بواسطة Google: " + error.message);
     }
   });
 }
 
-// استعادة كلمة المرور
-const resetForm = document.getElementById("reset-form");
-if (resetForm) {
-  resetForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const email = document.getElementById("email").value;
-    try {
-      await sendPasswordResetEmail(auth, email);
-      showToast("تم إرسال رابط استعادة كلمة المرور إلى بريدك الإلكتروني.", "success");
-    } catch (error) {
-      showToast("فشل إرسال رابط الاستعادة: " + error.message, "error");
-    }
-  });
-}
-
-// تسجيل الخروج
-const logoutBtn = document.getElementById("logout-btn");
-if (logoutBtn) {
-  logoutBtn.addEventListener("click", async () => {
-    await signOut(auth);
-    window.location.href = "/login";
-  });
-}
-
-// التحقق من حالة المصادقة
-onAuthStateChanged(auth, (user) => {
-  const protectedPages = ['/dashboard', '/customers', '/cases', '/sessions', '/documents', '/contracts', '/consultations', '/tasks', '/calendar', '/notifications', '/reports', '/accounting', '/employees', '/settings', '/profile'];
-  const currentPath = window.location.pathname;
-  if (!user && protectedPages.some(p => currentPath.startsWith(p))) {
-    window.location.href = "/login";
-  }
-  if (user && (currentPath === '/login' || currentPath === '/register')) {
-    window.location.href = "/dashboard";
-  }
-});
-
-// دالة عرض الإشعارات (Toast)
-function showToast(message, type = 'info') {
-  const toast = document.createElement('div');
-  toast.className = `fixed bottom-4 left-4 z-50 px-6 py-3 rounded-2xl text-white font-medium shadow-lg transition-all duration-300 transform translate-y-0 ${type === 'error' ? 'bg-red-500' : type === 'success' ? 'bg-green-500' : 'bg-[#4B5563]'}`;
-  toast.textContent = message;
-  document.body.appendChild(toast);
-  setTimeout(() => {
-    toast.style.transform = 'translateY(100px)';
-    setTimeout(() => toast.remove(), 300);
-  }, 4000);
-  // تسجيل حساب جديد
+// ===== إنشاء حساب =====
 const registerForm = document.getElementById("register-form");
 if (registerForm) {
   registerForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     const fullName = document.getElementById("fullName").value;
+    const academyName = document.getElementById("academyName").value;
     const email = document.getElementById("email").value;
+    const phone = document.getElementById("phone").value;
     const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
+
+    if (password !== confirmPassword) {
+      alert("كلمات المرور غير متطابقة");
+      return;
+    }
+
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      
       // حفظ بيانات المستخدم في Firestore
-      await setDoc(doc(db, "users", userCredential.user.uid), {
+      await setDoc(doc(db, "users", user.uid), {
         fullName,
+        academyName,
         email,
-        academyId: 'default', // يمكن تعديلها لاحقاً
-        role: 'owner',
-        status: 'active',
+        phone,
+        role: "owner",
+        status: "active",
+        createdAt: new Date().toISOString(),
+        academyId: user.uid // مؤقتاً نستخدم uid كـ academyId
+      });
+
+      // حفظ بيانات الأكاديمية
+      await setDoc(doc(db, "academies", user.uid), {
+        academyName,
+        ownerId: user.uid,
+        status: "active",
         createdAt: new Date().toISOString()
       });
+
       window.location.href = "/dashboard";
     } catch (error) {
-      showToast("فشل إنشاء الحساب: " + error.message, "error");
+      alert("فشل إنشاء الحساب: " + error.message);
     }
   });
 }
 
+// ===== استعادة كلمة المرور =====
+const forgotForm = document.getElementById("forgot-password-form");
+if (forgotForm) {
+  forgotForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = document.getElementById("email").value;
+    try {
+      await sendPasswordResetEmail(auth, email);
+      alert("تم إرسال رابط استعادة كلمة المرور إلى بريدك الإلكتروني");
+    } catch (error) {
+      alert("فشل إرسال رابط الاستعادة: " + error.message);
+    }
+  });
+}
+
+// ===== تسجيل الخروج =====
+document.addEventListener("click", (e) => {
+  if (e.target.id === "logout-btn" || e.target.closest("#logout-btn")) {
+    signOut(auth);
+    window.location.href = "/login";
+  }
+});
+
+// ===== التحقق من حالة المصادقة =====
+onAuthStateChanged(auth, async (user) => {
+  const currentPath = window.location.pathname;
+  const publicPaths = ["/", "/login", "/register", "/forgot-password", "/contact", "/about", "/blog", "/faq", "/privacy-policy", "/terms"];
+  const isPublic = publicPaths.includes(currentPath) || currentPath === "";
+
+  if (!user && !isPublic) {
+    window.location.href = "/login";
+  }
+
+  if (user && (currentPath === "/login" || currentPath === "/register" || currentPath === "/forgot-password")) {
+    window.location.href = "/dashboard";
+  }
+
+  // تحديث اسم المستخدم في الواجهة إذا كان موجوداً
+  if (user && document.getElementById("user-name")) {
+    const userDoc = await getDoc(doc(db, "users", user.uid));
+    if (userDoc.exists()) {
+      const data = userDoc.data();
+      document.getElementById("user-name").textContent = `مرحباً، ${data.fullName || "مستخدم"}`;
+    }
+  }
+});

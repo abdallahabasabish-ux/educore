@@ -10,609 +10,217 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..700&family=Cairo:wght@300..700&display=swap" rel="stylesheet" />
 
-    <!-- Tailwind + base styles -->
+    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Font Awesome 6 (free) -->
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
+    <!-- Lenis CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/lenis@1.1.13/dist/lenis.css" />
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="assets/css/style.css" />
+
     <style>
-        /* ---------- reset / base ---------- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        /* ===== تنسيقات خاصة بالصفحة الرئيسية ===== */
 
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'Inter', 'Cairo', sans-serif;
-            background: #ffffff;
-            color: #111827;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            overflow-x: hidden;
-        }
-
-        /* ---------- variables ---------- */
-        :root {
-            --primary: #4B5563;
-            --accent: #2563EB;
-            --surface: #F8FAFC;
-            --border: #E5E7EB;
-            --text: #111827;
-            --success: #22C55E;
-            --warning: #F59E0B;
-            --danger: #EF4444;
-            --radius: 20px;
-            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.04);
-            --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.06);
-            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.08);
-            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        /* ---------- utilities ---------- */
-        .container-custom {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
-        }
-
-        .glass {
-            background: rgba(255, 255, 255, 0.72);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .gradient-bg {
+        /* Hero */
+        .hero-gradient {
             background: radial-gradient(ellipse at 30% 20%, rgba(37, 99, 235, 0.06) 0%, transparent 70%),
                 radial-gradient(ellipse at 70% 80%, rgba(75, 85, 99, 0.04) 0%, transparent 60%);
         }
-
-        .card-hover {
-            transition: all var(--transition);
+        .hero-title {
+            font-size: clamp(1.8rem, 6vw, 3.5rem);
+            line-height: 1.15;
         }
-        .card-hover:hover {
-            transform: translateY(-6px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        /* ---------- scrollbar ---------- */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #d1d5db;
-            border-radius: 3px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #9ca3af;
+        .hero-subtitle {
+            font-size: clamp(0.95rem, 1.5vw, 1.2rem);
         }
 
-        /* ---------- responsive helpers ---------- */
-        .mobile-only {
-            display: none;
+        /* Trust Bar */
+        .trust-badge {
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
-        .desktop-only {
-            display: flex;
-        }
-
-        @media (max-width: 768px) {
-            .mobile-only {
-                display: flex;
-            }
-            .desktop-only {
-                display: none !important;
-            }
-            .container-custom {
-                padding: 0 1rem;
-            }
+        .trust-item {
+            font-size: clamp(0.7rem, 1vw, 0.9rem);
+            white-space: nowrap;
         }
 
-        /* ---------- animations ---------- */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(32px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        @keyframes fadeInScale {
-            from {
-                opacity: 0;
-                transform: scale(0.96);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-        @keyframes float {
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-10px);
-            }
-        }
-        @keyframes pulseGlow {
-            0%,
-            100% {
-                opacity: 0.4;
-            }
-            50% {
-                opacity: 0.8;
-            }
-        }
-
-        .animate-fade-up {
-            animation: fadeInUp 0.7s ease forwards;
-        }
-        .animate-fade-scale {
-            animation: fadeInScale 0.6s ease forwards;
-        }
-        .animate-float {
-            animation: float 4s ease-in-out infinite;
-        }
-        .animate-pulse-glow {
-            animation: pulseGlow 3s ease-in-out infinite;
-        }
-
-        /* ---------- section titles ---------- */
-        .section-badge {
-            display: inline-block;
-            background: rgba(37, 99, 235, 0.08);
-            color: var(--accent);
-            font-size: 0.75rem;
-            font-weight: 600;
-            padding: 0.3rem 1rem;
-            border-radius: 9999px;
-            letter-spacing: 0.3px;
-            margin-bottom: 0.75rem;
-        }
-
-        .section-title {
-            font-size: clamp(1.8rem, 4vw, 2.8rem);
+        /* Client Logos */
+        .client-logo {
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
             font-weight: 700;
-            line-height: 1.2;
-            letter-spacing: -0.02em;
+            color: #4B5563;
+            font-size: clamp(0.8rem, 1.2vw, 1.1rem);
         }
-
-        .section-sub {
-            color: #6b7280;
-            font-size: 1.05rem;
-            max-width: 600px;
-            margin: 0.5rem auto 0;
-        }
-
-        /* ---------- navbar mobile drawer ---------- */
-        .drawer {
-            position: fixed;
-            inset: 0;
-            z-index: 1000;
-            display: flex;
-            pointer-events: none;
-            visibility: hidden;
-            transition: visibility 0.3s;
-        }
-        .drawer.open {
-            pointer-events: auto;
-            visibility: visible;
-        }
-        .drawer-overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(4px);
-            opacity: 0;
-            transition: opacity 0.35s ease;
-        }
-        .drawer.open .drawer-overlay {
+        .client-logo:hover {
             opacity: 1;
         }
-        .drawer-panel {
-            position: relative;
-            width: 85%;
-            max-width: 320px;
-            background: white;
-            height: 100%;
-            padding: 2rem 1.5rem;
-            overflow-y: auto;
-            transform: translateX(100%);
-            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: -8px 0 40px rgba(0, 0, 0, 0.08);
-        }
-        .drawer.open .drawer-panel {
-            transform: translateX(0);
-        }
-        .drawer-panel .close-btn {
-            position: absolute;
-            left: 1rem;
-            top: 1rem;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: #4b5563;
-            cursor: pointer;
-            padding: 0.25rem;
-        }
-        .drawer-panel a {
-            display: block;
-            padding: 0.75rem 0;
-            color: #1f2937;
-            font-weight: 500;
-            border-bottom: 1px solid #f3f4f6;
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-        .drawer-panel a:hover {
-            color: var(--accent);
-        }
-        .drawer-panel .btn-primary {
-            margin-top: 1rem;
-            width: 100%;
-            text-align: center;
-        }
 
-        /* ---------- testimonials slider ---------- */
-        .testimonial-slider {
-            display: flex;
-            gap: 1.5rem;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            -webkit-overflow-scrolling: touch;
-            padding: 0.5rem 0.25rem 1.5rem;
-            scrollbar-width: none;
-        }
-        .testimonial-slider::-webkit-scrollbar {
-            display: none;
-        }
-        .testimonial-slider .slide {
-            flex: 0 0 90%;
-            max-width: 340px;
-            scroll-snap-align: start;
-            background: white;
-            border-radius: var(--radius);
-            padding: 1.75rem;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border);
-            transition: all var(--transition);
-        }
-        .testimonial-slider .slide:hover {
-            box-shadow: var(--shadow-md);
-        }
-        @media (min-width: 768px) {
-            .testimonial-slider .slide {
-                flex: 0 0 32%;
-                max-width: 380px;
-            }
-        }
-
-        /* ---------- pricing cards ---------- */
-        .pricing-card {
-            border-radius: var(--radius);
-            padding: 2rem 1.75rem;
-            background: white;
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow-sm);
-            transition: all var(--transition);
-            position: relative;
-        }
-        .pricing-card:hover {
-            box-shadow: var(--shadow-lg);
-            transform: translateY(-4px);
-        }
-        .pricing-card.popular {
-            border-color: var(--accent);
-            background: #f8faff;
-        }
-        .pricing-card.popular .badge {
-            position: absolute;
-            top: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--accent);
-            color: white;
-            font-size: 0.7rem;
-            font-weight: 600;
-            padding: 0.2rem 1.2rem;
-            border-radius: 9999px;
-            letter-spacing: 0.5px;
-        }
-
-        /* ---------- faq accordion ---------- */
-        .faq-item {
-            border-bottom: 1px solid var(--border);
-            padding: 1rem 0;
-        }
-        .faq-item:last-child {
-            border-bottom: none;
-        }
-        .faq-question {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            background: none;
-            border: none;
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--text);
-            cursor: pointer;
-            padding: 0.25rem 0;
-            gap: 1rem;
-            text-align: right;
-        }
-        .faq-question i {
-            transition: transform 0.3s ease;
-            color: var(--accent);
-            flex-shrink: 0;
-        }
-        .faq-item.open .faq-question i {
-            transform: rotate(180deg);
-        }
-        .faq-answer {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s ease, padding 0.3s ease;
-            color: #4b5563;
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
-        .faq-item.open .faq-answer {
-            max-height: 200px;
-            padding-top: 0.75rem;
-        }
-
-        /* ---------- comparison table ---------- */
-        .comparison-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.9rem;
-            background: white;
-            border-radius: var(--radius);
-            overflow: hidden;
-            box-shadow: var(--shadow-sm);
-        }
-        .comparison-table th {
-            background: var(--surface);
-            padding: 1rem 1.25rem;
-            font-weight: 600;
-            text-align: right;
-            border-bottom: 1px solid var(--border);
-        }
-        .comparison-table td {
-            padding: 0.9rem 1.25rem;
-            border-bottom: 1px solid var(--border);
-            text-align: right;
-        }
-        .comparison-table tr:last-child td {
-            border-bottom: none;
-        }
-        .comparison-table .check {
-            color: var(--success);
-        }
-        .comparison-table .cross {
-            color: var(--danger);
-        }
-        @media (max-width: 640px) {
-            .comparison-table {
-                font-size: 0.75rem;
-            }
-            .comparison-table th,
-            .comparison-table td {
-                padding: 0.5rem 0.75rem;
-            }
-        }
-
-        /* ---------- mockup container ---------- */
-        .mockup-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .mockup-mac {
-            width: 100%;
-            max-width: 560px;
-            aspect-ratio: 16/10;
-            background: #f1f5f9;
-            border-radius: 20px;
-            border: 2px solid #e2e8f0;
-            padding: 12px;
-            box-shadow: var(--shadow-lg);
-        }
-        .mockup-mac .screen {
-            width: 100%;
-            height: 100%;
-            background: white;
+        /* Feature Cards */
+        .feature-icon {
+            width: 48px;
+            height: 48px;
             border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.85rem;
-            color: #94a3b8;
-            background-image: radial-gradient(circle at 30% 40%, #f1f5f9 0%, transparent 60%);
-            overflow: hidden;
-            position: relative;
-        }
-        .mockup-mac .screen .placeholder-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            width: 80%;
-            padding: 12px;
-        }
-        .mockup-mac .screen .placeholder-grid .item {
-            background: #e2e8f0;
-            border-radius: 8px;
-            height: 40px;
-        }
-        .mockup-mac .screen .placeholder-grid .item:nth-child(1) {
-            height: 60px;
-            grid-column: span 3;
-            background: #dbeafe;
-        }
-        .mockup-phone {
-            position: absolute;
-            left: -20px;
-            bottom: -20px;
-            width: 120px;
-            aspect-ratio: 9/19;
-            background: #0f172a;
-            border-radius: 20px;
-            padding: 8px;
-            box-shadow: var(--shadow-lg);
-            border: 2px solid #334155;
-        }
-        .mockup-phone .phone-screen {
-            width: 100%;
-            height: 100%;
-            background: #f8fafc;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.4rem;
-            color: #94a3b8;
-        }
-        @media (max-width: 768px) {
-            .mockup-phone {
-                display: none;
-            }
-            .mockup-mac {
-                max-width: 320px;
-            }
-        }
-
-        /* ---------- language toggle ---------- */
-        .lang-toggle {
-            background: none;
-            border: 1px solid var(--border);
-            border-radius: 9999px;
-            padding: 0.3rem 1rem;
-            font-size: 0.8rem;
-            font-weight: 500;
-            color: var(--text);
-            cursor: pointer;
-            transition: all var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
-        .lang-toggle:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-
-        /* ---------- dark mode toggle ---------- */
-        .dark-mode-toggle {
-            background: none;
-            border: 1px solid var(--border);
-            border-radius: 9999px;
-            padding: 0.3rem 0.8rem;
-            font-size: 0.9rem;
-            color: var(--text);
-            cursor: pointer;
-            transition: all var(--transition);
-        }
-        .dark-mode-toggle:hover {
-            border-color: var(--accent);
-        }
-
-        /* ---------- general buttons ---------- */
-        .btn-primary {
-            background: var(--accent);
-            color: white;
-            padding: 0.7rem 2rem;
-            border-radius: 9999px;
-            font-weight: 600;
-            font-size: 0.95rem;
-            border: none;
-            cursor: pointer;
-            transition: all var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            text-decoration: none;
-        }
-        .btn-primary:hover {
-            background: #1d4ed8;
-            transform: scale(1.02);
-            box-shadow: 0 12px 28px rgba(37, 99, 235, 0.25);
-        }
-        .btn-secondary {
-            background: transparent;
-            color: var(--text);
-            padding: 0.7rem 2rem;
-            border-radius: 9999px;
-            font-weight: 600;
-            font-size: 0.95rem;
-            border: 1px solid var(--border);
-            cursor: pointer;
-            transition: all var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            text-decoration: none;
-        }
-        .btn-secondary:hover {
-            background: var(--surface);
-            border-color: #9ca3af;
-        }
-        .btn-outline-white {
-            background: transparent;
-            color: white;
-            padding: 0.7rem 2rem;
-            border-radius: 9999px;
-            font-weight: 600;
-            font-size: 0.95rem;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            cursor: pointer;
-            transition: all var(--transition);
-            text-decoration: none;
-        }
-        .btn-outline-white:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(255, 255, 255, 0.6);
-        }
-
-        .icon-box {
-            width: 56px;
-            height: 56px;
-            border-radius: 16px;
             background: rgba(37, 99, 235, 0.08);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--accent);
-            font-size: 1.5rem;
+            color: #2563EB;
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
             flex-shrink: 0;
         }
+        .feature-card {
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        .feature-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.08);
+        }
 
-        /* ---------- responsive extras ---------- */
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+        }
+
+        /* ===== استجابة الهواتف (Mobile First) ===== */
         @media (max-width: 480px) {
-            .container-custom {
-                padding: 0 0.75rem;
+            .hero-title {
+                font-size: 1.8rem;
             }
-            .section-title {
-                font-size: 1.6rem;
+            .hero-subtitle {
+                font-size: 0.95rem;
+            }
+            .trust-item {
+                font-size: 0.65rem;
+            }
+            .trust-item .number {
+                font-size: 0.85rem;
+            }
+            .feature-card {
+                padding: 1rem;
+            }
+            .feature-card h3 {
+                font-size: 1rem;
+            }
+            .feature-card p {
+                font-size: 0.8rem;
             }
             .btn-primary,
             .btn-secondary {
-                padding: 0.6rem 1.4rem;
-                font-size: 0.85rem;
+                padding: 0.6rem 1.2rem;
+                font-size: 0.8rem;
+                min-height: 44px;
+            }
+            .mockup-mac {
+                max-width: 260px;
+                padding: 8px;
+            }
+            .mockup-phone {
+                display: none;
+            }
+            .section-title {
+                font-size: 1.5rem;
+            }
+            .section-sub {
+                font-size: 0.9rem;
+            }
+            .footer-grid {
+                grid-template-columns: 1fr !important;
+                gap: 1.5rem !important;
+            }
+            .footer-links {
+                text-align: center;
+            }
+            .footer-social {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .hero-title {
+                font-size: 1.5rem;
+            }
+            .btn-primary,
+            .btn-secondary {
+                padding: 0.5rem 1rem;
+                font-size: 0.75rem;
+                min-height: 40px;
+            }
+            .container-custom {
+                padding: 0 0.75rem;
+            }
+        }
+
+        /* ===== استجابة الأجهزة اللوحية ===== */
+        @media (min-width: 481px) and (max-width: 768px) {
+            .hero-title {
+                font-size: 2.2rem;
+            }
+            .feature-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .mockup-mac {
+                max-width: 380px;
+            }
+            .mockup-phone {
+                width: 80px;
+                left: -10px;
+                bottom: -10px;
+            }
+        }
+
+        /* ===== استجابة سطح المكتب ===== */
+        @media (min-width: 1025px) {
+            .hero-title {
+                font-size: 3.5rem;
+            }
+            .feature-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            .mockup-mac {
+                max-width: 560px;
+            }
+            .mockup-phone {
+                width: 120px;
+                left: -20px;
+                bottom: -20px;
+            }
+        }
+
+        /* ===== تحسينات إضافية للقائمة الجانبية ===== */
+        .drawer-panel a {
+            min-height: 48px;
+            display: flex;
+            align-items: center;
+        }
+        .drawer-panel .btn-primary {
+            min-height: 48px;
+            justify-content: center;
+        }
+
+        /* ===== تحسين للجداول ===== */
+        .table-wrap {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .table-wrap table {
+            min-width: 600px;
+        }
+        @media (max-width: 640px) {
+            .table-wrap table {
+                min-width: 100%;
+            }
+            .table-wrap table td,
+            .table-wrap table th {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.75rem;
             }
         }
     </style>
@@ -621,35 +229,27 @@
 
     <!-- ======== NAVBAR ======== -->
     <header class="fixed top-0 left-0 right-0 z-50 glass border-b border-[#E5E7EB]/40 shadow-sm transition-all duration-300" id="navbar">
-        <div class="container-custom flex items-center justify-between h-16">
-            <!-- logo -->
-            <a href="#" class="flex items-center gap-2 text-xl font-extrabold text-[#111827] no-underline">
+        <div class="container-custom flex items-center justify-between h-14 md:h-16">
+            <a href="index.html" class="flex items-center gap-2 text-lg md:text-xl font-extrabold text-[#111827] no-underline">
                 <i class="fas fa-feather-alt text-[#4B5563]"></i>
                 <span>مداد العلم</span>
             </a>
-
-            <!-- nav links (desktop) -->
-            <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-[#4B5563]">
-                <a href="#features" class="hover:text-[#2563EB] transition">المميزات</a>
-                <a href="#pricing" class="hover:text-[#2563EB] transition">الأسعار</a>
-                <a href="#testimonials" class="hover:text-[#2563EB] transition">آراء</a>
-                <a href="#faq" class="hover:text-[#2563EB] transition">الأسئلة</a>
-                <a href="#contact" class="hover:text-[#2563EB] transition">تواصل</a>
+            <!-- Desktop Navigation -->
+            <nav class="hidden md:flex items-center gap-4 lg:gap-6 text-sm font-medium text-[#4B5563]">
+                <a href="features.html" class="hover:text-[#2563EB] transition">المميزات</a>
+                <a href="pricing.html" class="hover:text-[#2563EB] transition">الأسعار</a>
+                <a href="testimonials.html" class="hover:text-[#2563EB] transition">آراء</a>
+                <a href="faq.html" class="hover:text-[#2563EB] transition">الأسئلة</a>
+                <a href="contact.html" class="hover:text-[#2563EB] transition">تواصل</a>
             </nav>
-
-            <!-- right actions (desktop) -->
-            <div class="hidden md:flex items-center gap-3">
-                <button class="lang-toggle" aria-label="تبديل اللغة">
-                    <i class="fas fa-globe"></i> EN
-                </button>
-                <button class="dark-mode-toggle" aria-label="تبديل الوضع الداكن">
-                    <i class="fas fa-moon"></i>
-                </button>
-                <a href="#login" class="text-sm font-medium text-[#4B5563] hover:text-[#2563EB] transition">تسجيل الدخول</a>
-                <a href="#register" class="btn-primary text-sm py-1.5 px-5">ابدأ مجانًا</a>
+            <!-- Desktop Actions -->
+            <div class="hidden md:flex items-center gap-2 lg:gap-3">
+                <button class="lang-toggle" aria-label="تبديل اللغة"><i class="fas fa-globe"></i> EN</button>
+                <button class="dark-mode-toggle" aria-label="تبديل الوضع الداكن"><i class="fas fa-moon"></i></button>
+                <a href="login.html" class="text-sm font-medium text-[#4B5563] hover:text-[#2563EB] transition">تسجيل الدخول</a>
+                <a href="register.html" class="btn-primary text-sm py-1.5 px-4 lg:px-5">ابدأ مجانًا</a>
             </div>
-
-            <!-- mobile menu button -->
+            <!-- Mobile Menu Button -->
             <button class="md:hidden text-2xl text-[#4B5563] p-1" id="menuToggle" aria-label="فتح القائمة">
                 <i class="fas fa-bars"></i>
             </button>
@@ -660,60 +260,58 @@
     <div class="drawer" id="mobileDrawer" role="dialog" aria-modal="true" aria-label="القائمة">
         <div class="drawer-overlay" id="drawerOverlay"></div>
         <div class="drawer-panel">
-            <button class="close-btn" id="drawerClose" aria-label="إغلاق القائمة">
-                <i class="fas fa-times"></i>
-            </button>
-            <nav class="flex flex-col gap-1 mt-8">
-                <a href="#features">المميزات</a>
-                <a href="#pricing">الأسعار</a>
-                <a href="#testimonials">آراء العملاء</a>
-                <a href="#faq">الأسئلة الشائعة</a>
-                <a href="#contact">تواصل معنا</a>
-                <a href="#blog">المدونة</a>
+            <button class="close-btn" id="drawerClose" aria-label="إغلاق القائمة"><i class="fas fa-times"></i></button>
+            <nav class="flex flex-col gap-0.5 mt-8">
+                <a href="features.html">المميزات</a>
+                <a href="pricing.html">الأسعار</a>
+                <a href="testimonials.html">آراء العملاء</a>
+                <a href="faq.html">الأسئلة الشائعة</a>
+                <a href="contact.html">تواصل معنا</a>
+                <a href="blog.html">المدونة</a>
                 <div class="flex items-center gap-3 mt-4 border-t border-[#E5E7EB] pt-4">
                     <button class="lang-toggle text-sm">🌐 EN</button>
                     <button class="dark-mode-toggle text-sm"><i class="fas fa-moon"></i></button>
                 </div>
-                <a href="#login" class="text-[#4B5563] font-medium mt-2">تسجيل الدخول</a>
-                <a href="#register" class="btn-primary text-center mt-1">ابدأ مجانًا</a>
+                <a href="login.html" class="text-[#4B5563] font-medium mt-2">تسجيل الدخول</a>
+                <a href="register.html" class="btn-primary text-center mt-1">ابدأ مجانًا</a>
             </nav>
         </div>
     </div>
 
     <!-- ======== HERO ======== -->
-    <section class="relative pt-24 pb-12 md:pt-32 md:pb-20 overflow-hidden gradient-bg" id="hero">
-        <div class="container-custom relative z-10 grid md:grid-cols-2 gap-10 items-center">
+    <section class="relative pt-20 pb-10 md:pt-28 md:pb-16 lg:pt-32 lg:pb-20 overflow-hidden hero-gradient" id="hero">
+        <div class="container-custom relative z-10 grid md:grid-cols-2 gap-8 lg:gap-12 items-center">
 
-            <!-- text -->
+            <!-- Hero Text -->
             <div class="animate-fade-up order-2 md:order-1 text-right">
-                <span class="inline-block bg-[#2563EB]/10 text-[#2563EB] text-xs font-semibold px-4 py-1 rounded-full mb-4">
+                <span class="inline-block bg-[#2563EB]/10 text-[#2563EB] text-xs font-semibold px-3 md:px-4 py-1 rounded-full mb-3 md:mb-4">
                     منصة تعليمية متكاملة
                 </span>
-                <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.1] tracking-tight">
+                <h1 class="hero-title font-extrabold leading-[1.1] tracking-tight">
                     اكتب مستقبلك التعليمي
                     <span class="text-[#4B5563]">بمداد العلم</span>
                 </h1>
-                <p class="mt-4 text-lg md:text-xl text-[#4B5563] max-w-lg">
+                <p class="hero-subtitle mt-3 md:mt-4 text-[#4B5563] max-w-lg">
                     مداد العلم تمنحك كل ما تحتاجه لإدارة أكاديميتك الإلكترونية: الكورسات، الطلاب، الامتحانات، الاشتراكات، والتقارير — في مكان واحد.
                 </p>
-                <div class="mt-8 flex flex-wrap gap-4">
-                    <a href="#register" class="btn-primary">
+                <div class="mt-6 md:mt-8 flex flex-wrap gap-3 md:gap-4">
+                    <a href="register.html" class="btn-primary">
                         ابدأ مجانًا <i class="fas fa-arrow-left mr-1"></i>
                     </a>
                     <a href="#demo" class="btn-secondary">
                         <i class="fas fa-play-circle"></i> شاهد العرض
                     </a>
                 </div>
-                <div class="mt-6 flex flex-wrap gap-5 text-sm text-[#6B7280]">
+                <div class="mt-4 md:mt-6 flex flex-wrap gap-3 md:gap-5 text-xs md:text-sm text-[#6B7280]">
                     <span><i class="fas fa-check-circle text-[#22C55E] ml-1"></i> لا خبرة تقنية</span>
                     <span><i class="fas fa-check-circle text-[#22C55E] ml-1"></i> دعم 24/7</span>
-                    <span><i class="fas fa-check-circle text-[#22C55E] ml-1"></i> تحديثات مستمرة</span>
+                    <span class="hidden sm:inline"><i class="fas fa-check-circle text-[#22C55E] ml-1"></i> تحديثات مستمرة</span>
                 </div>
             </div>
 
-            <!-- mockup -->
+            <!-- Mockup -->
             <div class="order-1 md:order-2 flex justify-center animate-fade-scale">
-                <div class="mockup-wrapper w-full max-w-lg mx-auto">
+                <div class="mockup-wrapper w-full max-w-sm md:max-w-md lg:max-w-lg mx-auto">
                     <div class="mockup-mac">
                         <div class="screen">
                             <div class="placeholder-grid">
@@ -728,517 +326,190 @@
                     </div>
                     <div class="mockup-phone animate-float">
                         <div class="phone-screen">
-                            <span style="font-size:0.5rem;color:#94a3b8;">مداد العلم</span>
+                            <span style="font-size:0.4rem;color:#94a3b8;">مداد</span>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
 
-        <!-- decorative blobs -->
-        <div class="absolute top-20 right-0 w-64 h-64 bg-[#2563EB]/5 rounded-full blur-3xl -z-0 animate-pulse-glow"></div>
-        <div class="absolute bottom-0 left-0 w-96 h-96 bg-[#4B5563]/5 rounded-full blur-3xl -z-0"></div>
+        <!-- Decorative Blobs -->
+        <div class="absolute top-20 right-0 w-48 h-48 md:w-64 md:h-64 bg-[#2563EB]/5 rounded-full blur-3xl -z-0 animate-pulse-glow"></div>
+        <div class="absolute bottom-0 left-0 w-64 h-64 md:w-96 md:h-96 bg-[#4B5563]/5 rounded-full blur-3xl -z-0"></div>
     </section>
 
     <!-- ======== TRUST BAR ======== -->
-    <section class="py-4 md:py-6 border-y border-[#E5E7EB] bg-white/50 backdrop-blur-sm">
-        <div class="container-custom flex flex-wrap items-center justify-center gap-6 md:gap-10 text-sm">
-            <div class="flex items-center gap-1 text-[#F59E0B]">
+    <section class="py-3 md:py-5 border-y border-[#E5E7EB] bg-white/50 backdrop-blur-sm trust-badge">
+        <div class="container-custom flex flex-wrap items-center justify-center gap-4 md:gap-6 lg:gap-10">
+            <div class="trust-item flex items-center gap-1 text-[#F59E0B]">
                 ★★★★★ <span class="text-[#111827] font-semibold mr-1">4.9/5</span>
             </div>
-            <div class="flex items-center gap-2">
-                <span class="font-bold text-[#111827]">+10,000</span>
+            <div class="trust-item flex items-center gap-1 md:gap-2">
+                <span class="number font-bold text-[#111827]">+10,000</span>
                 <span class="text-[#4B5563]">طالب</span>
             </div>
-            <div class="flex items-center gap-2">
-                <span class="font-bold text-[#111827]">+500</span>
+            <div class="trust-item flex items-center gap-1 md:gap-2">
+                <span class="number font-bold text-[#111827]">+500</span>
                 <span class="text-[#4B5563]">مدرس</span>
             </div>
-            <div class="flex items-center gap-2">
-                <span class="font-bold text-[#111827]">+200</span>
+            <div class="trust-item flex items-center gap-1 md:gap-2">
+                <span class="number font-bold text-[#111827]">+200</span>
                 <span class="text-[#4B5563]">أكاديمية</span>
             </div>
-            <div class="flex items-center gap-2">
-                <span class="font-bold text-[#22C55E]">99.9%</span>
+            <div class="trust-item flex items-center gap-1 md:gap-2">
+                <span class="number font-bold text-[#22C55E]">99.9%</span>
                 <span class="text-[#4B5563]">جاهزية</span>
             </div>
         </div>
     </section>
 
     <!-- ======== CLIENTS LOGOS ======== -->
-    <section class="py-8 md:py-12 bg-[#F8FAFC]">
+    <section class="py-6 md:py-10 bg-[#F8FAFC]">
         <div class="container-custom">
-            <p class="text-center text-xs uppercase tracking-wider text-[#6B7280] font-semibold mb-4">
+            <p class="text-center text-[0.6rem] md:text-xs uppercase tracking-wider text-[#6B7280] font-semibold mb-3 md:mb-4">
                 يثق بنا آلاف المعلمين والأكاديميات
             </p>
-            <div class="flex flex-wrap justify-center items-center gap-8 md:gap-14 opacity-60">
-                <span class="text-lg font-bold text-[#4B5563]">أكاديمية المستقبل</span>
-                <span class="text-lg font-bold text-[#4B5563]">مدارس الإبداع</span>
-                <span class="text-lg font-bold text-[#4B5563]">جامعة المعرفة</span>
-                <span class="text-lg font-bold text-[#4B5563]">منصة تعلم</span>
-                <span class="text-lg font-bold text-[#4B5563]">مركز مهارات</span>
-                <span class="text-lg font-bold text-[#4B5563]">أكاديمية STEM</span>
+            <div class="flex flex-wrap justify-center items-center gap-4 md:gap-6 lg:gap-10">
+                <span class="client-logo">أكاديمية المستقبل</span>
+                <span class="client-logo">مدارس الإبداع</span>
+                <span class="client-logo">جامعة المعرفة</span>
+                <span class="client-logo hidden sm:inline">منصة تعلم</span>
+                <span class="client-logo hidden md:inline">مركز مهارات</span>
+                <span class="client-logo hidden lg:inline">أكاديمية STEM</span>
             </div>
         </div>
     </section>
 
-    <!-- ======== WHY MADAD AL-ILM (features) ======== -->
-    <section class="py-16 md:py-24" id="features">
+    <!-- ======== FEATURES PREVIEW ======== -->
+    <section class="py-12 md:py-16 lg:py-24 bg-white" id="features">
         <div class="container-custom text-center">
             <span class="section-badge">المميزات</span>
-            <h2 class="section-title">لماذا مداد العلم؟</h2>
-            <p class="section-sub">كل ما تحتاجه لإدارة أكاديمية إلكترونية احترافية في منصة واحدة</p>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12 text-right">
-                <div class="card-hover bg-white p-6 rounded-2xl border border-[#E5E7EB] shadow-sm">
-                    <div class="icon-box"><i class="fas fa-users"></i></div>
-                    <h3 class="text-lg font-bold mt-3">إدارة الطلاب</h3>
+            <h2 class="section-title">كل ما تحتاجه في منصة واحدة</h2>
+            <p class="section-sub">أدوات متطورة مصممة خصيصاً لتلبية احتياجات المعلمين والأكاديميات</p>
+            <div class="feature-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mt-8 md:mt-12 text-right">
+                <!-- Feature 1 -->
+                <div class="feature-card bg-white p-4 md:p-6 rounded-2xl border border-[#E5E7EB] shadow-sm">
+                    <div class="feature-icon"><i class="fas fa-users"></i></div>
+                    <h3 class="text-base md:text-lg font-bold mt-2">إدارة الطلاب</h3>
                     <p class="text-sm text-[#4B5563] mt-1">سجل الطلاب، متابعة التقدم، التواصل الفوري.</p>
                 </div>
-                <div class="card-hover bg-white p-6 rounded-2xl border border-[#E5E7EB] shadow-sm">
-                    <div class="icon-box"><i class="fas fa-book-open"></i></div>
-                    <h3 class="text-lg font-bold mt-3">الكورسات المتكاملة</h3>
+                <!-- Feature 2 -->
+                <div class="feature-card bg-white p-4 md:p-6 rounded-2xl border border-[#E5E7EB] shadow-sm">
+                    <div class="feature-icon"><i class="fas fa-book-open"></i></div>
+                    <h3 class="text-base md:text-lg font-bold mt-2">الكورسات المتكاملة</h3>
                     <p class="text-sm text-[#4B5563] mt-1">دروس، فيديوهات، ملفات، واختبارات تفاعلية.</p>
                 </div>
-                <div class="card-hover bg-white p-6 rounded-2xl border border-[#E5E7EB] shadow-sm">
-                    <div class="icon-box"><i class="fas fa-pencil-alt"></i></div>
-                    <h3 class="text-lg font-bold mt-3">الامتحانات والواجبات</h3>
+                <!-- Feature 3 -->
+                <div class="feature-card bg-white p-4 md:p-6 rounded-2xl border border-[#E5E7EB] shadow-sm">
+                    <div class="feature-icon"><i class="fas fa-pencil-alt"></i></div>
+                    <h3 class="text-base md:text-lg font-bold mt-2">الامتحانات والواجبات</h3>
                     <p class="text-sm text-[#4B5563] mt-1">إنشاء اختبارات، تصحيح آلي، واجبات مع تقييم.</p>
                 </div>
-                <div class="card-hover bg-white p-6 rounded-2xl border border-[#E5E7EB] shadow-sm">
-                    <div class="icon-box"><i class="fas fa-certificate"></i></div>
-                    <h3 class="text-lg font-bold mt-3">الشهادات</h3>
+                <!-- Feature 4 -->
+                <div class="feature-card bg-white p-4 md:p-6 rounded-2xl border border-[#E5E7EB] shadow-sm">
+                    <div class="feature-icon"><i class="fas fa-certificate"></i></div>
+                    <h3 class="text-base md:text-lg font-bold mt-2">الشهادات</h3>
                     <p class="text-sm text-[#4B5563] mt-1">شهادات رقمية مع QR وروابط تحقق.</p>
                 </div>
-                <div class="card-hover bg-white p-6 rounded-2xl border border-[#E5E7EB] shadow-sm">
-                    <div class="icon-box"><i class="fas fa-credit-card"></i></div>
-                    <h3 class="text-lg font-bold mt-3">الاشتراكات والدفع</h3>
-                    <p class="text-sm text-[#4B5563] mt-1">خطط اشتراك، بوابات دفع متعددة.</p>
-                </div>
-                <div class="card-hover bg-white p-6 rounded-2xl border border-[#E5E7EB] shadow-sm">
-                    <div class="icon-box"><i class="fas fa-chart-line"></i></div>
-                    <h3 class="text-lg font-bold mt-3">التقارير والتحليلات</h3>
-                    <p class="text-sm text-[#4B5563] mt-1">تقارير أداء، إحصائيات، رسوم بيانية.</p>
-                </div>
-                <div class="card-hover bg-white p-6 rounded-2xl border border-[#E5E7EB] shadow-sm">
-                    <div class="icon-box"><i class="fas fa-robot"></i></div>
-                    <h3 class="text-lg font-bold mt-3">الذكاء الاصطناعي</h3>
-                    <p class="text-sm text-[#4B5563] mt-1">مساعد ذكي لإنشاء الكورسات والاختبارات.</p>
-                </div>
-                <div class="card-hover bg-white p-6 rounded-2xl border border-[#E5E7EB] shadow-sm">
-                    <div class="icon-box"><i class="fas fa-cogs"></i></div>
-                    <h3 class="text-lg font-bold mt-3">CRM + ERP مدمج</h3>
-                    <p class="text-sm text-[#4B5563] mt-1">إدارة العملاء، المحاسبة، الموظفين، والمخزون.</p>
-                </div>
             </div>
-        </div>
-    </section>
-
-    <!-- ======== HOW IT WORKS ======== -->
-    <section class="py-16 md:py-20 bg-[#F8FAFC]">
-        <div class="container-custom text-center">
-            <span class="section-badge">الخطوات</span>
-            <h2 class="section-title">كيف تعمل المنصة؟</h2>
-            <p class="section-sub">أربع خطوات بسيطة لانطلاق أكاديميتك</p>
-
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mt-12 text-right">
-                <div class="relative">
-                    <div class="text-5xl font-extrabold text-[#2563EB]/20 absolute -top-2 right-0">01</div>
-                    <div class="pt-8">
-                        <div class="w-12 h-12 rounded-full bg-[#2563EB] text-white flex items-center justify-center text-lg font-bold mb-3">1</div>
-                        <h3 class="text-lg font-bold">أنشئ حسابًا</h3>
-                        <p class="text-sm text-[#4B5563] mt-1">سجل مجاناً واختر نوع الأكاديمية</p>
-                    </div>
-                    <div class="hidden md:block absolute top-16 right-full w-10 h-0.5 bg-[#E5E7EB]"></div>
-                </div>
-                <div class="relative">
-                    <div class="text-5xl font-extrabold text-[#2563EB]/20 absolute -top-2 right-0">02</div>
-                    <div class="pt-8">
-                        <div class="w-12 h-12 rounded-full bg-[#2563EB] text-white flex items-center justify-center text-lg font-bold mb-3">2</div>
-                        <h3 class="text-lg font-bold">أنشئ أكاديميتك</h3>
-                        <p class="text-sm text-[#4B5563] mt-1">أضف الشعار، الألوان، وبياناتك</p>
-                    </div>
-                </div>
-                <div class="relative">
-                    <div class="text-5xl font-extrabold text-[#2563EB]/20 absolute -top-2 right-0">03</div>
-                    <div class="pt-8">
-                        <div class="w-12 h-12 rounded-full bg-[#2563EB] text-white flex items-center justify-center text-lg font-bold mb-3">3</div>
-                        <h3 class="text-lg font-bold">أضف الكورسات</h3>
-                        <p class="text-sm text-[#4B5563] mt-1">أنشئ المحتوى، الدروس، والاختبارات</p>
-                    </div>
-                </div>
-                <div class="relative">
-                    <div class="text-5xl font-extrabold text-[#2563EB]/20 absolute -top-2 right-0">04</div>
-                    <div class="pt-8">
-                        <div class="w-12 h-12 rounded-full bg-[#2563EB] text-white flex items-center justify-center text-lg font-bold mb-3">4</div>
-                        <h3 class="text-lg font-bold">ابدأ استقبال الطلاب</h3>
-                        <p class="text-sm text-[#4B5563] mt-1">انشر منصتك وابدأ بالتعليم</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ======== VIDEO SECTION ======== -->
-    <section class="py-16 md:py-20">
-        <div class="container-custom text-center">
-            <span class="section-badge">فيديو تعريفي</span>
-            <h2 class="section-title">شاهد المنصة في دقيقة</h2>
-            <p class="section-sub">تعرف على إمكانيات مداد العلم من خلال عرض سريع</p>
-
-            <div class="relative max-w-3xl mx-auto mt-10 rounded-2xl overflow-hidden shadow-lg border border-[#E5E7EB] group cursor-pointer">
-                <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&auto=format&fit=crop" alt="فيديو تعريفي" class="w-full aspect-video object-cover" loading="lazy" />
-                <div class="absolute inset-0 bg-[#111827]/30 flex items-center justify-center group-hover:bg-[#111827]/20 transition-all">
-                    <button class="w-16 h-16 rounded-full bg-white/90 backdrop-blur-sm text-[#2563EB] flex items-center justify-center text-2xl shadow-lg hover:scale-110 transition-transform" aria-label="تشغيل الفيديو">
-                        <i class="fas fa-play"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ======== SCREENSHOTS (carousel) ======== -->
-    <section class="py-16 md:py-20 bg-[#F8FAFC]">
-        <div class="container-custom text-center">
-            <span class="section-badge">لقطات النظام</span>
-            <h2 class="section-title">واجهة احترافية بكل الأجهزة</h2>
-            <p class="section-sub">جرب المنصة على الكمبيوتر، الجهاز اللوحي، والهاتف</p>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
-                <div class="rounded-2xl overflow-hidden shadow-md border border-[#E5E7EB] bg-white">
-                    <div class="bg-[#1E293B] p-2 flex items-center gap-1.5">
-                        <span class="w-3 h-3 rounded-full bg-[#EF4444]"></span>
-                        <span class="w-3 h-3 rounded-full bg-[#F59E0B]"></span>
-                        <span class="w-3 h-3 rounded-full bg-[#22C55E]"></span>
-                        <span class="text-xs text-white/60 mr-2">MacBook</span>
-                    </div>
-                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&auto=format&fit=crop" alt="لقطة شاشة" class="w-full aspect-[16/10] object-cover" loading="lazy" />
-                </div>
-                <div class="rounded-2xl overflow-hidden shadow-md border border-[#E5E7EB] bg-white">
-                    <div class="bg-[#1E293B] p-2 flex items-center gap-1.5">
-                        <span class="w-3 h-3 rounded-full bg-[#EF4444]"></span>
-                        <span class="w-3 h-3 rounded-full bg-[#F59E0B]"></span>
-                        <span class="w-3 h-3 rounded-full bg-[#22C55E]"></span>
-                        <span class="text-xs text-white/60 mr-2">iPad</span>
-                    </div>
-                    <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600&auto=format&fit=crop" alt="لقطة شاشة" class="w-full aspect-[4/3] object-cover" loading="lazy" />
-                </div>
-                <div class="rounded-2xl overflow-hidden shadow-md border border-[#E5E7EB] bg-white">
-                    <div class="bg-[#1E293B] p-2 flex items-center gap-1.5">
-                        <span class="w-3 h-3 rounded-full bg-[#EF4444]"></span>
-                        <span class="w-3 h-3 rounded-full bg-[#F59E0B]"></span>
-                        <span class="w-3 h-3 rounded-full bg-[#22C55E]"></span>
-                        <span class="text-xs text-white/60 mr-2">iPhone</span>
-                    </div>
-                    <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=600&auto=format&fit=crop" alt="لقطة شاشة" class="w-full aspect-[9/16] object-cover" loading="lazy" />
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ======== STATS (animated counters) ======== -->
-    <section class="py-16 md:py-20 bg-[#4B5563] text-white" id="stats">
-        <div class="container-custom">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-                <div>
-                    <div class="text-4xl md:text-5xl font-extrabold" data-count="25000">0</div>
-                    <p class="text-white/70 text-sm mt-1">طالب</p>
-                </div>
-                <div>
-                    <div class="text-4xl md:text-5xl font-extrabold" data-count="1200">0</div>
-                    <p class="text-white/70 text-sm mt-1">كورس</p>
-                </div>
-                <div>
-                    <div class="text-4xl md:text-5xl font-extrabold" data-count="700">0</div>
-                    <p class="text-white/70 text-sm mt-1">مدرس</p>
-                </div>
-                <div>
-                    <div class="text-4xl md:text-5xl font-extrabold" data-count="98">0%</div>
-                    <p class="text-white/70 text-sm mt-1">رضا العملاء</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ======== COMPARISON ======== -->
-    <section class="py-16 md:py-20">
-        <div class="container-custom text-center">
-            <span class="section-badge">المقارنة</span>
-            <h2 class="section-title">لماذا مداد العلم؟</h2>
-            <p class="section-sub">قارن مع المنصات الأخرى واختر الأفضل</p>
-
-            <div class="mt-10 overflow-x-auto">
-                <table class="comparison-table w-full min-w-[600px]">
-                    <thead>
-                        <tr>
-                            <th>الميزة</th>
-                            <th class="text-center text-[#2563EB]">مداد العلم</th>
-                            <th class="text-center">Google Classroom</th>
-                            <th class="text-center">Moodle</th>
-                            <th class="text-center">Thinkific</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>إدارة الطلاب المتقدمة</td><td class="text-center check"><i class="fas fa-check-circle"></i></td><td class="text-center cross"><i class="fas fa-times-circle"></i></td><td class="text-center check"><i class="fas fa-check-circle"></i></td><td class="text-center check"><i class="fas fa-check-circle"></i></td></tr>
-                        <tr><td>الكورسات غير المحدودة</td><td class="text-center check"><i class="fas fa-check-circle"></i></td><td class="text-center cross"><i class="fas fa-times-circle"></i></td><td class="text-center check"><i class="fas fa-check-circle"></i></td><td class="text-center cross"><i class="fas fa-times-circle"></i></td></tr>
-                        <tr><td>الامتحانات والتصحيح الآلي</td><td class="text-center check"><i class="fas fa-check-circle"></i></td><td class="text-center cross"><i class="fas fa-times-circle"></i></td><td class="text-center check"><i class="fas fa-check-circle"></i></td><td class="text-center check"><i class="fas fa-check-circle"></i></td></tr>
-                        <tr><td>الشهادات الرقمية</td><td class="text-center check"><i class="fas fa-check-circle"></i></td><td class="text-center cross"><i class="fas fa-times-circle"></i></td><td class="text-center cross"><i class="fas fa-times-circle"></i></td><td class="text-center check"><i class="fas fa-check-circle"></i></td></tr>
-                        <tr><td>CRM + ERP مدمج</td><td class="text-center check"><i class="fas fa-check-circle"></i></td><td class="text-center cross"><i class="fas fa-times-circle"></i></td><td class="text-center cross"><i class="fas fa-times-circle"></i></td><td class="text-center cross"><i class="fas fa-times-circle"></i></td></tr>
-                        <tr><td>الذكاء الاصطناعي</td><td class="text-center check"><i class="fas fa-check-circle"></i></td><td class="text-center cross"><i class="fas fa-times-circle"></i></td><td class="text-center cross"><i class="fas fa-times-circle"></i></td><td class="text-center cross"><i class="fas fa-times-circle"></i></td></tr>
-                        <tr><td>خطط اشتراك مرنة</td><td class="text-center check"><i class="fas fa-check-circle"></i></td><td class="text-center cross"><i class="fas fa-times-circle"></i></td><td class="text-center cross"><i class="fas fa-times-circle"></i></td><td class="text-center check"><i class="fas fa-check-circle"></i></td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </section>
-
-    <!-- ======== PRICING ======== -->
-    <section class="py-16 md:py-24 bg-[#F8FAFC]" id="pricing">
-        <div class="container-custom text-center">
-            <span class="section-badge">الأسعار</span>
-            <h2 class="section-title">اختر الباقة المناسبة</h2>
-            <p class="section-sub">خطط تناسب الجميع من المدرسين المستقلين إلى الأكاديميات الكبرى</p>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12 max-w-5xl mx-auto">
-                <!-- Starter -->
-                <div class="pricing-card text-right">
-                    <h3 class="text-xl font-bold">Starter</h3>
-                    <div class="mt-2">
-                        <span class="text-4xl font-extrabold">$0</span>
-                        <span class="text-[#6B7280] text-sm">/شهر</span>
-                    </div>
-                    <p class="text-sm text-[#6B7280] mt-1">مثالية للبدء</p>
-                    <ul class="mt-5 space-y-2 text-sm text-[#4B5563]">
-                        <li><i class="fas fa-check text-[#22C55E] ml-2"></i>أكاديمية واحدة</li>
-                        <li><i class="fas fa-check text-[#22C55E] ml-2"></i>حتى 50 طالب</li>
-                        <li><i class="fas fa-check text-[#22C55E] ml-2"></i>5 كورسات</li>
-                        <li><i class="fas fa-check text-[#22C55E] ml-2"></i>دعم عبر البريد</li>
-                    </ul>
-                    <a href="#register" class="btn-primary w-full justify-center mt-6 text-sm">ابدأ مجانًا</a>
-                </div>
-
-                <!-- Professional (popular) -->
-                <div class="pricing-card popular text-right">
-                    <div class="badge">الأكثر شيوعاً</div>
-                    <h3 class="text-xl font-bold">Professional</h3>
-                    <div class="mt-2">
-                        <span class="text-4xl font-extrabold">$49</span>
-                        <span class="text-[#6B7280] text-sm">/شهر</span>
-                    </div>
-                    <p class="text-sm text-[#6B7280] mt-1">للأكاديميات والمدرسين المحترفين</p>
-                    <ul class="mt-5 space-y-2 text-sm text-[#4B5563]">
-                        <li><i class="fas fa-check text-[#22C55E] ml-2"></i>أكاديميات غير محدودة</li>
-                        <li><i class="fas fa-check text-[#22C55E] ml-2"></i>حتى 500 طالب</li>
-                        <li><i class="fas fa-check text-[#22C55E] ml-2"></i>كورسات غير محدودة</li>
-                        <li><i class="fas fa-check text-[#22C55E] ml-2"></i>دعم أولوية</li>
-                        <li><i class="fas fa-check text-[#22C55E] ml-2"></i>تحليلات متقدمة</li>
-                        <li><i class="fas fa-check text-[#22C55E] ml-2"></i>إزالة العلامة</li>
-                    </ul>
-                    <a href="#register" class="btn-primary w-full justify-center mt-6 text-sm">ابدأ الآن</a>
-                </div>
-
-                <!-- Enterprise -->
-                <div class="pricing-card text-right">
-                    <h3 class="text-xl font-bold">Enterprise</h3>
-                    <div class="mt-2">
-                        <span class="text-4xl font-extrabold">$99</span>
-                        <span class="text-[#6B7280] text-sm">/شهر</span>
-                    </div>
-                    <p class="text-sm text-[#6B7280] mt-1">حلول متكاملة للمؤسسات</p>
-                    <ul class="mt-5 space-y-2 text-sm text-[#4B5563]">
-                        <li><i class="fas fa-check text-[#22C55E] ml-2"></i>جميع المميزات السابقة</li>
-                        <li><i class="fas fa-check text-[#22C55E] ml-2"></i>طلاب غير محدودين</li>
-                        <li><i class="fas fa-check text-[#22C55E] ml-2"></i>دعم مخصص</li>
-                        <li><i class="fas fa-check text-[#22C55E] ml-2"></i>تكامل API كامل</li>
-                        <li><i class="fas fa-check text-[#22C55E] ml-2"></i>خادم مخصص</li>
-                    </ul>
-                    <a href="#contact" class="btn-secondary w-full justify-center mt-6 text-sm">تواصل معنا</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ======== TESTIMONIALS ======== -->
-    <section class="py-16 md:py-20" id="testimonials">
-        <div class="container-custom text-center">
-            <span class="section-badge">آراء العملاء</span>
-            <h2 class="section-title">ما يقوله المستخدمون</h2>
-            <p class="section-sub">آلاف المعلمين والأكاديميات يثقون في مداد العلم</p>
-
-            <div class="testimonial-slider mt-10 justify-center">
-                <div class="slide text-right">
-                    <div class="flex text-[#F59E0B] text-sm">★★★★★</div>
-                    <p class="mt-3 text-[#111827]">"مداد العلم غيرت طريقة تدريسي بالكامل. أصبحت أستطيع متابعة جميع طلابي بسهولة."</p>
-                    <div class="flex items-center gap-3 mt-4">
-                        <img src="https://i.pravatar.cc/48?img=1" alt="أحمد" class="w-10 h-10 rounded-full border" loading="lazy" />
-                        <div>
-                            <p class="font-bold text-sm">أحمد محمد</p>
-                            <p class="text-xs text-[#6B7280]">مدرس رياضيات</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="slide text-right">
-                    <div class="flex text-[#F59E0B] text-sm">★★★★★</div>
-                    <p class="mt-3 text-[#111827]">"منصة رائعة وسهلة الاستخدام. وفرت علينا الكثير من الوقت في الإدارة."</p>
-                    <div class="flex items-center gap-3 mt-4">
-                        <img src="https://i.pravatar.cc/48?img=2" alt="سارة" class="w-10 h-10 rounded-full border" loading="lazy" />
-                        <div>
-                            <p class="font-bold text-sm">سارة علي</p>
-                            <p class="text-xs text-[#6B7280]">مديرة أكاديمية</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="slide text-right">
-                    <div class="flex text-[#F59E0B] text-sm">★★★★★</div>
-                    <p class="mt-3 text-[#111827]">"من أفضل القرارات التي اتخذتها هي استخدام مداد العلم. منصة متكاملة ومستقرة."</p>
-                    <div class="flex items-center gap-3 mt-4">
-                        <img src="https://i.pravatar.cc/48?img=3" alt="خالد" class="w-10 h-10 rounded-full border" loading="lazy" />
-                        <div>
-                            <p class="font-bold text-sm">خالد بن سلمان</p>
-                            <p class="text-xs text-[#6B7280]">مؤسس منصة تعليمية</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="slide text-right">
-                    <div class="flex text-[#F59E0B] text-sm">★★★★★</div>
-                    <p class="mt-3 text-[#111827]">"واجهة بديهية وأدوات قوية. طلابي يحبون المنصة!"</p>
-                    <div class="flex items-center gap-3 mt-4">
-                        <img src="https://i.pravatar.cc/48?img=4" alt="نورة" class="w-10 h-10 rounded-full border" loading="lazy" />
-                        <div>
-                            <p class="font-bold text-sm">نورة أحمد</p>
-                            <p class="text-xs text-[#6B7280]">مدرسة لغة إنجليزية</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ======== FAQ ======== -->
-    <section class="py-16 md:py-20 bg-[#F8FAFC]" id="faq">
-        <div class="container-custom max-w-3xl mx-auto">
-            <div class="text-center">
-                <span class="section-badge">الأسئلة الشائعة</span>
-                <h2 class="section-title">إجابات لأكثر الأسئلة شيوعاً</h2>
-            </div>
-
-            <div class="mt-10 bg-white rounded-2xl shadow-sm border border-[#E5E7EB] overflow-hidden divide-y divide-[#E5E7EB]">
-                <div class="faq-item open px-6">
-                    <button class="faq-question">
-                        <span>هل يمكنني استخدام المنصة مجاناً؟</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="faq-answer">نعم، توفر مداد العلم باقة Starter مجانية مع مميزات أساسية تتيح لك تجربة المنصة.</div>
-                </div>
-                <div class="faq-item px-6">
-                    <button class="faq-question">
-                        <span>هل أحتاج إلى خبرة تقنية لاستخدام المنصة؟</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="faq-answer">لا، تم تصميم المنصة لتكون سهلة الاستخدام ولا تحتاج إلى أي خبرة تقنية سابقة.</div>
-                </div>
-                <div class="faq-item px-6">
-                    <button class="faq-question">
-                        <span>ما هي طرق الدفع المتاحة؟</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="faq-answer">ندعم جميع طرق الدفع الرئيسية مثل البطاقات الائتمانية، التحويل البنكي، والمحافظ الإلكترونية.</div>
-                </div>
-                <div class="faq-item px-6">
-                    <button class="faq-question">
-                        <span>كيف يمكنني نقل بياناتي إلى منصة أخرى؟</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="faq-answer">توفر مداد العلم أدوات تصدير متكاملة تتيح لك نقل بياناتك في أي وقت بصيغ مختلفة.</div>
-                </div>
-                <div class="faq-item px-6">
-                    <button class="faq-question">
-                        <span>هل توجد نسخة تجريبية؟</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="faq-answer">نعم، يمكنك استخدام الباقة المجانية لمدة 14 يوماً بدون أي قيود.</div>
-                </div>
+            <div class="mt-6 md:mt-8">
+                <a href="features.html" class="btn-secondary text-sm md:text-base">استعراض جميع المميزات <i class="fas fa-arrow-left mr-1"></i></a>
             </div>
         </div>
     </section>
 
     <!-- ======== CTA ======== -->
-    <section class="py-16 md:py-24 bg-[#2563EB] text-white" id="cta">
+    <section class="py-12 md:py-16 lg:py-24 cta-section text-white" id="cta">
         <div class="container-custom text-center">
-            <h2 class="text-3xl md:text-4xl font-extrabold">جاهز لبدء رحلتك التعليمية؟</h2>
-            <p class="text-white/80 text-lg mt-2 max-w-xl mx-auto">انضم إلى آلاف المعلمين والأكاديميات الذين يثقون في مداد العلم</p>
-            <div class="flex flex-wrap justify-center gap-4 mt-8">
-                <a href="#register" class="bg-white text-[#2563EB] font-bold px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition hover:scale-105">
+            <h2 class="text-2xl md:text-3xl lg:text-4xl font-extrabold">جاهز لبدء رحلتك التعليمية؟</h2>
+            <p class="text-white/80 text-base md:text-lg mt-2 max-w-xl mx-auto">انضم إلى آلاف المعلمين والأكاديميات الذين يثقون في مداد العلم</p>
+            <div class="flex flex-wrap justify-center gap-3 md:gap-4 mt-6 md:mt-8">
+                <a href="register.html" class="bg-white text-[#2563EB] font-bold px-6 md:px-8 py-2.5 md:py-3 rounded-full shadow-lg hover:shadow-xl transition hover:scale-105 text-sm md:text-base">
                     ابدأ مجاناً الآن
                 </a>
-                <a href="#demo" class="btn-outline-white">احجز عرضاً توضيحياً</a>
+                <a href="contact.html" class="btn-outline-white text-sm md:text-base">احجز عرضاً توضيحياً</a>
             </div>
         </div>
     </section>
 
     <!-- ======== FOOTER ======== -->
-    <footer class="bg-[#111827] text-[#9CA3AF] pt-16 pb-6" id="contact">
+    <footer class="bg-[#111827] text-[#9CA3AF] pt-12 md:pt-16 pb-6" id="contact">
         <div class="container-custom">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-right">
+            <div class="footer-grid grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 text-right">
+                <!-- Brand -->
                 <div class="col-span-2 md:col-span-1">
-                    <a href="#" class="flex items-center gap-2 text-xl font-extrabold text-white no-underline">
+                    <a href="index.html" class="flex items-center gap-2 text-xl font-extrabold text-white no-underline">
                         <i class="fas fa-feather-alt text-[#4B5563]"></i>
                         <span>مداد العلم</span>
                     </a>
                     <p class="text-sm mt-3 max-w-xs">منصة تعليمية متكاملة لإدارة الأكاديميات الإلكترونية بكل احترافية.</p>
-                    <div class="flex gap-4 mt-4">
-                        <a href="#" class="text-[#9CA3AF] hover:text-white transition"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="text-[#9CA3AF] hover:text-white transition"><i class="fab fa-facebook"></i></a>
-                        <a href="#" class="text-[#9CA3AF] hover:text-white transition"><i class="fab fa-linkedin"></i></a>
-                        <a href="#" class="text-[#9CA3AF] hover:text-white transition"><i class="fab fa-youtube"></i></a>
+                    <div class="footer-social flex gap-4 mt-4">
+                        <a href="#" class="text-[#9CA3AF] hover:text-white transition" aria-label="تويتر"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-[#9CA3AF] hover:text-white transition" aria-label="فيسبوك"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-[#9CA3AF] hover:text-white transition" aria-label="لينكد إن"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="text-[#9CA3AF] hover:text-white transition" aria-label="يوتيوب"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
-
-                <div>
+                <!-- Links -->
+                <div class="footer-links">
                     <h4 class="text-white font-semibold text-sm">المنصة</h4>
                     <ul class="mt-3 space-y-2 text-sm">
-                        <li><a href="#features" class="hover:text-white transition">المميزات</a></li>
-                        <li><a href="#pricing" class="hover:text-white transition">الأسعار</a></li>
-                        <li><a href="#about" class="hover:text-white transition">عن المنصة</a></li>
-                        <li><a href="#blog" class="hover:text-white transition">المدونة</a></li>
+                        <li><a href="features.html" class="hover:text-white transition">المميزات</a></li>
+                        <li><a href="pricing.html" class="hover:text-white transition">الأسعار</a></li>
+                        <li><a href="about.html" class="hover:text-white transition">عن المنصة</a></li>
+                        <li><a href="blog.html" class="hover:text-white transition">المدونة</a></li>
                     </ul>
                 </div>
-                <div>
+                <div class="footer-links">
                     <h4 class="text-white font-semibold text-sm">الدعم</h4>
                     <ul class="mt-3 space-y-2 text-sm">
-                        <li><a href="#contact" class="hover:text-white transition">تواصل معنا</a></li>
-                        <li><a href="#faq" class="hover:text-white transition">الأسئلة الشائعة</a></li>
-                        <li><a href="#status" class="hover:text-white transition">الحالة</a></li>
-                        <li><a href="#api" class="hover:text-white transition">API</a></li>
+                        <li><a href="contact.html" class="hover:text-white transition">تواصل معنا</a></li>
+                        <li><a href="faq.html" class="hover:text-white transition">الأسئلة الشائعة</a></li>
+                        <li><a href="login.html" class="hover:text-white transition">تسجيل الدخول</a></li>
+                        <li><a href="register.html" class="hover:text-white transition">إنشاء حساب</a></li>
                     </ul>
                 </div>
-                <div>
+                <div class="footer-links">
                     <h4 class="text-white font-semibold text-sm">قانوني</h4>
                     <ul class="mt-3 space-y-2 text-sm">
-                        <li><a href="#privacy" class="hover:text-white transition">سياسة الخصوصية</a></li>
-                        <li><a href="#terms" class="hover:text-white transition">الشروط والأحكام</a></li>
-                        <li><a href="#cookies" class="hover:text-white transition">ملفات تعريف الارتباط</a></li>
+                        <li><a href="privacy-policy.html" class="hover:text-white transition">سياسة الخصوصية</a></li>
+                        <li><a href="terms.html" class="hover:text-white transition">الشروط والأحكام</a></li>
+                        <li><a href="#" class="hover:text-white transition">ملفات تعريف الارتباط</a></li>
                     </ul>
                 </div>
             </div>
-
-            <div class="border-t border-[#1E293B] mt-10 pt-6 flex flex-col md:flex-row justify-between items-center text-sm">
+            <!-- Copyright -->
+            <div class="border-t border-[#1E293B] mt-8 md:mt-10 pt-6 flex flex-col md:flex-row justify-between items-center text-sm">
                 <span>&copy; 2026 مداد العلم. جميع الحقوق محفوظة.</span>
                 <div class="flex gap-6 mt-2 md:mt-0">
-                    <a href="#privacy" class="hover:text-white transition">سياسة الخصوصية</a>
-                    <a href="#terms" class="hover:text-white transition">الشروط</a>
-                    <a href="#status" class="hover:text-white transition">الحالة</a>
+                    <a href="privacy-policy.html" class="hover:text-white transition">سياسة الخصوصية</a>
+                    <a href="terms.html" class="hover:text-white transition">الشروط</a>
                 </div>
             </div>
         </div>
     </footer>
 
     <!-- ======== SCRIPTS ======== -->
+    <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
     <script>
-        // =============================================
-        // 1. Mobile drawer
-        // =============================================
+        // ============================================================
+        // 1. Lenis Smooth Scroll
+        // ============================================================
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            orientation: 'vertical',
+            gestureOrientation: 'vertical',
+            smoothWheel: true,
+            wheelMultiplier: 1,
+            touchMultiplier: 2,
+        });
+        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+        requestAnimationFrame(raf);
+
+        // ============================================================
+        // 2. Mobile Drawer
+        // ============================================================
         const menuToggle = document.getElementById('menuToggle');
         const drawer = document.getElementById('mobileDrawer');
         const drawerOverlay = document.getElementById('drawerOverlay');
@@ -1248,73 +519,18 @@
             drawer.classList.add('open');
             document.body.style.overflow = 'hidden';
         }
-
         function closeDrawer() {
             drawer.classList.remove('open');
             document.body.style.overflow = '';
         }
-
         if (menuToggle) menuToggle.addEventListener('click', openDrawer);
         if (drawerClose) drawerClose.addEventListener('click', closeDrawer);
         if (drawerOverlay) drawerOverlay.addEventListener('click', closeDrawer);
+        document.querySelectorAll('#mobileDrawer a').forEach(link => link.addEventListener('click', closeDrawer));
 
-        // close drawer on link click (mobile)
-        document.querySelectorAll('#mobileDrawer a').forEach(link => {
-            link.addEventListener('click', closeDrawer);
-        });
-
-        // =============================================
-        // 2. FAQ accordion
-        // =============================================
-        document.querySelectorAll('.faq-question').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const item = this.closest('.faq-item');
-                const isOpen = item.classList.contains('open');
-                // close all
-                document.querySelectorAll('.faq-item').forEach(el => el.classList.remove('open'));
-                if (!isOpen) item.classList.add('open');
-            });
-        });
-
-        // open first by default
-        const firstFaq = document.querySelector('.faq-item');
-        if (firstFaq) firstFaq.classList.add('open');
-
-        // =============================================
-        // 3. Animated counters (Intersection Observer)
-        // =============================================
-        const counters = document.querySelectorAll('[data-count]');
-
-        const counterObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const el = entry.target;
-                    const target = parseInt(el.dataset.count);
-                    if (isNaN(target)) return;
-                    let current = 0;
-                    const increment = Math.ceil(target / 50);
-                    const timer = setInterval(() => {
-                        current += increment;
-                        if (current >= target) {
-                            current = target;
-                            clearInterval(timer);
-                        }
-                        if (el.dataset.count.includes('%')) {
-                            el.textContent = current + '%';
-                        } else {
-                            el.textContent = current.toLocaleString();
-                        }
-                    }, 30);
-                    counterObserver.unobserve(el);
-                }
-            });
-        }, { threshold: 0.3 });
-
-        counters.forEach(el => counterObserver.observe(el));
-
-        // =============================================
-        // 4. Navbar background on scroll
-        // =============================================
+        // ============================================================
+        // 3. Navbar scroll effect
+        // ============================================================
         const navbar = document.getElementById('navbar');
         window.addEventListener('scroll', () => {
             if (window.scrollY > 20) {
@@ -1326,18 +542,28 @@
             }
         });
 
-        // =============================================
-        // 5. Dark mode toggle (demo only - stays light)
-        // =============================================
+        // ============================================================
+        // 4. Dark mode toggle (demo)
+        // ============================================================
         document.querySelectorAll('.dark-mode-toggle').forEach(btn => {
             btn.addEventListener('click', () => {
                 const icon = btn.querySelector('i');
                 icon.classList.toggle('fa-moon');
                 icon.classList.toggle('fa-sun');
+                document.body.classList.toggle('dark-mode');
             });
         });
 
-        console.log('✅ مداد العلم — interface loaded successfully');
+        // ============================================================
+        // 5. Lazy loading images (native)
+        // ============================================================
+        if ('loading' in HTMLImageElement.prototype) {
+            document.querySelectorAll('img[loading="lazy"]').forEach(img => {
+                img.src = img.dataset.src || img.src;
+            });
+        }
+
+        console.log('✅ مداد العلم — الصفحة الرئيسية جاهزة (Mobile First)');
     </script>
 
 </body>

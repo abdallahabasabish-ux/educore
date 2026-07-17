@@ -1,353 +1,1344 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>مداد العلم – منصة تعليمية متكاملة</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>مداد العلم — منصة تعليمية متكاملة</title>
 
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..700&family=Cairo:wght@300..700&display=swap" rel="stylesheet" />
 
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+    <!-- Tailwind + base styles -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome 6 (free) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
-  <!-- AOS -->
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        /* ---------- reset / base ---------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  <!-- Toastify -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
+        html {
+            scroll-behavior: smooth;
+        }
 
-  <!-- Custom CSS -->
-  <link rel="stylesheet" href="assets/css/style.css">
+        body {
+            font-family: 'Inter', 'Cairo', sans-serif;
+            background: #ffffff;
+            color: #111827;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
 
-  <style>
-    .mobile-menu { display: none; transition: all 0.3s ease; }
-    .mobile-menu.open { display: flex; }
-    @media (max-width: 768px) {
-      .desktop-nav { display: none !important; }
-      .mobile-menu {
-        display: none;
-        flex-direction: column;
-        position: absolute;
-        top: 64px;
-        right: 0;
-        left: 0;
-        background: white;
-        padding: 1.5rem;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        border-bottom: 1px solid #e5e7eb;
-        z-index: 50;
-        gap: 0.5rem;
-      }
-    }
-  </style>
+        /* ---------- variables ---------- */
+        :root {
+            --primary: #4B5563;
+            --accent: #2563EB;
+            --surface: #F8FAFC;
+            --border: #E5E7EB;
+            --text: #111827;
+            --success: #22C55E;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --radius: 20px;
+            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.08);
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ---------- utilities ---------- */
+        .container-custom {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.72);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .gradient-bg {
+            background: radial-gradient(ellipse at 30% 20%, rgba(37, 99, 235, 0.06) 0%, transparent 70%),
+                radial-gradient(ellipse at 70% 80%, rgba(75, 85, 99, 0.04) 0%, transparent 60%);
+        }
+
+        .card-hover {
+            transition: all var(--transition);
+        }
+        .card-hover:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* ---------- scrollbar ---------- */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af;
+        }
+
+        /* ---------- responsive helpers ---------- */
+        .mobile-only {
+            display: none;
+        }
+        .desktop-only {
+            display: flex;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-only {
+                display: flex;
+            }
+            .desktop-only {
+                display: none !important;
+            }
+            .container-custom {
+                padding: 0 1rem;
+            }
+        }
+
+        /* ---------- animations ---------- */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(32px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        @keyframes float {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        @keyframes pulseGlow {
+            0%,
+            100% {
+                opacity: 0.4;
+            }
+            50% {
+                opacity: 0.8;
+            }
+        }
+
+        .animate-fade-up {
+            animation: fadeInUp 0.7s ease forwards;
+        }
+        .animate-fade-scale {
+            animation: fadeInScale 0.6s ease forwards;
+        }
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
+        .animate-pulse-glow {
+            animation: pulseGlow 3s ease-in-out infinite;
+        }
+
+        /* ---------- section titles ---------- */
+        .section-badge {
+            display: inline-block;
+            background: rgba(37, 99, 235, 0.08);
+            color: var(--accent);
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.3rem 1rem;
+            border-radius: 9999px;
+            letter-spacing: 0.3px;
+            margin-bottom: 0.75rem;
+        }
+
+        .section-title {
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+        }
+
+        .section-sub {
+            color: #6b7280;
+            font-size: 1.05rem;
+            max-width: 600px;
+            margin: 0.5rem auto 0;
+        }
+
+        /* ---------- navbar mobile drawer ---------- */
+        .drawer {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            display: flex;
+            pointer-events: none;
+            visibility: hidden;
+            transition: visibility 0.3s;
+        }
+        .drawer.open {
+            pointer-events: auto;
+            visibility: visible;
+        }
+        .drawer-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(4px);
+            opacity: 0;
+            transition: opacity 0.35s ease;
+        }
+        .drawer.open .drawer-overlay {
+            opacity: 1;
+        }
+        .drawer-panel {
+            position: relative;
+            width: 85%;
+            max-width: 320px;
+            background: white;
+            height: 100%;
+            padding: 2rem 1.5rem;
+            overflow-y: auto;
+            transform: translateX(100%);
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: -8px 0 40px rgba(0, 0, 0, 0.08);
+        }
+        .drawer.open .drawer-panel {
+            transform: translateX(0);
+        }
+        .drawer-panel .close-btn {
+            position: absolute;
+            left: 1rem;
+            top: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #4b5563;
+            cursor: pointer;
+            padding: 0.25rem;
+        }
+        .drawer-panel a {
+            display: block;
+            padding: 0.75rem 0;
+            color: #1f2937;
+            font-weight: 500;
+            border-bottom: 1px solid #f3f4f6;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .drawer-panel a:hover {
+            color: var(--accent);
+        }
+        .drawer-panel .btn-primary {
+            margin-top: 1rem;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* ---------- testimonials slider ---------- */
+        .testimonial-slider {
+            display: flex;
+            gap: 1.5rem;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            padding: 0.5rem 0.25rem 1.5rem;
+            scrollbar-width: none;
+        }
+        .testimonial-slider::-webkit-scrollbar {
+            display: none;
+        }
+        .testimonial-slider .slide {
+            flex: 0 0 90%;
+            max-width: 340px;
+            scroll-snap-align: start;
+            background: white;
+            border-radius: var(--radius);
+            padding: 1.75rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            transition: all var(--transition);
+        }
+        .testimonial-slider .slide:hover {
+            box-shadow: var(--shadow-md);
+        }
+        @media (min-width: 768px) {
+            .testimonial-slider .slide {
+                flex: 0 0 32%;
+                max-width: 380px;
+            }
+        }
+
+        /* ---------- pricing cards ---------- */
+        .pricing-card {
+            border-radius: var(--radius);
+            padding: 2rem 1.75rem;
+            background: white;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition);
+            position: relative;
+        }
+        .pricing-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px);
+        }
+        .pricing-card.popular {
+            border-color: var(--accent);
+            background: #f8faff;
+        }
+        .pricing-card.popular .badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.2rem 1.2rem;
+            border-radius: 9999px;
+            letter-spacing: 0.5px;
+        }
+
+        /* ---------- faq accordion ---------- */
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 0;
+        }
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text);
+            cursor: pointer;
+            padding: 0.25rem 0;
+            gap: 1rem;
+            text-align: right;
+        }
+        .faq-question i {
+            transition: transform 0.3s ease;
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+        .faq-item.open .faq-question i {
+            transform: rotate(180deg);
+        }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.3s ease;
+            color: #4b5563;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        .faq-item.open .faq-answer {
+            max-height: 200px;
+            padding-top: 0.75rem;
+        }
+
+        /* ---------- comparison table ---------- */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            background: white;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+        .comparison-table th {
+            background: var(--surface);
+            padding: 1rem 1.25rem;
+            font-weight: 600;
+            text-align: right;
+            border-bottom: 1px solid var(--border);
+        }
+        .comparison-table td {
+            padding: 0.9rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+            text-align: right;
+        }
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+        .comparison-table .check {
+            color: var(--success);
+        }
+        .comparison-table .cross {
+            color: var(--danger);
+        }
+        @media (max-width: 640px) {
+            .comparison-table {
+                font-size: 0.75rem;
+            }
+            .comparison-table th,
+            .comparison-table td {
+                padding: 0.5rem 0.75rem;
+            }
+        }
+
+        /* ---------- mockup container ---------- */
+        .mockup-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .mockup-mac {
+            width: 100%;
+            max-width: 560px;
+            aspect-ratio: 16/10;
+            background: #f1f5f9;
+            border-radius: 20px;
+            border: 2px solid #e2e8f0;
+            padding: 12px;
+            box-shadow: var(--shadow-lg);
+        }
+        .mockup-mac .screen {
+            width: 100%;
+            height: 100%;
+            background: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            color: #94a3b8;
+            background-image: radial-gradient(circle at 30% 40%, #f1f5f9 0%, transparent 60%);
+            overflow: hidden;
+            position: relative;
+        }
+        .mockup-mac .screen .placeholder-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            width: 80%;
+            padding: 12px;
+        }
+        .mockup-mac .screen .placeholder-grid .item {
+            background: #e2e8f0;
+            border-radius: 8px;
+            height: 40px;
+        }
+        .mockup-mac .screen .placeholder-grid .item:nth-child(1) {
+            height: 60px;
+            grid-column: span 3;
+            background: #dbeafe;
+        }
+        .mockup-phone {
+            position: absolute;
+            left: -20px;
+            bottom: -20px;
+            width: 120px;
+            aspect-ratio: 9/19;
+            background: #0f172a;
+            border-radius: 20px;
+            padding: 8px;
+            box-shadow: var(--shadow-lg);
+            border: 2px solid #334155;
+        }
+        .mockup-phone .phone-screen {
+            width: 100%;
+            height: 100%;
+            background: #f8fafc;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.4rem;
+            color: #94a3b8;
+        }
+        @media (max-width: 768px) {
+            .mockup-phone {
+                display: none;
+            }
+            .mockup-mac {
+                max-width: 320px;
+            }
+        }
+
+        /* ---------- language toggle ---------- */
+        .lang-toggle {
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 9999px;
+            padding: 0.3rem 1rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text);
+            cursor: pointer;
+            transition: all var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .lang-toggle:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* ---------- dark mode toggle ---------- */
+        .dark-mode-toggle {
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 9999px;
+            padding: 0.3rem 0.8rem;
+            font-size: 0.9rem;
+            color: var(--text);
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+        .dark-mode-toggle:hover {
+            border-color: var(--accent);
+        }
+
+        /* ---------- general buttons ---------- */
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+            padding: 0.7rem 2rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: none;
+            cursor: pointer;
+            transition: all var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: scale(1.02);
+            box-shadow: 0 12px 28px rgba(37, 99, 235, 0.25);
+        }
+        .btn-secondary {
+            background: transparent;
+            color: var(--text);
+            padding: 0.7rem 2rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+        .btn-secondary:hover {
+            background: var(--surface);
+            border-color: #9ca3af;
+        }
+        .btn-outline-white {
+            background: transparent;
+            color: white;
+            padding: 0.7rem 2rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all var(--transition);
+            text-decoration: none;
+        }
+        .btn-outline-white:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.6);
+        }
+
+        .icon-box {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            background: rgba(37, 99, 235, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        /* ---------- responsive extras ---------- */
+        @media (max-width: 480px) {
+            .container-custom {
+                padding: 0 0.75rem;
+            }
+            .section-title {
+                font-size: 1.6rem;
+            }
+            .btn-primary,
+            .btn-secondary {
+                padding: 0.6rem 1.4rem;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
 </head>
 <body>
 
-  <!-- ===== NAVBAR ===== -->
-  <nav class="fixed top-0 right-0 left-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-200/50 shadow-sm" data-aos="fade-down">
-    <div class="container mx-auto px-4 flex justify-between items-center h-16">
-      <a href="index.html" class="flex items-center gap-2 text-2xl font-extrabold text-[#2563EB]">
-        <i class="fas fa-feather-alt text-2xl"></i> مداد العلم
-      </a>
-      <div class="hidden md:flex items-center gap-6 desktop-nav">
-        <a href="#features" class="text-sm font-medium text-gray-700 hover:text-[#2563EB] transition">المميزات</a>
-        <a href="#testimonials" class="text-sm font-medium text-gray-700 hover:text-[#2563EB] transition">آراء العملاء</a>
-        <a href="#pricing" class="text-sm font-medium text-gray-700 hover:text-[#2563EB] transition">الأسعار</a>
-        <a href="#faq" class="text-sm font-medium text-gray-700 hover:text-[#2563EB] transition">الأسئلة الشائعة</a>
-        <a href="contact.html" class="text-sm font-medium text-gray-700 hover:text-[#2563EB] transition">تواصل معنا</a>
-        <a href="login.html" class="px-4 py-2 text-sm font-medium text-[#2563EB] hover:bg-gray-100 rounded-full transition">تسجيل الدخول</a>
-        <a href="register.html" class="px-5 py-2 text-sm font-medium text-white bg-[#2563EB] hover:bg-[#1D4ED8] rounded-full shadow-md hover:shadow-lg transition-all">ابدأ الآن</a>
-      </div>
-      <button id="menu-toggle" class="md:hidden text-gray-600 hover:text-[#2563EB] transition text-2xl">
-        <i class="fas fa-bars"></i>
-      </button>
-    </div>
-    <div id="mobile-menu" class="mobile-menu md:hidden">
-      <a href="#features" class="py-2 text-gray-700 hover:text-[#2563EB] transition">المميزات</a>
-      <a href="#testimonials" class="py-2 text-gray-700 hover:text-[#2563EB] transition">آراء العملاء</a>
-      <a href="#pricing" class="py-2 text-gray-700 hover:text-[#2563EB] transition">الأسعار</a>
-      <a href="#faq" class="py-2 text-gray-700 hover:text-[#2563EB] transition">الأسئلة الشائعة</a>
-      <a href="contact.html" class="py-2 text-gray-700 hover:text-[#2563EB] transition">تواصل معنا</a>
-      <a href="login.html" class="py-2 text-center border border-[#2563EB] text-[#2563EB] rounded-full hover:bg-gray-50 transition">تسجيل الدخول</a>
-      <a href="register.html" class="py-2 text-center bg-[#2563EB] text-white rounded-full hover:bg-[#1D4ED8] transition">ابدأ الآن</a>
-    </div>
-  </nav>
+    <!-- ======== NAVBAR ======== -->
+    <header class="fixed top-0 left-0 right-0 z-50 glass border-b border-[#E5E7EB]/40 shadow-sm transition-all duration-300" id="navbar">
+        <div class="container-custom flex items-center justify-between h-16">
+            <!-- logo -->
+            <a href="#" class="flex items-center gap-2 text-xl font-extrabold text-[#111827] no-underline">
+                <i class="fas fa-feather-alt text-[#4B5563]"></i>
+                <span>مداد العلم</span>
+            </a>
 
-  <!-- ===== HERO ===== -->
-  <section class="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-white to-gray-100 pt-20 pb-10 overflow-hidden relative" id="hero">
-    <div class="absolute top-20 right-10 w-72 h-72 bg-[#2563EB]/5 rounded-full blur-3xl -z-10"></div>
-    <div class="absolute bottom-20 left-10 w-96 h-96 bg-[#2563EB]/5 rounded-full blur-3xl -z-10"></div>
-    <div class="container mx-auto px-4 grid md:grid-cols-2 gap-12 items-center relative z-10">
-      <div class="text-center md:text-right" data-aos="fade-up" data-aos-duration="800">
-        <div class="inline-block bg-[#2563EB]/10 text-[#2563EB] text-sm font-semibold px-4 py-1 rounded-full mb-4">
-          <i class="fas fa-rocket ml-1"></i> منصة تعليمية متكاملة
-        </div>
-        <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight">
-          اكتب مستقبلك التعليمي <span class="text-[#2563EB]">بمداد العلم</span>
-        </h1>
-        <p class="mt-4 text-lg text-gray-600 max-w-lg mx-auto md:mx-0 leading-relaxed">
-          منصة تعليمية متكاملة تتيح لك إنشاء وإدارة كورساتك وطلابك بكل احترافية وسلاسة.
-        </p>
-        <div class="mt-8 flex flex-wrap gap-4 justify-center md:justify-start">
-          <a href="register.html" class="px-6 py-3 bg-[#2563EB] text-white rounded-full text-base font-semibold hover:bg-[#1D4ED8] shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5">
-            ابدأ الآن مجاناً <i class="fas fa-arrow-left mr-2"></i>
-          </a>
-          <a href="#features" class="px-6 py-3 border border-gray-300 rounded-full text-base font-medium hover:bg-white shadow-sm transition-all hover:shadow-md">
-            <i class="fas fa-play ml-2"></i> اكتشف المزيد
-          </a>
-        </div>
-        <div class="mt-8 flex flex-wrap justify-center md:justify-start gap-6 text-sm text-gray-500">
-          <span><i class="fas fa-check-circle text-[#2563EB] ml-1"></i> لا حاجة لخبرة تقنية</span>
-          <span><i class="fas fa-check-circle text-[#2563EB] ml-1"></i> دعم فني 24/7</span>
-          <span><i class="fas fa-check-circle text-[#2563EB] ml-1"></i> تحديثات مستمرة</span>
-        </div>
-      </div>
-      <div class="relative flex justify-center" data-aos="fade-left" data-aos-duration="800" data-aos-delay="200">
-        <div class="w-full max-w-md bg-white/60 backdrop-blur-sm rounded-3xl shadow-2xl border border-white/30 p-6 transform hover:scale-105 transition-transform duration-500">
-          <div class="bg-[#2563EB]/5 rounded-2xl p-4">
-            <div class="flex items-center gap-2 mb-4">
-              <div class="w-3 h-3 bg-red-400 rounded-full"></div>
-              <div class="w-3 h-3 bg-yellow-400 rounded-full"></div>
-              <div class="w-3 h-3 bg-green-400 rounded-full"></div>
+            <!-- nav links (desktop) -->
+            <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-[#4B5563]">
+                <a href="#features" class="hover:text-[#2563EB] transition">المميزات</a>
+                <a href="#pricing" class="hover:text-[#2563EB] transition">الأسعار</a>
+                <a href="#testimonials" class="hover:text-[#2563EB] transition">آراء</a>
+                <a href="#faq" class="hover:text-[#2563EB] transition">الأسئلة</a>
+                <a href="#contact" class="hover:text-[#2563EB] transition">تواصل</a>
+            </nav>
+
+            <!-- right actions (desktop) -->
+            <div class="hidden md:flex items-center gap-3">
+                <button class="lang-toggle" aria-label="تبديل اللغة">
+                    <i class="fas fa-globe"></i> EN
+                </button>
+                <button class="dark-mode-toggle" aria-label="تبديل الوضع الداكن">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <a href="#login" class="text-sm font-medium text-[#4B5563] hover:text-[#2563EB] transition">تسجيل الدخول</a>
+                <a href="#register" class="btn-primary text-sm py-1.5 px-5">ابدأ مجانًا</a>
             </div>
-            <div class="h-8 w-3/4 bg-[#2563EB]/20 rounded mb-4"></div>
-            <div class="h-4 w-1/2 bg-[#2563EB]/10 rounded mb-2"></div>
-            <div class="h-4 w-2/3 bg-[#2563EB]/10 rounded"></div>
-            <div class="mt-6 flex gap-3">
-              <div class="h-10 w-16 bg-[#2563EB]/20 rounded-full"></div>
-              <div class="h-10 w-16 bg-[#2563EB]/10 rounded-full"></div>
-              <div class="h-10 w-16 bg-[#2563EB]/10 rounded-full"></div>
+
+            <!-- mobile menu button -->
+            <button class="md:hidden text-2xl text-[#4B5563] p-1" id="menuToggle" aria-label="فتح القائمة">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- ======== MOBILE DRAWER ======== -->
+    <div class="drawer" id="mobileDrawer" role="dialog" aria-modal="true" aria-label="القائمة">
+        <div class="drawer-overlay" id="drawerOverlay"></div>
+        <div class="drawer-panel">
+            <button class="close-btn" id="drawerClose" aria-label="إغلاق القائمة">
+                <i class="fas fa-times"></i>
+            </button>
+            <nav class="flex flex-col gap-1 mt-8">
+                <a href="#features">المميزات</a>
+                <a href="#pricing">الأسعار</a>
+                <a href="#testimonials">آراء العملاء</a>
+                <a href="#faq">الأسئلة الشائعة</a>
+                <a href="#contact">تواصل معنا</a>
+                <a href="#blog">المدونة</a>
+                <div class="flex items-center gap-3 mt-4 border-t border-[#E5E7EB] pt-4">
+                    <button class="lang-toggle text-sm">🌐 EN</button>
+                    <button class="dark-mode-toggle text-sm"><i class="fas fa-moon"></i></button>
+                </div>
+                <a href="#login" class="text-[#4B5563] font-medium mt-2">تسجيل الدخول</a>
+                <a href="#register" class="btn-primary text-center mt-1">ابدأ مجانًا</a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- ======== HERO ======== -->
+    <section class="relative pt-24 pb-12 md:pt-32 md:pb-20 overflow-hidden gradient-bg" id="hero">
+        <div class="container-custom relative z-10 grid md:grid-cols-2 gap-10 items-center">
+
+            <!-- text -->
+            <div class="animate-fade-up order-2 md:order-1 text-right">
+                <span class="inline-block bg-[#2563EB]/10 text-[#2563EB] text-xs font-semibold px-4 py-1 rounded-full mb-4">
+                    منصة تعليمية متكاملة
+                </span>
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.1] tracking-tight">
+                    اكتب مستقبلك التعليمي
+                    <span class="text-[#4B5563]">بمداد العلم</span>
+                </h1>
+                <p class="mt-4 text-lg md:text-xl text-[#4B5563] max-w-lg">
+                    مداد العلم تمنحك كل ما تحتاجه لإدارة أكاديميتك الإلكترونية: الكورسات، الطلاب، الامتحانات، الاشتراكات، والتقارير — في مكان واحد.
+                </p>
+                <div class="mt-8 flex flex-wrap gap-4">
+                    <a href="#register" class="btn-primary">
+                        ابدأ مجانًا <i class="fas fa-arrow-left mr-1"></i>
+                    </a>
+                    <a href="#demo" class="btn-secondary">
+                        <i class="fas fa-play-circle"></i> شاهد العرض
+                    </a>
+                </div>
+                <div class="mt-6 flex flex-wrap gap-5 text-sm text-[#6B7280]">
+                    <span><i class="fas fa-check-circle text-[#22C55E] ml-1"></i> لا خبرة تقنية</span>
+                    <span><i class="fas fa-check-circle text-[#22C55E] ml-1"></i> دعم 24/7</span>
+                    <span><i class="fas fa-check-circle text-[#22C55E] ml-1"></i> تحديثات مستمرة</span>
+                </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
 
-  <!-- ===== FEATURES ===== -->
-  <section id="features" class="py-20 bg-gray-50/50">
-    <div class="container mx-auto px-4 text-center">
-      <span class="text-sm font-semibold text-[#2563EB] bg-[#2563EB]/10 px-4 py-1 rounded-full" data-aos="fade-up">مميزات استثنائية</span>
-      <h2 class="text-3xl md:text-4xl font-extrabold mt-2" data-aos="fade-up" data-aos-delay="50">كل ما تحتاجه في منصة واحدة</h2>
-      <p class="text-gray-500 mt-2 max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="100">أدوات متطورة مصممة خصيصاً لتلبية احتياجات المعلمين والأكاديميات</p>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
-        <!-- بطاقات المميزات -->
-        <div class="card-hover bg-white p-6 rounded-2xl shadow-sm border border-gray-200 hover:shadow-xl transition-all duration-300 group" data-aos="fade-up" data-aos-delay="100">
-          <div class="w-14 h-14 bg-[#2563EB]/10 rounded-2xl flex items-center justify-center mx-auto group-hover:bg-[#2563EB] transition-colors">
-            <i class="fas fa-tachometer-alt text-2xl text-[#2563EB] group-hover:text-white transition-colors"></i>
-          </div>
-          <h3 class="text-lg font-bold mt-4">لوحة تحكم متطورة</h3>
-          <p class="text-sm text-gray-500 mt-2">إدارة كاملة لمنصتك من مكان واحد مع إحصائيات وتقارير فورية.</p>
-        </div>
-        <div class="card-hover bg-white p-6 rounded-2xl shadow-sm border border-gray-200 hover:shadow-xl transition-all duration-300 group" data-aos="fade-up" data-aos-delay="150">
-          <div class="w-14 h-14 bg-[#2563EB]/10 rounded-2xl flex items-center justify-center mx-auto group-hover:bg-[#2563EB] transition-colors">
-            <i class="fas fa-users text-2xl text-[#2563EB] group-hover:text-white transition-colors"></i>
-          </div>
-          <h3 class="text-lg font-bold mt-4">إدارة الطلاب والمدرسين</h3>
-          <p class="text-sm text-gray-500 mt-2">متابعة وتقييم متقدم مع أدوات تواصل فعالة.</p>
-        </div>
-        <div class="card-hover bg-white p-6 rounded-2xl shadow-sm border border-gray-200 hover:shadow-xl transition-all duration-300 group" data-aos="fade-up" data-aos-delay="200">
-          <div class="w-14 h-14 bg-[#2563EB]/10 rounded-2xl flex items-center justify-center mx-auto group-hover:bg-[#2563EB] transition-colors">
-            <i class="fas fa-book-open text-2xl text-[#2563EB] group-hover:text-white transition-colors"></i>
-          </div>
-          <h3 class="text-lg font-bold mt-4">نظام الكورسات المتكامل</h3>
-          <p class="text-sm text-gray-500 mt-2">دروس، اختبارات، ومواد تعليمية تفاعلية.</p>
-        </div>
-        <div class="card-hover bg-white p-6 rounded-2xl shadow-sm border border-gray-200 hover:shadow-xl transition-all duration-300 group" data-aos="fade-up" data-aos-delay="250">
-          <div class="w-14 h-14 bg-[#2563EB]/10 rounded-2xl flex items-center justify-center mx-auto group-hover:bg-[#2563EB] transition-colors">
-            <i class="fas fa-shield-alt text-2xl text-[#2563EB] group-hover:text-white transition-colors"></i>
-          </div>
-          <h3 class="text-lg font-bold mt-4">أمان وحماية كاملة</h3>
-          <p class="text-sm text-gray-500 mt-2">بياناتك آمنة بمعايير عالمية مع صلاحيات متقدمة.</p>
-        </div>
-      </div>
-    </div>
-  </section>
+            <!-- mockup -->
+            <div class="order-1 md:order-2 flex justify-center animate-fade-scale">
+                <div class="mockup-wrapper w-full max-w-lg mx-auto">
+                    <div class="mockup-mac">
+                        <div class="screen">
+                            <div class="placeholder-grid">
+                                <div class="item"></div>
+                                <div class="item"></div>
+                                <div class="item"></div>
+                                <div class="item"></div>
+                                <div class="item"></div>
+                                <div class="item"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mockup-phone animate-float">
+                        <div class="phone-screen">
+                            <span style="font-size:0.5rem;color:#94a3b8;">مداد العلم</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-  <!-- ===== STATS ===== -->
-  <section class="py-16 bg-[#2563EB] text-white">
-    <div class="container mx-auto px-4">
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-        <div data-aos="fade-up" data-aos-delay="100">
-          <p class="text-4xl font-extrabold" id="stat-academies">1000+</p>
-          <p class="text-sm text-white/70 mt-1">أكاديمية</p>
         </div>
-        <div data-aos="fade-up" data-aos-delay="150">
-          <p class="text-4xl font-extrabold" id="stat-students">25000+</p>
-          <p class="text-sm text-white/70 mt-1">طالب</p>
-        </div>
-        <div data-aos="fade-up" data-aos-delay="200">
-          <p class="text-4xl font-extrabold" id="stat-teachers">500+</p>
-          <p class="text-sm text-white/70 mt-1">مدرس</p>
-        </div>
-        <div data-aos="fade-up" data-aos-delay="250">
-          <p class="text-4xl font-extrabold" id="stat-uptime">99.9%</p>
-          <p class="text-sm text-white/70 mt-1">جاهزية</p>
-        </div>
-      </div>
-    </div>
-  </section>
 
-  <!-- ===== PRICING ===== -->
-  <section id="pricing" class="py-20 bg-white">
-    <div class="container mx-auto px-4 text-center">
-      <span class="text-sm font-semibold text-[#2563EB] bg-[#2563EB]/10 px-4 py-1 rounded-full" data-aos="fade-up">الأسعار</span>
-      <h2 class="text-3xl md:text-4xl font-extrabold mt-2" data-aos="fade-up" data-aos-delay="50">اختر الباقة المناسبة لك</h2>
-      <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto mt-12">
-        <div class="border border-gray-200 rounded-2xl p-6 hover:shadow-xl transition-all hover:-translate-y-1" data-aos="flip-left" data-aos-delay="100">
-          <h3 class="text-xl font-bold">Starter</h3>
-          <p class="text-3xl font-extrabold mt-2">$0<span class="text-sm font-normal text-gray-500">/شهر</span></p>
-          <ul class="mt-4 space-y-2 text-sm text-gray-600">
-            <li><i class="fas fa-check text-[#2563EB] ml-2"></i>أكاديمية واحدة</li>
-            <li><i class="fas fa-check text-[#2563EB] ml-2"></i>حتى 50 طالب</li>
-            <li><i class="fas fa-check text-[#2563EB] ml-2"></i>5 كورسات</li>
-          </ul>
-          <a href="register.html" class="mt-6 inline-block px-6 py-2 border border-[#2563EB] text-[#2563EB] rounded-full hover:bg-[#2563EB] hover:text-white transition">ابدأ مجاناً</a>
-        </div>
-        <div class="border-2 border-[#2563EB] rounded-2xl p-6 shadow-lg relative hover:shadow-xl transition-all hover:-translate-y-1" data-aos="flip-left" data-aos-delay="200">
-          <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#2563EB] text-white text-xs px-3 py-1 rounded-full">الأكثر شيوعاً</span>
-          <h3 class="text-xl font-bold">Professional</h3>
-          <p class="text-3xl font-extrabold mt-2">$49<span class="text-sm font-normal text-gray-500">/شهر</span></p>
-          <ul class="mt-4 space-y-2 text-sm text-gray-600">
-            <li><i class="fas fa-check text-[#2563EB] ml-2"></i>أكاديميات غير محدودة</li>
-            <li><i class="fas fa-check text-[#2563EB] ml-2"></i>حتى 500 طالب</li>
-            <li><i class="fas fa-check text-[#2563EB] ml-2"></i>كورسات غير محدودة</li>
-            <li><i class="fas fa-check text-[#2563EB] ml-2"></i>دعم أولوية</li>
-          </ul>
-          <a href="register.html" class="mt-6 inline-block px-6 py-2 bg-[#2563EB] text-white rounded-full hover:bg-[#1D4ED8] transition">ابدأ الآن</a>
-        </div>
-        <div class="border border-gray-200 rounded-2xl p-6 hover:shadow-xl transition-all hover:-translate-y-1" data-aos="flip-left" data-aos-delay="300">
-          <h3 class="text-xl font-bold">Enterprise</h3>
-          <p class="text-3xl font-extrabold mt-2">$99<span class="text-sm font-normal text-gray-500">/شهر</span></p>
-          <ul class="mt-4 space-y-2 text-sm text-gray-600">
-            <li><i class="fas fa-check text-[#2563EB] ml-2"></i>جميع المميزات</li>
-            <li><i class="fas fa-check text-[#2563EB] ml-2"></i>دعم مخصص</li>
-            <li><i class="fas fa-check text-[#2563EB] ml-2"></i>تكامل API</li>
-          </ul>
-          <a href="contact.html" class="mt-6 inline-block px-6 py-2 border border-[#2563EB] text-[#2563EB] rounded-full hover:bg-[#2563EB] hover:text-white transition">تواصل معنا</a>
-        </div>
-      </div>
-    </div>
-  </section>
+        <!-- decorative blobs -->
+        <div class="absolute top-20 right-0 w-64 h-64 bg-[#2563EB]/5 rounded-full blur-3xl -z-0 animate-pulse-glow"></div>
+        <div class="absolute bottom-0 left-0 w-96 h-96 bg-[#4B5563]/5 rounded-full blur-3xl -z-0"></div>
+    </section>
 
-  <!-- ===== FAQ ===== -->
-  <section id="faq" class="py-20 bg-gray-50/50">
-    <div class="container mx-auto px-4 max-w-3xl">
-      <h2 class="text-3xl md:text-4xl font-extrabold text-center" data-aos="fade-up">الأسئلة الشائعة</h2>
-      <div class="space-y-4 mt-8">
-        <div class="bg-white rounded-xl border border-gray-200 p-4 shadow-sm hover:shadow-md transition" data-aos="fade-up" data-aos-delay="100">
-          <button class="flex justify-between items-center w-full text-right font-semibold hover:text-[#2563EB] transition" onclick="this.nextElementSibling.classList.toggle('hidden')">
-            <span>هل يمكنني استخدام المنصة مجاناً؟</span>
-            <i class="fas fa-chevron-down text-[#2563EB] transition-transform duration-200"></i>
-          </button>
-          <p class="hidden mt-2 text-gray-600 text-sm">نعم، توفر مداد العلم باقة Starter مجانية مع مميزات أساسية.</p>
+    <!-- ======== TRUST BAR ======== -->
+    <section class="py-4 md:py-6 border-y border-[#E5E7EB] bg-white/50 backdrop-blur-sm">
+        <div class="container-custom flex flex-wrap items-center justify-center gap-6 md:gap-10 text-sm">
+            <div class="flex items-center gap-1 text-[#F59E0B]">
+                ★★★★★ <span class="text-[#111827] font-semibold mr-1">4.9/5</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="font-bold text-[#111827]">+10,000</span>
+                <span class="text-[#4B5563]">طالب</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="font-bold text-[#111827]">+500</span>
+                <span class="text-[#4B5563]">مدرس</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="font-bold text-[#111827]">+200</span>
+                <span class="text-[#4B5563]">أكاديمية</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="font-bold text-[#22C55E]">99.9%</span>
+                <span class="text-[#4B5563]">جاهزية</span>
+            </div>
         </div>
-        <div class="bg-white rounded-xl border border-gray-200 p-4 shadow-sm hover:shadow-md transition" data-aos="fade-up" data-aos-delay="150">
-          <button class="flex justify-between items-center w-full text-right font-semibold hover:text-[#2563EB] transition" onclick="this.nextElementSibling.classList.toggle('hidden')">
-            <span>هل أحتاج إلى خبرة تقنية لاستخدام المنصة؟</span>
-            <i class="fas fa-chevron-down text-[#2563EB] transition-transform duration-200"></i>
-          </button>
-          <p class="hidden mt-2 text-gray-600 text-sm">لا، تم تصميم المنصة لتكون سهلة الاستخدام ولا تحتاج إلى خبرة تقنية.</p>
+    </section>
+
+    <!-- ======== CLIENTS LOGOS ======== -->
+    <section class="py-8 md:py-12 bg-[#F8FAFC]">
+        <div class="container-custom">
+            <p class="text-center text-xs uppercase tracking-wider text-[#6B7280] font-semibold mb-4">
+                يثق بنا آلاف المعلمين والأكاديميات
+            </p>
+            <div class="flex flex-wrap justify-center items-center gap-8 md:gap-14 opacity-60">
+                <span class="text-lg font-bold text-[#4B5563]">أكاديمية المستقبل</span>
+                <span class="text-lg font-bold text-[#4B5563]">مدارس الإبداع</span>
+                <span class="text-lg font-bold text-[#4B5563]">جامعة المعرفة</span>
+                <span class="text-lg font-bold text-[#4B5563]">منصة تعلم</span>
+                <span class="text-lg font-bold text-[#4B5563]">مركز مهارات</span>
+                <span class="text-lg font-bold text-[#4B5563]">أكاديمية STEM</span>
+            </div>
         </div>
-        <div class="bg-white rounded-xl border border-gray-200 p-4 shadow-sm hover:shadow-md transition" data-aos="fade-up" data-aos-delay="200">
-          <button class="flex justify-between items-center w-full text-right font-semibold hover:text-[#2563EB] transition" onclick="this.nextElementSibling.classList.toggle('hidden')">
-            <span>ما هي طرق الدفع المتاحة؟</span>
-            <i class="fas fa-chevron-down text-[#2563EB] transition-transform duration-200"></i>
-          </button>
-          <p class="hidden mt-2 text-gray-600 text-sm">ندعم جميع طرق الدفع الرئيسية مثل البطاقات الائتمانية والتحويل البنكي.</p>
+    </section>
+
+    <!-- ======== WHY MADAD AL-ILM (features) ======== -->
+    <section class="py-16 md:py-24" id="features">
+        <div class="container-custom text-center">
+            <span class="section-badge">المميزات</span>
+            <h2 class="section-title">لماذا مداد العلم؟</h2>
+            <p class="section-sub">كل ما تحتاجه لإدارة أكاديمية إلكترونية احترافية في منصة واحدة</p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12 text-right">
+                <div class="card-hover bg-white p-6 rounded-2xl border border-[#E5E7EB] shadow-sm">
+                    <div class="icon-box"><i class="fas fa-users"></i></div>
+                    <h3 class="text-lg font-bold mt-3">إدارة الطلاب</h3>
+                    <p class="text-sm text-[#4B5563] mt-1">سجل الطلاب، متابعة التقدم، التواصل الفوري.</p>
+                </div>
+                <div class="card-hover bg-white p-6 rounded-2xl border border-[#E5E7EB] shadow-sm">
+                    <div class="icon-box"><i class="fas fa-book-open"></i></div>
+                    <h3 class="text-lg font-bold mt-3">الكورسات المتكاملة</h3>
+                    <p class="text-sm text-[#4B5563] mt-1">دروس، فيديوهات، ملفات، واختبارات تفاعلية.</p>
+                </div>
+                <div class="card-hover bg-white p-6 rounded-2xl border border-[#E5E7EB] shadow-sm">
+                    <div class="icon-box"><i class="fas fa-pencil-alt"></i></div>
+                    <h3 class="text-lg font-bold mt-3">الامتحانات والواجبات</h3>
+                    <p class="text-sm text-[#4B5563] mt-1">إنشاء اختبارات، تصحيح آلي، واجبات مع تقييم.</p>
+                </div>
+                <div class="card-hover bg-white p-6 rounded-2xl border border-[#E5E7EB] shadow-sm">
+                    <div class="icon-box"><i class="fas fa-certificate"></i></div>
+                    <h3 class="text-lg font-bold mt-3">الشهادات</h3>
+                    <p class="text-sm text-[#4B5563] mt-1">شهادات رقمية مع QR وروابط تحقق.</p>
+                </div>
+                <div class="card-hover bg-white p-6 rounded-2xl border border-[#E5E7EB] shadow-sm">
+                    <div class="icon-box"><i class="fas fa-credit-card"></i></div>
+                    <h3 class="text-lg font-bold mt-3">الاشتراكات والدفع</h3>
+                    <p class="text-sm text-[#4B5563] mt-1">خطط اشتراك، بوابات دفع متعددة.</p>
+                </div>
+                <div class="card-hover bg-white p-6 rounded-2xl border border-[#E5E7EB] shadow-sm">
+                    <div class="icon-box"><i class="fas fa-chart-line"></i></div>
+                    <h3 class="text-lg font-bold mt-3">التقارير والتحليلات</h3>
+                    <p class="text-sm text-[#4B5563] mt-1">تقارير أداء، إحصائيات، رسوم بيانية.</p>
+                </div>
+                <div class="card-hover bg-white p-6 rounded-2xl border border-[#E5E7EB] shadow-sm">
+                    <div class="icon-box"><i class="fas fa-robot"></i></div>
+                    <h3 class="text-lg font-bold mt-3">الذكاء الاصطناعي</h3>
+                    <p class="text-sm text-[#4B5563] mt-1">مساعد ذكي لإنشاء الكورسات والاختبارات.</p>
+                </div>
+                <div class="card-hover bg-white p-6 rounded-2xl border border-[#E5E7EB] shadow-sm">
+                    <div class="icon-box"><i class="fas fa-cogs"></i></div>
+                    <h3 class="text-lg font-bold mt-3">CRM + ERP مدمج</h3>
+                    <p class="text-sm text-[#4B5563] mt-1">إدارة العملاء، المحاسبة، الموظفين، والمخزون.</p>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- ===== CTA ===== -->
-  <section class="py-20 bg-[#2563EB]" data-aos="zoom-in" data-aos-duration="800">
-    <div class="container mx-auto px-4 text-center">
-      <h2 class="text-3xl md:text-4xl font-extrabold text-white">جاهز لبدء رحلتك التعليمية؟</h2>
-      <p class="text-white/80 mt-2 max-w-xl mx-auto">انضم إلى آلاف المعلمين والأكاديميات الذين يثقون في مداد العلم</p>
-      <div class="mt-8 flex flex-wrap gap-4 justify-center">
-        <a href="register.html" class="px-8 py-3 bg-white text-[#2563EB] rounded-full font-bold shadow-lg hover:shadow-xl transition-all hover:scale-105">ابدأ مجاناً الآن</a>
-        <a href="contact.html" class="px-8 py-3 border-2 border-white text-white rounded-full font-bold hover:bg-white hover:text-[#2563EB] transition-all">تواصل معنا</a>
-      </div>
-    </div>
-  </section>
+    <!-- ======== HOW IT WORKS ======== -->
+    <section class="py-16 md:py-20 bg-[#F8FAFC]">
+        <div class="container-custom text-center">
+            <span class="section-badge">الخطوات</span>
+            <h2 class="section-title">كيف تعمل المنصة؟</h2>
+            <p class="section-sub">أربع خطوات بسيطة لانطلاق أكاديميتك</p>
 
-  <!-- ===== FOOTER ===== -->
-  <footer class="bg-gray-900 text-gray-400">
-    <div class="container mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
-      <div>
-        <h3 class="text-white font-bold text-xl"><i class="fas fa-feather-alt ml-2"></i>مداد العلم</h3>
-        <p class="text-sm mt-2 leading-relaxed">منصة تعليمية متكاملة لإدارة المنصات التعليمية بكل احترافية وسهولة.</p>
-        <div class="flex gap-4 mt-4">
-          <a href="#" class="text-gray-400 hover:text-white transition-all hover:scale-110"><i class="fab fa-twitter text-xl"></i></a>
-          <a href="#" class="text-gray-400 hover:text-white transition-all hover:scale-110"><i class="fab fa-facebook text-xl"></i></a>
-          <a href="#" class="text-gray-400 hover:text-white transition-all hover:scale-110"><i class="fab fa-instagram text-xl"></i></a>
-          <a href="#" class="text-gray-400 hover:text-white transition-all hover:scale-110"><i class="fab fa-youtube text-xl"></i></a>
-          <a href="#" class="text-gray-400 hover:text-white transition-all hover:scale-110"><i class="fab fa-linkedin text-xl"></i></a>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mt-12 text-right">
+                <div class="relative">
+                    <div class="text-5xl font-extrabold text-[#2563EB]/20 absolute -top-2 right-0">01</div>
+                    <div class="pt-8">
+                        <div class="w-12 h-12 rounded-full bg-[#2563EB] text-white flex items-center justify-center text-lg font-bold mb-3">1</div>
+                        <h3 class="text-lg font-bold">أنشئ حسابًا</h3>
+                        <p class="text-sm text-[#4B5563] mt-1">سجل مجاناً واختر نوع الأكاديمية</p>
+                    </div>
+                    <div class="hidden md:block absolute top-16 right-full w-10 h-0.5 bg-[#E5E7EB]"></div>
+                </div>
+                <div class="relative">
+                    <div class="text-5xl font-extrabold text-[#2563EB]/20 absolute -top-2 right-0">02</div>
+                    <div class="pt-8">
+                        <div class="w-12 h-12 rounded-full bg-[#2563EB] text-white flex items-center justify-center text-lg font-bold mb-3">2</div>
+                        <h3 class="text-lg font-bold">أنشئ أكاديميتك</h3>
+                        <p class="text-sm text-[#4B5563] mt-1">أضف الشعار، الألوان، وبياناتك</p>
+                    </div>
+                </div>
+                <div class="relative">
+                    <div class="text-5xl font-extrabold text-[#2563EB]/20 absolute -top-2 right-0">03</div>
+                    <div class="pt-8">
+                        <div class="w-12 h-12 rounded-full bg-[#2563EB] text-white flex items-center justify-center text-lg font-bold mb-3">3</div>
+                        <h3 class="text-lg font-bold">أضف الكورسات</h3>
+                        <p class="text-sm text-[#4B5563] mt-1">أنشئ المحتوى، الدروس، والاختبارات</p>
+                    </div>
+                </div>
+                <div class="relative">
+                    <div class="text-5xl font-extrabold text-[#2563EB]/20 absolute -top-2 right-0">04</div>
+                    <div class="pt-8">
+                        <div class="w-12 h-12 rounded-full bg-[#2563EB] text-white flex items-center justify-center text-lg font-bold mb-3">4</div>
+                        <h3 class="text-lg font-bold">ابدأ استقبال الطلاب</h3>
+                        <p class="text-sm text-[#4B5563] mt-1">انشر منصتك وابدأ بالتعليم</p>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-      <div>
-        <h4 class="text-white font-semibold">المنصة</h4>
-        <ul class="mt-2 space-y-2 text-sm">
-          <li><a href="#features" class="hover:text-white transition">المميزات</a></li>
-          <li><a href="#pricing" class="hover:text-white transition">الأسعار</a></li>
-          <li><a href="about.html" class="hover:text-white transition">عن المنصة</a></li>
-          <li><a href="blog.html" class="hover:text-white transition">المدونة</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="text-white font-semibold">الدعم</h4>
-        <ul class="mt-2 space-y-2 text-sm">
-          <li><a href="contact.html" class="hover:text-white transition">تواصل معنا</a></li>
-          <li><a href="faq.html" class="hover:text-white transition">الأسئلة الشائعة</a></li>
-          <li><a href="privacy-policy.html" class="hover:text-white transition">سياسة الخصوصية</a></li>
-          <li><a href="terms.html" class="hover:text-white transition">الشروط والأحكام</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="text-white font-semibold">ابقَ على تواصل</h4>
-        <p class="text-sm mt-2">اشترك في النشرة البريدية لتصلك التحديثات</p>
-        <form class="mt-2 flex flex-col gap-2">
-          <input type="email" placeholder="بريدك الإلكتروني" class="bg-gray-800 border border-gray-700 rounded-xl px-4 py-2 text-sm text-white focus:ring-2 focus:ring-[#2563EB] focus:outline-none" />
-          <button class="bg-[#2563EB] text-white px-4 py-2 rounded-xl hover:bg-[#1D4ED8] transition text-sm">اشتراك</button>
-        </form>
-      </div>
-    </div>
-    <div class="border-t border-gray-800 py-4 text-center text-sm">
-      <p>&copy; 2026 مداد العلم. جميع الحقوق محفوظة.</p>
-    </div>
-  </footer>
+    </section>
 
-  <!-- ===== SCRIPTS ===== -->
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-  <script src="https://unpkg.com/lenis@1.0.45/dist/lenis.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- ======== VIDEO SECTION ======== -->
+    <section class="py-16 md:py-20">
+        <div class="container-custom text-center">
+            <span class="section-badge">فيديو تعريفي</span>
+            <h2 class="section-title">شاهد المنصة في دقيقة</h2>
+            <p class="section-sub">تعرف على إمكانيات مداد العلم من خلال عرض سريع</p>
 
-  <script>
-    AOS.init({ duration: 800, once: true, disable: window.innerWidth < 768 });
-    const lenis = new Lenis({ duration: 1.2 });
-    function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
-    requestAnimationFrame(raf);
-  </script>
+            <div class="relative max-w-3xl mx-auto mt-10 rounded-2xl overflow-hidden shadow-lg border border-[#E5E7EB] group cursor-pointer">
+                <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&auto=format&fit=crop" alt="فيديو تعريفي" class="w-full aspect-video object-cover" loading="lazy" />
+                <div class="absolute inset-0 bg-[#111827]/30 flex items-center justify-center group-hover:bg-[#111827]/20 transition-all">
+                    <button class="w-16 h-16 rounded-full bg-white/90 backdrop-blur-sm text-[#2563EB] flex items-center justify-center text-2xl shadow-lg hover:scale-110 transition-transform" aria-label="تشغيل الفيديو">
+                        <i class="fas fa-play"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  <script type="importmap">
-    {
-      "imports": {
-        "firebase/app": "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js",
-        "firebase/auth": "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js",
-        "firebase/firestore": "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js",
-        "firebase/storage": "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js"
-      }
-    }
-  </script>
+    <!-- ======== SCREENSHOTS (carousel) ======== -->
+    <section class="py-16 md:py-20 bg-[#F8FAFC]">
+        <div class="container-custom text-center">
+            <span class="section-badge">لقطات النظام</span>
+            <h2 class="section-title">واجهة احترافية بكل الأجهزة</h2>
+            <p class="section-sub">جرب المنصة على الكمبيوتر، الجهاز اللوحي، والهاتف</p>
 
-  <script type="module" src="assets/js/app.js"></script>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
+                <div class="rounded-2xl overflow-hidden shadow-md border border-[#E5E7EB] bg-white">
+                    <div class="bg-[#1E293B] p-2 flex items-center gap-1.5">
+                        <span class="w-3 h-3 rounded-full bg-[#EF4444]"></span>
+                        <span class="w-3 h-3 rounded-full bg-[#F59E0B]"></span>
+                        <span class="w-3 h-3 rounded-full bg-[#22C55E]"></span>
+                        <span class="text-xs text-white/60 mr-2">MacBook</span>
+                    </div>
+                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&auto=format&fit=crop" alt="لقطة شاشة" class="w-full aspect-[16/10] object-cover" loading="lazy" />
+                </div>
+                <div class="rounded-2xl overflow-hidden shadow-md border border-[#E5E7EB] bg-white">
+                    <div class="bg-[#1E293B] p-2 flex items-center gap-1.5">
+                        <span class="w-3 h-3 rounded-full bg-[#EF4444]"></span>
+                        <span class="w-3 h-3 rounded-full bg-[#F59E0B]"></span>
+                        <span class="w-3 h-3 rounded-full bg-[#22C55E]"></span>
+                        <span class="text-xs text-white/60 mr-2">iPad</span>
+                    </div>
+                    <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600&auto=format&fit=crop" alt="لقطة شاشة" class="w-full aspect-[4/3] object-cover" loading="lazy" />
+                </div>
+                <div class="rounded-2xl overflow-hidden shadow-md border border-[#E5E7EB] bg-white">
+                    <div class="bg-[#1E293B] p-2 flex items-center gap-1.5">
+                        <span class="w-3 h-3 rounded-full bg-[#EF4444]"></span>
+                        <span class="w-3 h-3 rounded-full bg-[#F59E0B]"></span>
+                        <span class="w-3 h-3 rounded-full bg-[#22C55E]"></span>
+                        <span class="text-xs text-white/60 mr-2">iPhone</span>
+                    </div>
+                    <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=600&auto=format&fit=crop" alt="لقطة شاشة" class="w-full aspect-[9/16] object-cover" loading="lazy" />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== STATS (animated counters) ======== -->
+    <section class="py-16 md:py-20 bg-[#4B5563] text-white" id="stats">
+        <div class="container-custom">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                <div>
+                    <div class="text-4xl md:text-5xl font-extrabold" data-count="25000">0</div>
+                    <p class="text-white/70 text-sm mt-1">طالب</p>
+                </div>
+                <div>
+                    <div class="text-4xl md:text-5xl font-extrabold" data-count="1200">0</div>
+                    <p class="text-white/70 text-sm mt-1">كورس</p>
+                </div>
+                <div>
+                    <div class="text-4xl md:text-5xl font-extrabold" data-count="700">0</div>
+                    <p class="text-white/70 text-sm mt-1">مدرس</p>
+                </div>
+                <div>
+                    <div class="text-4xl md:text-5xl font-extrabold" data-count="98">0%</div>
+                    <p class="text-white/70 text-sm mt-1">رضا العملاء</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== COMPARISON ======== -->
+    <section class="py-16 md:py-20">
+        <div class="container-custom text-center">
+            <span class="section-badge">المقارنة</span>
+            <h2 class="section-title">لماذا مداد العلم؟</h2>
+            <p class="section-sub">قارن مع المنصات الأخرى واختر الأفضل</p>
+
+            <div class="mt-10 overflow-x-auto">
+                <table class="comparison-table w-full min-w-[600px]">
+                    <thead>
+                        <tr>
+                            <th>الميزة</th>
+                            <th class="text-center text-[#2563EB]">مداد العلم</th>
+                            <th class="text-center">Google Classroom</th>
+                            <th class="text-center">Moodle</th>
+                            <th class="text-center">Thinkific</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>إدارة الطلاب المتقدمة</td><td class="text-center check"><i class="fas fa-check-circle"></i></td><td class="text-center cross"><i class="fas fa-times-circle"></i></td><td class="text-center check"><i class="fas fa-check-circle"></i></td><td class="text-center check"><i class="fas fa-check-circle"></i></td></tr>
+                        <tr><td>الكورسات غير المحدودة</td><td class="text-center check"><i class="fas fa-check-circle"></i></td><td class="text-center cross"><i class="fas fa-times-circle"></i></td><td class="text-center check"><i class="fas fa-check-circle"></i></td><td class="text-center cross"><i class="fas fa-times-circle"></i></td></tr>
+                        <tr><td>الامتحانات والتصحيح الآلي</td><td class="text-center check"><i class="fas fa-check-circle"></i></td><td class="text-center cross"><i class="fas fa-times-circle"></i></td><td class="text-center check"><i class="fas fa-check-circle"></i></td><td class="text-center check"><i class="fas fa-check-circle"></i></td></tr>
+                        <tr><td>الشهادات الرقمية</td><td class="text-center check"><i class="fas fa-check-circle"></i></td><td class="text-center cross"><i class="fas fa-times-circle"></i></td><td class="text-center cross"><i class="fas fa-times-circle"></i></td><td class="text-center check"><i class="fas fa-check-circle"></i></td></tr>
+                        <tr><td>CRM + ERP مدمج</td><td class="text-center check"><i class="fas fa-check-circle"></i></td><td class="text-center cross"><i class="fas fa-times-circle"></i></td><td class="text-center cross"><i class="fas fa-times-circle"></i></td><td class="text-center cross"><i class="fas fa-times-circle"></i></td></tr>
+                        <tr><td>الذكاء الاصطناعي</td><td class="text-center check"><i class="fas fa-check-circle"></i></td><td class="text-center cross"><i class="fas fa-times-circle"></i></td><td class="text-center cross"><i class="fas fa-times-circle"></i></td><td class="text-center cross"><i class="fas fa-times-circle"></i></td></tr>
+                        <tr><td>خطط اشتراك مرنة</td><td class="text-center check"><i class="fas fa-check-circle"></i></td><td class="text-center cross"><i class="fas fa-times-circle"></i></td><td class="text-center cross"><i class="fas fa-times-circle"></i></td><td class="text-center check"><i class="fas fa-check-circle"></i></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== PRICING ======== -->
+    <section class="py-16 md:py-24 bg-[#F8FAFC]" id="pricing">
+        <div class="container-custom text-center">
+            <span class="section-badge">الأسعار</span>
+            <h2 class="section-title">اختر الباقة المناسبة</h2>
+            <p class="section-sub">خطط تناسب الجميع من المدرسين المستقلين إلى الأكاديميات الكبرى</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12 max-w-5xl mx-auto">
+                <!-- Starter -->
+                <div class="pricing-card text-right">
+                    <h3 class="text-xl font-bold">Starter</h3>
+                    <div class="mt-2">
+                        <span class="text-4xl font-extrabold">$0</span>
+                        <span class="text-[#6B7280] text-sm">/شهر</span>
+                    </div>
+                    <p class="text-sm text-[#6B7280] mt-1">مثالية للبدء</p>
+                    <ul class="mt-5 space-y-2 text-sm text-[#4B5563]">
+                        <li><i class="fas fa-check text-[#22C55E] ml-2"></i>أكاديمية واحدة</li>
+                        <li><i class="fas fa-check text-[#22C55E] ml-2"></i>حتى 50 طالب</li>
+                        <li><i class="fas fa-check text-[#22C55E] ml-2"></i>5 كورسات</li>
+                        <li><i class="fas fa-check text-[#22C55E] ml-2"></i>دعم عبر البريد</li>
+                    </ul>
+                    <a href="#register" class="btn-primary w-full justify-center mt-6 text-sm">ابدأ مجانًا</a>
+                </div>
+
+                <!-- Professional (popular) -->
+                <div class="pricing-card popular text-right">
+                    <div class="badge">الأكثر شيوعاً</div>
+                    <h3 class="text-xl font-bold">Professional</h3>
+                    <div class="mt-2">
+                        <span class="text-4xl font-extrabold">$49</span>
+                        <span class="text-[#6B7280] text-sm">/شهر</span>
+                    </div>
+                    <p class="text-sm text-[#6B7280] mt-1">للأكاديميات والمدرسين المحترفين</p>
+                    <ul class="mt-5 space-y-2 text-sm text-[#4B5563]">
+                        <li><i class="fas fa-check text-[#22C55E] ml-2"></i>أكاديميات غير محدودة</li>
+                        <li><i class="fas fa-check text-[#22C55E] ml-2"></i>حتى 500 طالب</li>
+                        <li><i class="fas fa-check text-[#22C55E] ml-2"></i>كورسات غير محدودة</li>
+                        <li><i class="fas fa-check text-[#22C55E] ml-2"></i>دعم أولوية</li>
+                        <li><i class="fas fa-check text-[#22C55E] ml-2"></i>تحليلات متقدمة</li>
+                        <li><i class="fas fa-check text-[#22C55E] ml-2"></i>إزالة العلامة</li>
+                    </ul>
+                    <a href="#register" class="btn-primary w-full justify-center mt-6 text-sm">ابدأ الآن</a>
+                </div>
+
+                <!-- Enterprise -->
+                <div class="pricing-card text-right">
+                    <h3 class="text-xl font-bold">Enterprise</h3>
+                    <div class="mt-2">
+                        <span class="text-4xl font-extrabold">$99</span>
+                        <span class="text-[#6B7280] text-sm">/شهر</span>
+                    </div>
+                    <p class="text-sm text-[#6B7280] mt-1">حلول متكاملة للمؤسسات</p>
+                    <ul class="mt-5 space-y-2 text-sm text-[#4B5563]">
+                        <li><i class="fas fa-check text-[#22C55E] ml-2"></i>جميع المميزات السابقة</li>
+                        <li><i class="fas fa-check text-[#22C55E] ml-2"></i>طلاب غير محدودين</li>
+                        <li><i class="fas fa-check text-[#22C55E] ml-2"></i>دعم مخصص</li>
+                        <li><i class="fas fa-check text-[#22C55E] ml-2"></i>تكامل API كامل</li>
+                        <li><i class="fas fa-check text-[#22C55E] ml-2"></i>خادم مخصص</li>
+                    </ul>
+                    <a href="#contact" class="btn-secondary w-full justify-center mt-6 text-sm">تواصل معنا</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== TESTIMONIALS ======== -->
+    <section class="py-16 md:py-20" id="testimonials">
+        <div class="container-custom text-center">
+            <span class="section-badge">آراء العملاء</span>
+            <h2 class="section-title">ما يقوله المستخدمون</h2>
+            <p class="section-sub">آلاف المعلمين والأكاديميات يثقون في مداد العلم</p>
+
+            <div class="testimonial-slider mt-10 justify-center">
+                <div class="slide text-right">
+                    <div class="flex text-[#F59E0B] text-sm">★★★★★</div>
+                    <p class="mt-3 text-[#111827]">"مداد العلم غيرت طريقة تدريسي بالكامل. أصبحت أستطيع متابعة جميع طلابي بسهولة."</p>
+                    <div class="flex items-center gap-3 mt-4">
+                        <img src="https://i.pravatar.cc/48?img=1" alt="أحمد" class="w-10 h-10 rounded-full border" loading="lazy" />
+                        <div>
+                            <p class="font-bold text-sm">أحمد محمد</p>
+                            <p class="text-xs text-[#6B7280]">مدرس رياضيات</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="slide text-right">
+                    <div class="flex text-[#F59E0B] text-sm">★★★★★</div>
+                    <p class="mt-3 text-[#111827]">"منصة رائعة وسهلة الاستخدام. وفرت علينا الكثير من الوقت في الإدارة."</p>
+                    <div class="flex items-center gap-3 mt-4">
+                        <img src="https://i.pravatar.cc/48?img=2" alt="سارة" class="w-10 h-10 rounded-full border" loading="lazy" />
+                        <div>
+                            <p class="font-bold text-sm">سارة علي</p>
+                            <p class="text-xs text-[#6B7280]">مديرة أكاديمية</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="slide text-right">
+                    <div class="flex text-[#F59E0B] text-sm">★★★★★</div>
+                    <p class="mt-3 text-[#111827]">"من أفضل القرارات التي اتخذتها هي استخدام مداد العلم. منصة متكاملة ومستقرة."</p>
+                    <div class="flex items-center gap-3 mt-4">
+                        <img src="https://i.pravatar.cc/48?img=3" alt="خالد" class="w-10 h-10 rounded-full border" loading="lazy" />
+                        <div>
+                            <p class="font-bold text-sm">خالد بن سلمان</p>
+                            <p class="text-xs text-[#6B7280]">مؤسس منصة تعليمية</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="slide text-right">
+                    <div class="flex text-[#F59E0B] text-sm">★★★★★</div>
+                    <p class="mt-3 text-[#111827]">"واجهة بديهية وأدوات قوية. طلابي يحبون المنصة!"</p>
+                    <div class="flex items-center gap-3 mt-4">
+                        <img src="https://i.pravatar.cc/48?img=4" alt="نورة" class="w-10 h-10 rounded-full border" loading="lazy" />
+                        <div>
+                            <p class="font-bold text-sm">نورة أحمد</p>
+                            <p class="text-xs text-[#6B7280]">مدرسة لغة إنجليزية</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== FAQ ======== -->
+    <section class="py-16 md:py-20 bg-[#F8FAFC]" id="faq">
+        <div class="container-custom max-w-3xl mx-auto">
+            <div class="text-center">
+                <span class="section-badge">الأسئلة الشائعة</span>
+                <h2 class="section-title">إجابات لأكثر الأسئلة شيوعاً</h2>
+            </div>
+
+            <div class="mt-10 bg-white rounded-2xl shadow-sm border border-[#E5E7EB] overflow-hidden divide-y divide-[#E5E7EB]">
+                <div class="faq-item open px-6">
+                    <button class="faq-question">
+                        <span>هل يمكنني استخدام المنصة مجاناً؟</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">نعم، توفر مداد العلم باقة Starter مجانية مع مميزات أساسية تتيح لك تجربة المنصة.</div>
+                </div>
+                <div class="faq-item px-6">
+                    <button class="faq-question">
+                        <span>هل أحتاج إلى خبرة تقنية لاستخدام المنصة؟</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">لا، تم تصميم المنصة لتكون سهلة الاستخدام ولا تحتاج إلى أي خبرة تقنية سابقة.</div>
+                </div>
+                <div class="faq-item px-6">
+                    <button class="faq-question">
+                        <span>ما هي طرق الدفع المتاحة؟</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">ندعم جميع طرق الدفع الرئيسية مثل البطاقات الائتمانية، التحويل البنكي، والمحافظ الإلكترونية.</div>
+                </div>
+                <div class="faq-item px-6">
+                    <button class="faq-question">
+                        <span>كيف يمكنني نقل بياناتي إلى منصة أخرى؟</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">توفر مداد العلم أدوات تصدير متكاملة تتيح لك نقل بياناتك في أي وقت بصيغ مختلفة.</div>
+                </div>
+                <div class="faq-item px-6">
+                    <button class="faq-question">
+                        <span>هل توجد نسخة تجريبية؟</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">نعم، يمكنك استخدام الباقة المجانية لمدة 14 يوماً بدون أي قيود.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== CTA ======== -->
+    <section class="py-16 md:py-24 bg-[#2563EB] text-white" id="cta">
+        <div class="container-custom text-center">
+            <h2 class="text-3xl md:text-4xl font-extrabold">جاهز لبدء رحلتك التعليمية؟</h2>
+            <p class="text-white/80 text-lg mt-2 max-w-xl mx-auto">انضم إلى آلاف المعلمين والأكاديميات الذين يثقون في مداد العلم</p>
+            <div class="flex flex-wrap justify-center gap-4 mt-8">
+                <a href="#register" class="bg-white text-[#2563EB] font-bold px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition hover:scale-105">
+                    ابدأ مجاناً الآن
+                </a>
+                <a href="#demo" class="btn-outline-white">احجز عرضاً توضيحياً</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== FOOTER ======== -->
+    <footer class="bg-[#111827] text-[#9CA3AF] pt-16 pb-6" id="contact">
+        <div class="container-custom">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-right">
+                <div class="col-span-2 md:col-span-1">
+                    <a href="#" class="flex items-center gap-2 text-xl font-extrabold text-white no-underline">
+                        <i class="fas fa-feather-alt text-[#4B5563]"></i>
+                        <span>مداد العلم</span>
+                    </a>
+                    <p class="text-sm mt-3 max-w-xs">منصة تعليمية متكاملة لإدارة الأكاديميات الإلكترونية بكل احترافية.</p>
+                    <div class="flex gap-4 mt-4">
+                        <a href="#" class="text-[#9CA3AF] hover:text-white transition"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-[#9CA3AF] hover:text-white transition"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-[#9CA3AF] hover:text-white transition"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="text-[#9CA3AF] hover:text-white transition"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-semibold text-sm">المنصة</h4>
+                    <ul class="mt-3 space-y-2 text-sm">
+                        <li><a href="#features" class="hover:text-white transition">المميزات</a></li>
+                        <li><a href="#pricing" class="hover:text-white transition">الأسعار</a></li>
+                        <li><a href="#about" class="hover:text-white transition">عن المنصة</a></li>
+                        <li><a href="#blog" class="hover:text-white transition">المدونة</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold text-sm">الدعم</h4>
+                    <ul class="mt-3 space-y-2 text-sm">
+                        <li><a href="#contact" class="hover:text-white transition">تواصل معنا</a></li>
+                        <li><a href="#faq" class="hover:text-white transition">الأسئلة الشائعة</a></li>
+                        <li><a href="#status" class="hover:text-white transition">الحالة</a></li>
+                        <li><a href="#api" class="hover:text-white transition">API</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold text-sm">قانوني</h4>
+                    <ul class="mt-3 space-y-2 text-sm">
+                        <li><a href="#privacy" class="hover:text-white transition">سياسة الخصوصية</a></li>
+                        <li><a href="#terms" class="hover:text-white transition">الشروط والأحكام</a></li>
+                        <li><a href="#cookies" class="hover:text-white transition">ملفات تعريف الارتباط</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-[#1E293B] mt-10 pt-6 flex flex-col md:flex-row justify-between items-center text-sm">
+                <span>&copy; 2026 مداد العلم. جميع الحقوق محفوظة.</span>
+                <div class="flex gap-6 mt-2 md:mt-0">
+                    <a href="#privacy" class="hover:text-white transition">سياسة الخصوصية</a>
+                    <a href="#terms" class="hover:text-white transition">الشروط</a>
+                    <a href="#status" class="hover:text-white transition">الحالة</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ======== SCRIPTS ======== -->
+    <script>
+        // =============================================
+        // 1. Mobile drawer
+        // =============================================
+        const menuToggle = document.getElementById('menuToggle');
+        const drawer = document.getElementById('mobileDrawer');
+        const drawerOverlay = document.getElementById('drawerOverlay');
+        const drawerClose = document.getElementById('drawerClose');
+
+        function openDrawer() {
+            drawer.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDrawer() {
+            drawer.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        if (menuToggle) menuToggle.addEventListener('click', openDrawer);
+        if (drawerClose) drawerClose.addEventListener('click', closeDrawer);
+        if (drawerOverlay) drawerOverlay.addEventListener('click', closeDrawer);
+
+        // close drawer on link click (mobile)
+        document.querySelectorAll('#mobileDrawer a').forEach(link => {
+            link.addEventListener('click', closeDrawer);
+        });
+
+        // =============================================
+        // 2. FAQ accordion
+        // =============================================
+        document.querySelectorAll('.faq-question').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const item = this.closest('.faq-item');
+                const isOpen = item.classList.contains('open');
+                // close all
+                document.querySelectorAll('.faq-item').forEach(el => el.classList.remove('open'));
+                if (!isOpen) item.classList.add('open');
+            });
+        });
+
+        // open first by default
+        const firstFaq = document.querySelector('.faq-item');
+        if (firstFaq) firstFaq.classList.add('open');
+
+        // =============================================
+        // 3. Animated counters (Intersection Observer)
+        // =============================================
+        const counters = document.querySelectorAll('[data-count]');
+
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const el = entry.target;
+                    const target = parseInt(el.dataset.count);
+                    if (isNaN(target)) return;
+                    let current = 0;
+                    const increment = Math.ceil(target / 50);
+                    const timer = setInterval(() => {
+                        current += increment;
+                        if (current >= target) {
+                            current = target;
+                            clearInterval(timer);
+                        }
+                        if (el.dataset.count.includes('%')) {
+                            el.textContent = current + '%';
+                        } else {
+                            el.textContent = current.toLocaleString();
+                        }
+                    }, 30);
+                    counterObserver.unobserve(el);
+                }
+            });
+        }, { threshold: 0.3 });
+
+        counters.forEach(el => counterObserver.observe(el));
+
+        // =============================================
+        // 4. Navbar background on scroll
+        // =============================================
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 20) {
+                navbar.classList.add('shadow-sm');
+                navbar.style.borderBottomColor = 'rgba(229,231,235,0.6)';
+            } else {
+                navbar.classList.remove('shadow-sm');
+                navbar.style.borderBottomColor = 'rgba(229,231,235,0.2)';
+            }
+        });
+
+        // =============================================
+        // 5. Dark mode toggle (demo only - stays light)
+        // =============================================
+        document.querySelectorAll('.dark-mode-toggle').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const icon = btn.querySelector('i');
+                icon.classList.toggle('fa-moon');
+                icon.classList.toggle('fa-sun');
+            });
+        });
+
+        console.log('✅ مداد العلم — interface loaded successfully');
+    </script>
+
 </body>
 </html>

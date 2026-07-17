@@ -1,443 +1,545 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>تسجيل الدخول – مداد العلم</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>تسجيل الدخول – مداد العلم</title>
 
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-  />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cairo:wght@400;500;600;700&display=swap"
-    rel="stylesheet"
-  />
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..700&family=Cairo:wght@300..700&display=swap" rel="stylesheet" />
 
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"
-  />
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/css/style.css" />
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- نفس الأنماط كما في register.html -->
-  <style>
-    body {
-      font-family: "Inter", "Cairo", sans-serif;
-      direction: rtl;
-      background: #f8fafc;
-      margin: 0;
-      padding: 0;
-    }
-    .page-wrapper {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 1rem;
-      background: linear-gradient(135deg, #f8fafc 0%, #e5e7eb 100%);
-    }
-    .login-card {
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      background: rgba(255, 255, 255, 0.85);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      border-radius: 2rem;
-      overflow: hidden;
-      box-shadow: 0 25px 60px -12px rgba(0, 0, 0, 0.25);
-      width: 100%;
-      max-width: 1100px;
-    }
-    .login-image {
-      background: linear-gradient(135deg, #4b5563 0%, #1f2937 100%);
-      position: relative;
-      overflow: hidden;
-    }
-    .login-image::after {
-      content: "";
-      position: absolute;
-      top: -50%;
-      right: -50%;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(
-        circle at 30% 50%,
-        rgba(255, 255, 255, 0.05) 0%,
-        transparent 60%
-      );
-      animation: pulse 8s ease-in-out infinite;
-    }
-    @keyframes pulse {
-      0%,
-      100% {
-        transform: scale(1);
-        opacity: 0.3;
-      }
-      50% {
-        transform: scale(1.2);
-        opacity: 0.6;
-      }
-    }
-    .login-image .content {
-      position: relative;
-      z-index: 2;
-    }
-    .input-icon {
-      position: absolute;
-      right: 1rem;
-      top: 50%;
-      transform: translateY(-50%);
-      color: #9ca3af;
-      font-size: 1rem;
-    }
-    .input-field {
-      width: 100%;
-      padding: 0.75rem 1rem 0.75rem 2.5rem;
-      border: 1px solid #e5e7eb;
-      border-radius: 0.75rem;
-      background: #f9fafb;
-      transition: all 0.2s;
-      font-size: 0.95rem;
-    }
-    .input-field:focus {
-      outline: none;
-      border-color: #4b5563;
-      box-shadow: 0 0 0 3px rgba(75, 85, 99, 0.15);
-      background: white;
-    }
-    .btn-primary {
-      background: #4b5563;
-      color: white;
-      padding: 0.75rem 1.5rem;
-      border-radius: 0.75rem;
-      font-weight: 600;
-      transition: all 0.3s;
-      width: 100%;
-      border: none;
-      cursor: pointer;
-    }
-    .btn-primary:hover {
-      background: #3b4553;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 16px -4px rgba(75, 85, 99, 0.3);
-    }
-    .btn-google {
-      border: 1px solid #e5e7eb;
-      padding: 0.75rem 1.5rem;
-      border-radius: 0.75rem;
-      background: white;
-      font-weight: 500;
-      transition: all 0.2s;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      cursor: pointer;
-    }
-    .btn-google:hover {
-      background: #f9fafb;
-      border-color: #4b5563;
-    }
-    .divider {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin: 1.5rem 0;
-    }
-    .divider::before,
-    .divider::after {
-      content: "";
-      flex: 1;
-      height: 1px;
-      background: #e5e7eb;
-    }
-    .divider span {
-      color: #9ca3af;
-      font-size: 0.8rem;
-      font-weight: 500;
-      white-space: nowrap;
-    }
-    .form-group {
-      margin-bottom: 1rem;
-    }
-    .form-group label {
-      display: block;
-      font-size: 0.85rem;
-      font-weight: 500;
-      color: #374151;
-      margin-bottom: 0.25rem;
-    }
-    .form-side {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 2rem 2.5rem;
-    }
-    @media (min-width: 768px) {
-      .page-wrapper {
-        min-height: 100vh;
-        max-height: 100vh;
-        overflow: hidden;
-        padding: 0;
-      }
-      .login-card {
-        max-height: 95vh;
-        overflow: hidden;
-        border-radius: 2rem;
-      }
-      .login-card > .flex-col {
-        max-height: 95vh;
-        overflow-y: auto;
-      }
-      .login-card form {
-        max-height: 60vh;
-        overflow-y: auto;
-        padding-left: 4px;
-        padding-right: 4px;
-      }
-      .form-side {
-        padding: 1.5rem 2rem !important;
-      }
-      .login-image .p-12 {
-        padding: 2.5rem !important;
-      }
-      .login-image .text-7xl {
-        font-size: 3.5rem;
-      }
-      .login-image .text-3xl {
-        font-size: 1.8rem;
-      }
-      .login-image .text-lg {
-        font-size: 1rem;
-      }
-      .login-image .mt-8 {
-        margin-top: 1.5rem;
-      }
-      .input-field {
-        font-size: 0.85rem;
-        padding-top: 0.5rem;
-        padding-bottom: 0.5rem;
-      }
-      .btn-primary {
-        padding-top: 0.5rem;
-        padding-bottom: 0.5rem;
-        font-size: 0.95rem;
-      }
-      .form-group {
-        margin-bottom: 0.75rem;
-      }
-      .divider {
-        margin: 1rem 0;
-      }
-    }
-    @media (max-width: 767px) {
-      .page-wrapper {
-        min-height: 100vh;
-        overflow-y: auto;
-        padding: 1rem;
-      }
-      .login-card {
-        max-height: none;
-        overflow: visible;
-        border-radius: 1.5rem;
-      }
-      .login-card > .flex-col {
-        max-height: none;
-        overflow-y: visible;
-      }
-      .login-card form {
-        max-height: none;
-        overflow-y: visible;
-      }
-      .form-side {
-        padding: 1.5rem 1.5rem !important;
-      }
-    }
-  </style>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+    <!-- Lenis CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/lenis@1.1.13/dist/lenis.css" />
+
+    <!-- Toastify -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="assets/css/style.css" />
+
+    <style>
+        /* ===== تنسيقات خاصة بصفحة تسجيل الدخول ===== */
+        body {
+            background: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 1rem;
+            margin: 0;
+        }
+
+        .auth-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem 1.75rem;
+            max-width: 440px;
+            width: 100%;
+            box-shadow: 0 20px 60px -12px rgba(0, 0, 0, 0.12);
+            transition: all 0.3s ease;
+        }
+
+        .auth-logo {
+            text-align: center;
+            margin-bottom: 1.75rem;
+        }
+        .auth-logo i {
+            font-size: 2.2rem;
+            color: #2563EB;
+        }
+        .auth-logo h1 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-top: 0.25rem;
+            color: #111827;
+        }
+        .auth-logo p {
+            color: #64748b;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        /* ===== الحقول ===== */
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 0.35rem;
+        }
+        .form-control {
+            width: 100%;
+            padding: 0.6rem 0.875rem;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 10px;
+            background: #f8fafc;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            color: #111827;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: #2563EB;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        .form-control::placeholder {
+            color: #94a3b8;
+        }
+
+        /* ===== الأزرار ===== */
+        .btn-primary {
+            background: #2563EB;
+            color: white;
+            padding: 0.7rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            min-height: 48px;
+        }
+        .btn-primary:hover {
+            background: #1D4ED8;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px -6px rgba(37, 99, 235, 0.3);
+        }
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        .btn-google {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+            padding: 0.7rem;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 10px;
+            background: white;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: #1e293b;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            min-height: 48px;
+        }
+        .btn-google:hover {
+            background: #f8fafc;
+            border-color: #2563EB;
+        }
+        .btn-google i {
+            font-size: 1.2rem;
+            color: #ea4335;
+        }
+
+        /* ===== الفاصل ===== */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e5e7eb;
+        }
+        .divider span {
+            color: #94a3b8;
+            font-size: 0.8rem;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        /* ===== روابط ===== */
+        .auth-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+        .auth-footer a {
+            color: #2563EB;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .forgot-link {
+            font-size: 0.85rem;
+            color: #2563EB;
+            text-decoration: none;
+        }
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== رسائل الخطأ/النجاح ===== */
+        .message-box {
+            padding: 0.6rem 1rem;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            margin-top: 0.75rem;
+            display: none;
+        }
+        .message-box.error {
+            display: block;
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+        .message-box.success {
+            display: block;
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        /* ===== استجابة الهواتف ===== */
+        @media (max-width: 480px) {
+            .auth-card {
+                padding: 1.5rem 1.25rem;
+                border-radius: 16px;
+            }
+            .auth-logo i {
+                font-size: 1.8rem;
+            }
+            .auth-logo h1 {
+                font-size: 1.25rem;
+            }
+            .form-control {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.85rem;
+            }
+            .btn-primary,
+            .btn-google {
+                font-size: 0.85rem;
+                min-height: 44px;
+                padding: 0.6rem 1rem;
+            }
+            .auth-footer {
+                font-size: 0.8rem;
+            }
+            .forgot-link {
+                font-size: 0.75rem;
+            }
+            .divider span {
+                font-size: 0.7rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .auth-card {
+                padding: 1.25rem 1rem;
+            }
+            .auth-logo h1 {
+                font-size: 1.1rem;
+            }
+            .auth-logo p {
+                font-size: 0.75rem;
+            }
+            .btn-primary,
+            .btn-google {
+                font-size: 0.8rem;
+                min-height: 40px;
+                padding: 0.5rem 0.75rem;
+            }
+            .form-group {
+                margin-bottom: 0.75rem;
+            }
+        }
+
+        /* ===== تحسينات للشاشات الكبيرة ===== */
+        @media (min-width: 1024px) {
+            .auth-card {
+                padding: 2.5rem;
+                max-width: 460px;
+            }
+            .auth-logo i {
+                font-size: 2.5rem;
+            }
+            .auth-logo h1 {
+                font-size: 1.75rem;
+            }
+        }
+    </style>
 </head>
 <body>
 
-  <div class="page-wrapper">
-    <div
-      class="login-card flex flex-col md:flex-row"
-      data-aos="zoom-in"
-      data-aos-duration="800"
-    >
+    <!-- ======== بطاقة تسجيل الدخول ======== -->
+    <div class="auth-card">
 
-      <!-- صورة جانبية -->
-      <div
-        class="login-image hidden md:flex md:w-1/2 items-center justify-center p-12 text-white"
-      >
-        <div class="content text-center">
-          <div class="text-7xl mb-6"><i class="fas fa-feather-alt"></i></div>
-          <h1 class="text-3xl font-bold mb-2">مداد العلم</h1>
-          <p class="text-white/70 text-lg max-w-sm mx-auto">
-            منصة تعليمية متكاملة لإدارة الكورسات والطلاب والامتحانات بكل
-            احترافية.
-          </p>
-          <div class="mt-8 flex justify-center gap-6 text-sm">
-            <div>
-              <i class="fas fa-check-circle text-green-400 ml-1"></i>
-              <span class="text-white/80">آمنة</span>
-            </div>
-            <div>
-              <i class="fas fa-check-circle text-green-400 ml-1"></i>
-              <span class="text-white/80">سريعة</span>
-            </div>
-            <div>
-              <i class="fas fa-check-circle text-green-400 ml-1"></i>
-              <span class="text-white/80">متطورة</span>
-            </div>
-          </div>
-          <div class="mt-8">
-            <span class="text-white/50 text-sm">© 2026 مداد العلم</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- النموذج -->
-      <div
-        class="w-full md:w-1/2 form-side bg-white/80 backdrop-blur-sm md:backdrop-blur-none"
-      >
-
-        <!-- شعار الهاتف -->
-        <div class="md:hidden flex items-center justify-center mb-4">
-          <i class="fas fa-feather-alt text-3xl text-[#4B5563] ml-2"></i>
-          <span class="text-2xl font-extrabold text-[#4B5563]">مداد العلم</span>
+        <!-- Logo -->
+        <div class="auth-logo">
+            <i class="fas fa-feather-alt"></i>
+            <h1>مداد العلم</h1>
+            <p>سجل الدخول إلى حسابك</p>
         </div>
 
-        <div class="text-center md:text-right mb-4">
-          <h2 class="text-2xl font-bold text-gray-800">مرحباً بعودتك</h2>
-          <p class="text-gray-500 text-sm mt-1">
-            سجل الدخول إلى حسابك لمواصلة رحلتك التعليمية
-          </p>
-        </div>
+        <!-- ===== نموذج تسجيل الدخول ===== -->
+        <form id="loginForm" novalidate>
 
-        <!-- نموذج تسجيل الدخول -->
-        <form id="loginForm" class="space-y-3">
-          <div class="form-group">
-            <label for="loginEmail">البريد الإلكتروني</label>
-            <div class="relative">
-              <i class="fas fa-envelope input-icon"></i>
-              <input
-                type="email"
-                class="input-field"
-                id="loginEmail"
-                placeholder="example@email.com"
-                required
-              />
+            <!-- البريد الإلكتروني -->
+            <div class="form-group">
+                <label for="loginEmail">البريد الإلكتروني</label>
+                <input type="email" id="loginEmail" class="form-control" placeholder="example@email.com" required autocomplete="email" />
             </div>
-          </div>
-          <div class="form-group">
-            <label for="loginPassword">كلمة المرور</label>
-            <div class="relative">
-              <i class="fas fa-lock input-icon"></i>
-              <input
-                type="password"
-                class="input-field"
-                id="loginPassword"
-                placeholder="••••••••"
-                required
-                minlength="6"
-              />
-            </div>
-          </div>
-          <div class="flex items-center justify-between text-sm">
-            <label class="flex items-center gap-2 cursor-pointer text-gray-600">
-              <input
-                type="checkbox"
-                id="loginRemember"
-                class="rounded border-gray-300 text-[#4B5563] focus:ring-[#4B5563]"
-              />
-              تذكرني
-            </label>
-            <a
-              href="#"
-              id="forgotPasswordLink"
-              class="text-[#4B5563] hover:underline font-medium"
-              >نسيت كلمة المرور؟</a
-            >
-          </div>
 
-          <button type="submit" class="btn-primary" id="loginBtn">
-            <i class="fas fa-sign-in-alt ml-2"></i> تسجيل الدخول
-          </button>
-          <div id="loginError" class="text-red-500 text-sm mt-1 hidden"></div>
+            <!-- كلمة المرور -->
+            <div class="form-group">
+                <label for="loginPassword">كلمة المرور</label>
+                <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" required autocomplete="current-password" minlength="6" />
+            </div>
+
+            <!-- تذكرني + نسيت كلمة المرور -->
+            <div class="flex items-center justify-between text-sm mb-3">
+                <label class="flex items-center gap-1.5 text-gray-600 cursor-pointer">
+                    <input type="checkbox" id="rememberMe" class="accent-[#2563EB] w-4 h-4" />
+                    <span class="text-sm md:text-base">تذكرني</span>
+                </label>
+                <a href="forgot-password.html" class="forgot-link">نسيت كلمة المرور؟</a>
+            </div>
+
+            <!-- رسائل الخطأ/النجاح -->
+            <div id="loginMessage" class="message-box"></div>
+
+            <!-- زر تسجيل الدخول -->
+            <button type="submit" class="btn-primary" id="loginBtn">
+                <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
+            </button>
+
         </form>
 
-        <div class="divider"><span>أو</span></div>
+        <!-- ===== الفاصل ===== -->
+        <div class="divider">
+            <span>أو</span>
+        </div>
 
-        <button class="btn-google" id="googleLoginBtn">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 48 48"
-          >
-            <path
-              fill="#EA4335"
-              d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"
-            />
-            <path
-              fill="#4285F4"
-              d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"
-            />
-            <path
-              fill="#FBBC05"
-              d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"
-            />
-            <path
-              fill="#34A853"
-              d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
-            />
-          </svg>
-          تسجيل الدخول عبر Google
+        <!-- ===== زر Google ===== -->
+        <button id="googleLoginBtn" class="btn-google">
+            <i class="fab fa-google"></i> تسجيل الدخول عبر Google
         </button>
 
-        <p class="text-center text-sm text-gray-500 mt-4">
-          ليس لديك حساب؟
-          <a href="register.html" class="text-[#4B5563] font-semibold hover:underline"
-            >إنشاء حساب</a
-          >
-        </p>
-      </div>
+        <!-- ===== رابط إنشاء حساب ===== -->
+        <div class="auth-footer">
+            ليس لديك حساب؟ <a href="register.html">إنشاء حساب</a>
+        </div>
+
     </div>
-  </div>
 
-  <!-- ========================================================= -->
-  <!-- Import Map & Firebase -->
-  <!-- ========================================================= -->
-  <script type="importmap">
-    {
-      "imports": {
-        "firebase/app": "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js",
-        "firebase/auth": "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js",
-        "firebase/firestore": "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js",
-        "firebase/storage": "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js"
-      }
-    }
-  </script>
+    <!-- ======== SCRIPTS ======== -->
+    <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
-  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-  <script src="https://unpkg.com/lenis@1.0.45/dist/lenis.min.js"></script>
+    <!-- Import Map for Firebase -->
+    <script type="importmap">
+        {
+            "imports": {
+                "firebase/app": "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js",
+                "firebase/auth": "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js",
+                "firebase/firestore": "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js",
+                "firebase/storage": "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js"
+            }
+        }
+    </script>
 
-  <script>
-    AOS.init({ duration: 800, once: true, disable: window.innerWidth < 768 });
-    const lenis = new Lenis({ duration: 1.2 });
-    function raf(time) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-    requestAnimationFrame(raf);
-  </script>
+    <script type="module">
+        // ============================================================
+        // login.js – نظام تسجيل الدخول مع Firebase
+        // ============================================================
 
-  <script type="module" src="assets/js/auth.js"></script>
+        import { initializeApp } from "firebase/app";
+        import {
+            getAuth,
+            signInWithEmailAndPassword,
+            signInWithPopup,
+            GoogleAuthProvider,
+            setPersistence,
+            browserLocalPersistence,
+            browserSessionPersistence
+        } from "firebase/auth";
+
+        // ===== Firebase Config =====
+        const firebaseConfig = {
+            apiKey: "AIzaSyBsSP8Le5_nDG2YFiyGcZ6BFR7aLi3djLU",
+            authDomain: "edu-core-ddb48.firebaseapp.com",
+            projectId: "edu-core-ddb48",
+            storageBucket: "edu-core-ddb48.firebasestorage.app",
+            messagingSenderId: "4743644287",
+            appId: "1:4743644287:web:9167749cc80417b6876b4a",
+            measurementId: "G-S94FBCFCXW"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // ===== عناصر DOM =====
+        const loginForm = document.getElementById('loginForm');
+        const messageEl = document.getElementById('loginMessage');
+        const loginBtn = document.getElementById('loginBtn');
+        const emailInput = document.getElementById('loginEmail');
+        const passwordInput = document.getElementById('loginPassword');
+        const rememberMe = document.getElementById('rememberMe');
+
+        // ===== دالة عرض الرسائل =====
+        function showMessage(text, type = 'error') {
+            messageEl.textContent = text;
+            messageEl.className = `message-box ${type}`;
+            // إخفاء الرسالة بعد 5 ثوان
+            clearTimeout(messageEl._timeout);
+            messageEl._timeout = setTimeout(() => {
+                messageEl.className = 'message-box';
+                messageEl.textContent = '';
+            }, 5000);
+        }
+
+        // ===== دالة تعطيل الزر أثناء التحميل =====
+        function setLoading(isLoading) {
+            if (isLoading) {
+                loginBtn.disabled = true;
+                loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحميل...';
+            } else {
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> تسجيل الدخول';
+            }
+        }
+
+        // ===== تسجيل الدخول بالبريد وكلمة المرور =====
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+
+            if (!email || !password) {
+                showMessage('يرجى إدخال البريد الإلكتروني وكلمة المرور', 'error');
+                return;
+            }
+
+            if (password.length < 6) {
+                showMessage('كلمة المرور يجب أن تكون 6 أحرف على الأقل', 'error');
+                return;
+            }
+
+            // تعيين نوع الجلسة (تذكرني)
+            const persistence = rememberMe.checked ? browserLocalPersistence : browserSessionPersistence;
+            try {
+                await setPersistence(auth, persistence);
+            } catch (error) {
+                console.warn('فشل تعيين حالة الجلسة:', error);
+            }
+
+            setLoading(true);
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                showMessage('تم تسجيل الدخول بنجاح! جاري التوجيه...', 'success');
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1000);
+            } catch (error) {
+                let msg = 'فشل تسجيل الدخول';
+                if (error.code === 'auth/user-not-found') msg = 'البريد الإلكتروني غير مسجل';
+                else if (error.code === 'auth/wrong-password') msg = 'كلمة المرور غير صحيحة';
+                else if (error.code === 'auth/too-many-requests') msg = 'تم إرسال العديد من المحاولات، حاول لاحقاً';
+                else if (error.code === 'auth/invalid-email') msg = 'البريد الإلكتروني غير صحيح';
+                else if (error.code === 'auth/user-disabled') msg = 'تم تعطيل هذا الحساب';
+                else msg = error.message;
+                showMessage(msg, 'error');
+            } finally {
+                setLoading(false);
+            }
+        });
+
+        // ===== تسجيل الدخول بـ Google =====
+        document.getElementById('googleLoginBtn').addEventListener('click', async () => {
+            const provider = new GoogleAuthProvider();
+
+            // تعيين الجلسة للتذكر (Google)
+            try {
+                await setPersistence(auth, browserLocalPersistence);
+            } catch (error) {
+                console.warn('فشل تعيين حالة الجلسة:', error);
+            }
+
+            setLoading(true);
+            try {
+                await signInWithPopup(auth, provider);
+                showMessage('تم تسجيل الدخول بواسطة Google بنجاح!', 'success');
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1000);
+            } catch (error) {
+                let msg = 'فشل تسجيل الدخول عبر Google';
+                if (error.code === 'auth/popup-closed-by-user') msg = 'تم إغلاق النافذة المنبثقة قبل إكمال التسجيل';
+                else if (error.code === 'auth/cancelled-popup-request') msg = 'تم إلغاء طلب تسجيل الدخول';
+                else if (error.code === 'auth/account-exists-with-different-credential')
+                    msg = 'يوجد حساب بنفس البريد الإلكتروني باستخدام طريقة أخرى';
+                else msg = error.message;
+                showMessage(msg, 'error');
+            } finally {
+                setLoading(false);
+            }
+        });
+
+        // ===== إزالة الرسائل عند الكتابة =====
+        emailInput.addEventListener('input', () => {
+            if (messageEl.className !== 'message-box') {
+                messageEl.className = 'message-box';
+                messageEl.textContent = '';
+            }
+        });
+        passwordInput.addEventListener('input', () => {
+            if (messageEl.className !== 'message-box') {
+                messageEl.className = 'message-box';
+                messageEl.textContent = '';
+            }
+        });
+
+        // ===== Lenis Smooth Scroll =====
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            orientation: 'vertical',
+            gestureOrientation: 'vertical',
+            smoothWheel: true,
+            wheelMultiplier: 1,
+            touchMultiplier: 2,
+        });
+
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        console.log('✅ مداد العلم — صفحة تسجيل الدخول جاهزة');
+    </script>
+
 </body>
 </html>

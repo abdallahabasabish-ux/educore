@@ -3,7 +3,15 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>مداد العلم — منصة تعليمية متكاملة</title>
+    <title>مداد العلم – منصة تعليمية متكاملة</title>
+
+    <!-- SEO Meta -->
+    <meta name="description" content="منصة تعليمية متكاملة تتيح للمعلمين والأكاديميات إنشاء وإدارة كورساتهم وطلابهم بكل احترافية وسهولة." />
+    <meta property="og:title" content="مداد العلم – منصة تعليمية متكاملة" />
+    <meta property="og:description" content="أنشئ أكاديميتك الإلكترونية في دقائق وأدار الكورسات والطلاب والامتحانات من مكان واحد." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="مداد العلم – منصة تعليمية متكاملة" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -19,334 +27,900 @@
     <!-- Lenis CSS -->
     <link rel="stylesheet" href="https://unpkg.com/lenis@1.1.13/dist/lenis.css" />
 
-    <!-- Main CSS (Black & White Identity) -->
+    <!-- AOS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+
+    <!-- Main CSS -->
     <link rel="stylesheet" href="assets/css/style.css" />
 
     <style>
-        /* ===== تنسيقات خاصة بالهوية الجديدة ===== */
+        /* ============================================================
+           تنسيقات الصفحة الرئيسية التسويقية
+           ============================================================ */
+
+        /* ----- Hero ----- */
         .hero-gradient {
-            background: radial-gradient(ellipse at 30% 20%, rgba(0, 0, 0, 0.03) 0%, transparent 70%),
-                radial-gradient(ellipse at 70% 80%, rgba(0, 0, 0, 0.02) 0%, transparent 60%);
+            background: radial-gradient(ellipse at 20% 30%, rgba(0, 0, 0, 0.02) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 70%, rgba(0, 0, 0, 0.015) 0%, transparent 50%);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-gradient::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -30%;
+            width: 80%;
+            height: 150%;
+            background: radial-gradient(ellipse, rgba(0, 0, 0, 0.03) 0%, transparent 70%);
+            pointer-events: none;
         }
         .hero-title {
-            font-size: clamp(1.8rem, 6vw, 3.5rem);
-            line-height: 1.15;
-            color: #000000;
+            font-size: clamp(2.5rem, 7vw, 4.5rem);
+            line-height: 1.08;
+            letter-spacing: -0.03em;
+            font-weight: 800;
         }
         .hero-subtitle {
-            font-size: clamp(0.95rem, 1.5vw, 1.2rem);
+            font-size: clamp(1.05rem, 1.5vw, 1.25rem);
             color: #555555;
+            max-width: 560px;
+            line-height: 1.7;
+        }
+
+        /* ----- Trust Bar ----- */
+        .trust-bar {
+            border-top: 1px solid #e5e5e5;
+            border-bottom: 1px solid #e5e5e5;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(8px);
         }
         .trust-item {
-            font-size: clamp(0.7rem, 1vw, 0.9rem);
-            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: clamp(0.75rem, 0.9vw, 0.95rem);
             color: #333333;
+            white-space: nowrap;
+        }
+        .trust-item .number {
+            font-weight: 700;
+            color: #000000;
+            font-size: clamp(1rem, 1.2vw, 1.3rem);
         }
         .trust-item .stars {
             color: #000000;
+            letter-spacing: 1px;
         }
-        .client-logo {
-            opacity: 0.5;
+
+        /* ----- Features ----- */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+        }
+        .feature-card {
+            background: #ffffff;
+            padding: 1.75rem 1.5rem;
+            border-radius: 20px;
+            border: 1px solid #e5e5e5;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: default;
+            position: relative;
+            overflow: hidden;
+        }
+        .feature-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.02) 0%, transparent 50%);
+            opacity: 0;
             transition: opacity 0.3s ease;
-            font-weight: 700;
-            color: #000000;
-            font-size: clamp(0.8rem, 1.2vw, 1.1rem);
         }
-        .client-logo:hover {
+        .feature-card:hover::after {
             opacity: 1;
         }
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 48px -12px rgba(0, 0, 0, 0.08);
+        }
         .feature-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
             background: #f0f0f0;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #000000;
-            font-size: 1.25rem;
-            margin-bottom: 0.75rem;
-            flex-shrink: 0;
-            transition: background 0.3s ease;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
         }
         .feature-card:hover .feature-icon {
             background: #000000;
             color: #ffffff;
         }
-        .feature-card {
+        .feature-card h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 0.35rem;
+        }
+        .feature-card p {
+            font-size: 0.9rem;
+            color: #555555;
+            line-height: 1.6;
+        }
+
+        /* ----- How It Works ----- */
+        .step-circle {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #000000;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.25rem;
+            margin: 0 auto 0.75rem;
             transition: all 0.3s ease;
-            cursor: default;
+        }
+        .step-card:hover .step-circle {
+            transform: scale(1.08);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+        .step-card h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #000000;
+        }
+        .step-card p {
+            font-size: 0.85rem;
+            color: #555555;
+            line-height: 1.6;
+        }
+        .step-connector {
+            position: relative;
+        }
+        .step-connector::after {
+            content: '';
+            position: absolute;
+            top: 28px;
+            right: 50%;
+            width: 60%;
+            height: 2px;
+            background: #e5e5e5;
+        }
+        @media (max-width: 768px) {
+            .step-connector::after {
+                display: none;
+            }
+        }
+
+        /* ----- Stats ----- */
+        .stats-section {
+            background: #000000;
+            color: #ffffff;
+        }
+        .stat-number {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+        .stat-label {
+            font-size: 0.9rem;
+            color: #aaaaaa;
+            margin-top: 0.25rem;
+        }
+
+        /* ----- Testimonials ----- */
+        .testimonial-card {
+            background: #ffffff;
+            padding: 1.75rem;
+            border-radius: 20px;
             border: 1px solid #e5e5e5;
+            transition: all 0.3s ease;
         }
-        .feature-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.08);
+        .testimonial-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.06);
         }
+        .testimonial-card .stars {
+            color: #000000;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            margin-bottom: 0.75rem;
+        }
+        .testimonial-card blockquote {
+            font-size: 0.95rem;
+            color: #333333;
+            line-height: 1.7;
+        }
+        .testimonial-card .author {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #f0f0f0;
+        }
+        .testimonial-card .author img {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 2px solid #e5e5e5;
+        }
+        .testimonial-card .author .name {
+            font-weight: 600;
+            color: #000000;
+            font-size: 0.9rem;
+        }
+        .testimonial-card .author .role {
+            font-size: 0.8rem;
+            color: #777777;
+        }
+
+        /* ----- CTA ----- */
         .cta-section {
             background: #000000;
+            color: #ffffff;
+            position: relative;
+            overflow: hidden;
         }
+        .cta-section::after {
+            content: '';
+            position: absolute;
+            top: -30%;
+            right: -10%;
+            width: 50%;
+            height: 160%;
+            background: radial-gradient(ellipse, rgba(255, 255, 255, 0.04) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .cta-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ----- Footer ----- */
+        .footer-link {
+            color: #888888;
+            transition: color 0.2s ease;
+            text-decoration: none;
+            font-size: 0.85rem;
+        }
+        .footer-link:hover {
+            color: #ffffff;
+        }
+
+        /* ============================================================
+           استجابة
+           ============================================================ */
+        @media (max-width: 768px) {
+            .feature-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+            .feature-card {
+                padding: 1.25rem;
+            }
+            .hero-title {
+                font-size: 2.2rem;
+            }
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+            .trust-item {
+                font-size: 0.65rem;
+            }
+            .trust-item .number {
+                font-size: 0.8rem;
+            }
+            .cta-section {
+                padding: 3rem 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            .hero-title {
+                font-size: 1.8rem;
+            }
+            .mockup-phone {
+                display: none;
+            }
+            .mockup-mac {
+                max-width: 280px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .hero-grid {
+                gap: 4rem;
+            }
+            .feature-grid {
+                gap: 2rem;
+            }
+        }
+
+        /* ============================================================
+           تحسينات إضافية
+           ============================================================ */
+        .section-badge {
+            display: inline-block;
+            background: #f0f0f0;
+            color: #000000;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+        }
+        .section-title {
+            font-size: clamp(2rem, 4vw, 2.8rem);
+            font-weight: 700;
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+            color: #000000;
+        }
+        .section-subtitle {
+            font-size: 1.05rem;
+            color: #555555;
+            max-width: 560px;
+            margin: 0.5rem auto 0;
+            line-height: 1.6;
+        }
+
+        .btn-primary {
+            background: #000000;
+            color: #ffffff;
+            padding: 0.75rem 2rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            min-height: 48px;
+        }
+        .btn-primary:hover {
+            background: #222222;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #000000;
+            padding: 0.75rem 2rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: 1.5px solid #cccccc;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            min-height: 48px;
+        }
+        .btn-secondary:hover {
+            background: #f5f5f5;
+            border-color: #888888;
+        }
+
         .btn-outline-white {
             background: transparent;
             color: #ffffff;
-            padding: 0.7rem 2rem;
+            padding: 0.75rem 2rem;
             border-radius: 9999px;
             font-weight: 600;
             font-size: 0.95rem;
             border: 1.5px solid rgba(255, 255, 255, 0.3);
             cursor: pointer;
             transition: all 0.3s ease;
-            text-decoration: none;
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            justify-content: center;
+            text-decoration: none;
+            min-height: 48px;
         }
         .btn-outline-white:hover {
             background: rgba(255, 255, 255, 0.08);
             border-color: rgba(255, 255, 255, 0.6);
         }
-        .footer-link {
-            color: #888888;
-            transition: color 0.2s ease;
-            text-decoration: none;
+
+        .mockup-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .footer-link:hover {
-            color: #ffffff;
-        }
-        .section-badge {
-            display: inline-block;
+        .mockup-mac {
+            width: 100%;
+            max-width: 580px;
+            aspect-ratio: 16/10;
             background: #f0f0f0;
-            color: #000000;
-            font-size: 0.75rem;
-            font-weight: 600;
-            padding: 0.3rem 1rem;
-            border-radius: 9999px;
-            letter-spacing: 0.3px;
-            margin-bottom: 0.75rem;
+            border-radius: 20px;
+            border: 2px solid #d5d5d5;
+            padding: 12px;
+            box-shadow: 0 24px 64px -12px rgba(0, 0, 0, 0.08);
         }
-        .section-title {
-            font-size: clamp(1.8rem, 4vw, 2.8rem);
+        .mockup-mac .screen {
+            width: 100%;
+            height: 100%;
+            background: #ffffff;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background-image: radial-gradient(circle at 30% 40%, #f5f5f5 0%, transparent 60%);
+        }
+        .mockup-mac .screen .placeholder-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            width: 80%;
+            padding: 12px;
+        }
+        .mockup-mac .screen .placeholder-grid .item {
+            background: #e5e5e5;
+            border-radius: 8px;
+            height: 40px;
+        }
+        .mockup-mac .screen .placeholder-grid .item:nth-child(1) {
+            height: 60px;
+            grid-column: span 3;
+            background: #d0d0d0;
+        }
+        .mockup-phone {
+            position: absolute;
+            left: -20px;
+            bottom: -20px;
+            width: 120px;
+            aspect-ratio: 9/19;
+            background: #111111;
+            border-radius: 20px;
+            padding: 8px;
+            box-shadow: 0 16px 40px -8px rgba(0, 0, 0, 0.2);
+            border: 2px solid #333333;
+        }
+        .mockup-phone .phone-screen {
+            width: 100%;
+            height: 100%;
+            background: #f5f5f5;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.4rem;
+            color: #888888;
+        }
+        .mockup-phone .phone-screen span {
             font-weight: 700;
-            line-height: 1.2;
             color: #000000;
-        }
-        .section-sub {
-            color: #555555;
-            font-size: 1.05rem;
-            max-width: 600px;
-            margin: 0.5rem auto 0;
         }
 
-        /* ===== استجابة الهواتف ===== */
-        @media (max-width: 480px) {
-            .hero-title { font-size: 1.8rem; }
-            .hero-subtitle { font-size: 0.95rem; }
-            .trust-item { font-size: 0.6rem; }
-            .feature-card { padding: 1rem; }
-            .btn-primary, .btn-secondary { padding: 0.6rem 1.2rem; font-size: 0.8rem; min-height: 44px; }
-            .mockup-mac { max-width: 260px; padding: 8px; }
-            .mockup-phone { display: none; }
-            .footer-grid { grid-template-columns: 1fr !important; gap: 1.5rem !important; }
+        /* ===== Dark Mode Override ===== */
+        body.dark-mode .hero-gradient {
+            background: #0a0a0a;
         }
-        @media (min-width: 768px) {
-            .feature-grid { grid-template-columns: repeat(4, 1fr); }
+        body.dark-mode .feature-card {
+            background: #1a1a1a;
+            border-color: #333333;
         }
-        @media (min-width: 481px) and (max-width: 768px) {
-            .hero-title { font-size: 2.2rem; }
-            .feature-grid { grid-template-columns: repeat(2, 1fr); }
-            .mockup-mac { max-width: 380px; }
+        body.dark-mode .feature-card h3 {
+            color: #ffffff;
+        }
+        body.dark-mode .feature-card p {
+            color: #aaaaaa;
+        }
+        body.dark-mode .feature-icon {
+            background: #333333;
+            color: #ffffff;
+        }
+        body.dark-mode .feature-card:hover .feature-icon {
+            background: #ffffff;
+            color: #000000;
+        }
+        body.dark-mode .testimonial-card {
+            background: #1a1a1a;
+            border-color: #333333;
+        }
+        body.dark-mode .testimonial-card blockquote {
+            color: #dddddd;
+        }
+        body.dark-mode .testimonial-card .author .name {
+            color: #ffffff;
+        }
+        body.dark-mode .section-title {
+            color: #ffffff;
+        }
+        body.dark-mode .section-subtitle {
+            color: #aaaaaa;
+        }
+        body.dark-mode .step-card h4 {
+            color: #ffffff;
+        }
+        body.dark-mode .step-card p {
+            color: #aaaaaa;
+        }
+        body.dark-mode .step-circle {
+            background: #ffffff;
+            color: #000000;
+        }
+        body.dark-mode .trust-bar {
+            background: rgba(10, 10, 10, 0.8);
+            border-color: #222222;
+        }
+        body.dark-mode .trust-item {
+            color: #aaaaaa;
+        }
+        body.dark-mode .trust-item .number {
+            color: #ffffff;
+        }
+        body.dark-mode .trust-item .stars {
+            color: #ffffff;
+        }
+        body.dark-mode .mockup-mac {
+            background: #1a1a1a;
+            border-color: #333333;
+        }
+        body.dark-mode .mockup-mac .screen {
+            background: #111111;
+        }
+        body.dark-mode .mockup-mac .screen .placeholder-grid .item {
+            background: #333333;
+        }
+        body.dark-mode .mockup-mac .screen .placeholder-grid .item:nth-child(1) {
+            background: #444444;
+        }
+        body.dark-mode .btn-secondary {
+            border-color: #444444;
+            color: #ffffff;
+        }
+        body.dark-mode .btn-secondary:hover {
+            background: #1a1a1a;
+            border-color: #666666;
+        }
+        body.dark-mode .section-badge {
+            background: #222222;
+            color: #ffffff;
+        }
+        body.dark-mode .stats-section {
+            background: #0a0a0a;
+        }
+        body.dark-mode .stats-section .stat-label {
+            color: #666666;
         }
     </style>
 </head>
 <body>
 
     <!-- ======== NAVBAR ======== -->
-    <header class="fixed top-0 left-0 right-0 z-50 glass border-b border-[#E5E5E5]/60 shadow-sm transition-all duration-300" id="navbar">
-        <div class="container-custom flex items-center justify-between h-14 md:h-16">
-            <a href="index.html" class="flex items-center gap-2 text-lg md:text-xl font-extrabold text-[#000000] no-underline">
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-white/85 backdrop-blur-md border-b border-[#e5e5e5]/60 shadow-sm transition-all duration-300" id="navbar">
+        <div class="container-custom flex items-center justify-between h-16 md:h-20">
+            <a href="index.html" class="flex items-center gap-2 text-2xl font-extrabold text-[#000000] no-underline">
                 <i class="fas fa-feather-alt text-[#000000]"></i>
                 <span>مداد العلم</span>
             </a>
-            <nav class="hidden md:flex items-center gap-4 lg:gap-6 text-sm font-medium text-[#333333]">
-                <a href="features.html" class="hover:text-[#000000] transition">المميزات</a>
-                <a href="pricing.html" class="hover:text-[#000000] transition">الأسعار</a>
-                <a href="testimonials.html" class="hover:text-[#000000] transition">آراء</a>
-                <a href="faq.html" class="hover:text-[#000000] transition">الأسئلة</a>
-                <a href="contact.html" class="hover:text-[#000000] transition">تواصل</a>
+
+            <!-- Desktop Nav -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-[#333333]">
+                <a href="#features" class="hover:text-[#000000] transition">المميزات</a>
+                <a href="#how-it-works" class="hover:text-[#000000] transition">كيف تعمل</a>
+                <a href="#pricing" class="hover:text-[#000000] transition">الأسعار</a>
+                <a href="#testimonials" class="hover:text-[#000000] transition">آراء</a>
+                <a href="#faq" class="hover:text-[#000000] transition">الأسئلة</a>
             </nav>
-            <div class="hidden md:flex items-center gap-2 lg:gap-3">
+
+            <!-- Desktop Actions -->
+            <div class="hidden md:flex items-center gap-3">
                 <button class="lang-toggle" aria-label="تبديل اللغة"><i class="fas fa-globe"></i> EN</button>
                 <button class="dark-mode-toggle" aria-label="تبديل الوضع الداكن"><i class="fas fa-moon"></i></button>
                 <a href="login.html" class="text-sm font-medium text-[#333333] hover:text-[#000000] transition">تسجيل الدخول</a>
-                <a href="register.html" class="btn-primary text-sm py-1.5 px-4 lg:px-5">ابدأ مجانًا</a>
+                <a href="register-academy.html" class="btn-primary text-sm py-2 px-5">ابدأ مجانًا</a>
             </div>
+
+            <!-- Mobile Menu Button -->
             <button class="md:hidden text-2xl text-[#333333] p-1" id="menuToggle" aria-label="فتح القائمة">
                 <i class="fas fa-bars"></i>
             </button>
         </div>
-    </header>
 
-    <!-- ======== MOBILE DRAWER ======== -->
-    <div class="drawer" id="mobileDrawer" role="dialog" aria-modal="true" aria-label="القائمة">
-        <div class="drawer-overlay" id="drawerOverlay"></div>
-        <div class="drawer-panel">
-            <button class="close-btn" id="drawerClose" aria-label="إغلاق القائمة"><i class="fas fa-times"></i></button>
-            <nav class="flex flex-col gap-0.5 mt-8">
-                <a href="features.html">المميزات</a>
-                <a href="pricing.html">الأسعار</a>
-                <a href="testimonials.html">آراء العملاء</a>
-                <a href="faq.html">الأسئلة الشائعة</a>
-                <a href="contact.html">تواصل معنا</a>
-                <a href="blog.html">المدونة</a>
-                <div class="flex items-center gap-3 mt-4 border-t border-[#E5E5E5] pt-4">
-                    <button class="lang-toggle text-sm">🌐 EN</button>
-                    <button class="dark-mode-toggle text-sm"><i class="fas fa-moon"></i></button>
-                </div>
-                <a href="login.html" class="text-[#333333] font-medium mt-2">تسجيل الدخول</a>
-                <a href="register.html" class="btn-primary text-center mt-1">ابدأ مجانًا</a>
-            </nav>
+        <!-- Mobile Drawer -->
+        <div class="drawer" id="mobileDrawer">
+            <div class="drawer-overlay" id="drawerOverlay"></div>
+            <div class="drawer-panel">
+                <button class="close-btn" id="drawerClose"><i class="fas fa-times"></i></button>
+                <nav class="flex flex-col gap-2 mt-8">
+                    <a href="#features">المميزات</a>
+                    <a href="#how-it-works">كيف تعمل</a>
+                    <a href="#pricing">الأسعار</a>
+                    <a href="#testimonials">آراء العملاء</a>
+                    <a href="#faq">الأسئلة الشائعة</a>
+                    <div class="flex items-center gap-3 mt-4 border-t border-[#E5E5E5] pt-4">
+                        <button class="lang-toggle text-sm">🌐 EN</button>
+                        <button class="dark-mode-toggle text-sm"><i class="fas fa-moon"></i></button>
+                    </div>
+                    <a href="login.html" class="text-[#333333] font-medium mt-2">تسجيل الدخول</a>
+                    <a href="register-academy.html" class="btn-primary text-center mt-1">ابدأ مجانًا</a>
+                </nav>
+            </div>
         </div>
-    </div>
+    </nav>
 
     <!-- ======== HERO ======== -->
-    <section class="relative pt-20 pb-10 md:pt-28 md:pb-16 lg:pt-32 lg:pb-20 overflow-hidden hero-gradient" id="hero">
-        <div class="container-custom relative z-10 grid md:grid-cols-2 gap-8 lg:gap-12 items-center">
+    <section class="hero-gradient min-h-screen flex items-center pt-20 md:pt-28 pb-12 md:pb-20" id="hero">
+        <div class="container-custom relative z-10">
+            <div class="hero-grid grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
 
-            <div class="animate-fade-up order-2 md:order-1 text-right">
-                <span class="section-badge">منصة تعليمية متكاملة</span>
-                <h1 class="hero-title font-extrabold leading-[1.1] tracking-tight">
-                    اكتب مستقبلك التعليمي
-                    <span class="text-[#000000]">بمداد العلم</span>
-                </h1>
-                <p class="hero-subtitle mt-3 md:mt-4 max-w-lg">
-                    مداد العلم تمنحك كل ما تحتاجه لإدارة أكاديميتك الإلكترونية: الكورسات، الطلاب، الامتحانات، الاشتراكات، والتقارير — في مكان واحد.
-                </p>
-                <div class="mt-6 md:mt-8 flex flex-wrap gap-3 md:gap-4">
-                    <a href="register.html" class="btn-primary">ابدأ مجانًا <i class="fas fa-arrow-left mr-1"></i></a>
-                    <a href="#demo" class="btn-secondary"><i class="fas fa-play-circle"></i> شاهد العرض</a>
+                <!-- Hero Text -->
+                <div data-aos="fade-up" data-aos-duration="700">
+                    <span class="section-badge">🔥 منصة تعليمية متكاملة</span>
+                    <h1 class="hero-title">
+                        اكتب مستقبلك التعليمي
+                        <span class="text-[#000000]">بمداد العلم</span>
+                    </h1>
+                    <p class="hero-subtitle mt-4">
+                        منصة متطورة تتيح للمعلمين والأكاديميات إنشاء وإدارة كورساتهم، طلابهم، امتحاناتهم، واشتراكاتهم — في مكان واحد، بكل احترافية وسهولة.
+                    </p>
+                    <div class="mt-8 flex flex-wrap gap-4">
+                        <a href="register-academy.html" class="btn-primary">
+                            ابدأ مجانًا <i class="fas fa-arrow-left mr-1"></i>
+                        </a>
+                        <a href="#features" class="btn-secondary">
+                            <i class="fas fa-play-circle"></i> شاهد العرض
+                        </a>
+                    </div>
+                    <div class="mt-6 flex flex-wrap gap-5 text-sm text-[#555555]">
+                        <span><i class="fas fa-check-circle text-[#000000] ml-1"></i> لا خبرة تقنية</span>
+                        <span><i class="fas fa-check-circle text-[#000000] ml-1"></i> دعم 24/7</span>
+                        <span><i class="fas fa-check-circle text-[#000000] ml-1"></i> تحديثات مستمرة</span>
+                    </div>
                 </div>
-                <div class="mt-4 md:mt-6 flex flex-wrap gap-3 md:gap-5 text-xs md:text-sm text-[#555555]">
-                    <span><i class="fas fa-check-circle text-[#22C55E] ml-1"></i> لا خبرة تقنية</span>
-                    <span><i class="fas fa-check-circle text-[#22C55E] ml-1"></i> دعم 24/7</span>
-                    <span class="hidden sm:inline"><i class="fas fa-check-circle text-[#22C55E] ml-1"></i> تحديثات مستمرة</span>
-                </div>
-            </div>
 
-            <div class="order-1 md:order-2 flex justify-center animate-fade-scale">
-                <div class="mockup-wrapper w-full max-w-sm md:max-w-md lg:max-w-lg mx-auto">
-                    <div class="mockup-mac">
-                        <div class="screen">
-                            <div class="placeholder-grid">
-                                <div class="item"></div>
-                                <div class="item"></div>
-                                <div class="item"></div>
-                                <div class="item"></div>
-                                <div class="item"></div>
-                                <div class="item"></div>
+                <!-- Hero Mockup -->
+                <div data-aos="fade-left" data-aos-duration="700" data-aos-delay="150">
+                    <div class="mockup-wrapper">
+                        <div class="mockup-mac">
+                            <div class="screen">
+                                <div class="placeholder-grid">
+                                    <div class="item"></div>
+                                    <div class="item"></div>
+                                    <div class="item"></div>
+                                    <div class="item"></div>
+                                    <div class="item"></div>
+                                    <div class="item"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mockup-phone animate-float">
+                            <div class="phone-screen">
+                                <span>مداد</span>
                             </div>
                         </div>
                     </div>
-                    <div class="mockup-phone animate-float">
-                        <div class="phone-screen"><span style="font-size:0.4rem;color:#888888;">مداد</span></div>
-                    </div>
                 </div>
+
             </div>
         </div>
 
-        <div class="absolute top-20 right-0 w-48 h-48 md:w-64 md:h-64 bg-[#000000]/5 rounded-full blur-3xl -z-0 animate-pulse-glow"></div>
-        <div class="absolute bottom-0 left-0 w-64 h-64 md:w-96 md:h-96 bg-[#000000]/3 rounded-full blur-3xl -z-0"></div>
+        <!-- Decorative Blobs -->
+        <div class="absolute top-20 right-0 w-64 h-64 bg-[#000000]/5 rounded-full blur-3xl -z-0 animate-pulse-glow"></div>
+        <div class="absolute bottom-0 left-0 w-96 h-96 bg-[#000000]/3 rounded-full blur-3xl -z-0"></div>
     </section>
 
     <!-- ======== TRUST BAR ======== -->
-    <section class="py-3 md:py-5 border-y border-[#E5E5E5] bg-white/50 backdrop-blur-sm">
-        <div class="container-custom flex flex-wrap items-center justify-center gap-4 md:gap-6 lg:gap-10">
-            <div class="trust-item flex items-center gap-1">
-                <span class="stars">★★★★★</span> <span class="text-[#000000] font-semibold mr-1">4.9/5</span>
+    <section class="trust-bar py-4 md:py-5">
+        <div class="container-custom flex flex-wrap items-center justify-center gap-6 md:gap-10">
+            <div class="trust-item">
+                <span class="stars">★★★★★</span>
+                <span>4.9/5</span>
             </div>
-            <div class="trust-item flex items-center gap-1 md:gap-2">
-                <span class="font-bold text-[#000000]">+10,000</span> <span>طالب</span>
+            <div class="trust-item">
+                <span class="number">+10,000</span>
+                <span>طالب</span>
             </div>
-            <div class="trust-item flex items-center gap-1 md:gap-2">
-                <span class="font-bold text-[#000000]">+500</span> <span>مدرس</span>
+            <div class="trust-item">
+                <span class="number">+500</span>
+                <span>مدرس</span>
             </div>
-            <div class="trust-item flex items-center gap-1 md:gap-2">
-                <span class="font-bold text-[#000000]">+200</span> <span>أكاديمية</span>
+            <div class="trust-item">
+                <span class="number">+200</span>
+                <span>أكاديمية</span>
             </div>
-            <div class="trust-item flex items-center gap-1 md:gap-2">
-                <span class="font-bold text-[#22C55E]">99.9%</span> <span>جاهزية</span>
-            </div>
-        </div>
-    </section>
-
-    <!-- ======== CLIENTS LOGOS ======== -->
-    <section class="py-6 md:py-10 bg-[#F5F5F5]">
-        <div class="container-custom">
-            <p class="text-center text-[0.6rem] md:text-xs uppercase tracking-wider text-[#555555] font-semibold mb-3 md:mb-4">
-                يثق بنا آلاف المعلمين والأكاديميات
-            </p>
-            <div class="flex flex-wrap justify-center items-center gap-4 md:gap-6 lg:gap-10">
-                <span class="client-logo">أكاديمية المستقبل</span>
-                <span class="client-logo">مدارس الإبداع</span>
-                <span class="client-logo">جامعة المعرفة</span>
-                <span class="client-logo hidden sm:inline">منصة تعلم</span>
-                <span class="client-logo hidden md:inline">مركز مهارات</span>
-                <span class="client-logo hidden lg:inline">أكاديمية STEM</span>
+            <div class="trust-item">
+                <span class="number text-[#22C55E]">99.9%</span>
+                <span>جاهزية</span>
             </div>
         </div>
     </section>
 
-    <!-- ======== FEATURES PREVIEW ======== -->
-    <section class="py-12 md:py-16 lg:py-24 bg-[#FFFFFF]" id="features">
+    <!-- ======== FEATURES ======== -->
+    <section class="py-16 md:py-24 bg-white" id="features">
         <div class="container-custom text-center">
-            <span class="section-badge">المميزات</span>
-            <h2 class="section-title">كل ما تحتاجه في منصة واحدة</h2>
-            <p class="section-sub">أدوات متطورة مصممة خصيصاً لتلبية احتياجات المعلمين والأكاديميات</p>
-            <div class="feature-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mt-8 md:mt-12 text-right">
-                <div class="feature-card bg-white p-4 md:p-6 rounded-2xl border border-[#E5E5E5] shadow-sm">
+            <span class="section-badge" data-aos="fade-up">المميزات</span>
+            <h2 class="section-title" data-aos="fade-up" data-aos-delay="50">كل ما تحتاجه في منصة واحدة</h2>
+            <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">أدوات متطورة مصممة خصيصاً لتلبية احتياجات المعلمين والأكاديميات</p>
+
+            <div class="feature-grid mt-12">
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="50">
                     <div class="feature-icon"><i class="fas fa-users"></i></div>
-                    <h3 class="text-base md:text-lg font-bold mt-2 text-[#000000]">إدارة الطلاب</h3>
-                    <p class="text-sm text-[#555555] mt-1">سجل الطلاب، متابعة التقدم، التواصل الفوري.</p>
+                    <h3>إدارة الطلاب</h3>
+                    <p>سجل الطلاب، متابعة التقدم، التواصل الفوري، وتقارير الأداء.</p>
                 </div>
-                <div class="feature-card bg-white p-4 md:p-6 rounded-2xl border border-[#E5E5E5] shadow-sm">
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
                     <div class="feature-icon"><i class="fas fa-book-open"></i></div>
-                    <h3 class="text-base md:text-lg font-bold mt-2 text-[#000000]">الكورسات المتكاملة</h3>
-                    <p class="text-sm text-[#555555] mt-1">دروس، فيديوهات، ملفات، واختبارات تفاعلية.</p>
+                    <h3>الكورسات المتكاملة</h3>
+                    <p>دروس، فيديوهات، ملفات PDF، واختبارات تفاعلية مع نظام متابعة.</p>
                 </div>
-                <div class="feature-card bg-white p-4 md:p-6 rounded-2xl border border-[#E5E5E5] shadow-sm">
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="150">
                     <div class="feature-icon"><i class="fas fa-pencil-alt"></i></div>
-                    <h3 class="text-base md:text-lg font-bold mt-2 text-[#000000]">الامتحانات والواجبات</h3>
-                    <p class="text-sm text-[#555555] mt-1">إنشاء اختبارات، تصحيح آلي، واجبات مع تقييم.</p>
+                    <h3>الامتحانات والواجبات</h3>
+                    <p>إنشاء اختبارات، تصحيح آلي، واجبات مع نظام تقييم متكامل.</p>
                 </div>
-                <div class="feature-card bg-white p-4 md:p-6 rounded-2xl border border-[#E5E5E5] shadow-sm">
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
                     <div class="feature-icon"><i class="fas fa-certificate"></i></div>
-                    <h3 class="text-base md:text-lg font-bold mt-2 text-[#000000]">الشهادات</h3>
-                    <p class="text-sm text-[#555555] mt-1">شهادات رقمية مع QR وروابط تحقق.</p>
+                    <h3>الشهادات الرقمية</h3>
+                    <p>شهادات مع QR وروابط تحقق، قابلة للطباعة والتحميل.</p>
+                </div>
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="50">
+                    <div class="feature-icon"><i class="fas fa-credit-card"></i></div>
+                    <h3>الاشتراكات والدفع</h3>
+                    <p>خطط اشتراك مرنة، بوابات دفع متعددة، وإدارة فواتير.</p>
+                </div>
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                    <h3>التقارير والتحليلات</h3>
+                    <p>تقارير أداء، إحصائيات، رسوم بيانية، وتحليل بيانات متقدم.</p>
+                </div>
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="150">
+                    <div class="feature-icon"><i class="fas fa-robot"></i></div>
+                    <h3>الذكاء الاصطناعي</h3>
+                    <p>مساعد ذكي لإنشاء الكورسات والاختبارات والأسئلة بسرعة.</p>
+                </div>
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="feature-icon"><i class="fas fa-cogs"></i></div>
+                    <h3>CRM + ERP مدمج</h3>
+                    <p>إدارة العملاء، المحاسبة، الموظفين، والمخزون في مكان واحد.</p>
                 </div>
             </div>
-            <div class="mt-6 md:mt-8">
-                <a href="features.html" class="btn-secondary text-sm md:text-base">استعراض جميع المميزات <i class="fas fa-arrow-left mr-1"></i></a>
+        </div>
+    </section>
+
+    <!-- ======== HOW IT WORKS ======== -->
+    <section class="py-16 md:py-24 bg-[#f8f8f8]" id="how-it-works">
+        <div class="container-custom text-center">
+            <span class="section-badge" data-aos="fade-up">الخطوات</span>
+            <h2 class="section-title" data-aos="fade-up" data-aos-delay="50">كيف تعمل المنصة؟</h2>
+            <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">أربع خطوات بسيطة لانطلاق أكاديميتك</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mt-12">
+                <div class="step-card" data-aos="fade-up" data-aos-delay="50">
+                    <div class="step-circle">1</div>
+                    <h4>أنشئ حسابًا</h4>
+                    <p>سجل مجاناً واختر نوع الأكاديمية التي ترغب في إنشائها</p>
+                </div>
+                <div class="step-card step-connector" data-aos="fade-up" data-aos-delay="100">
+                    <div class="step-circle">2</div>
+                    <h4>أنشئ أكاديميتك</h4>
+                    <p>أضف الشعار، الألوان، وبياناتك الشخصية والمهنية</p>
+                </div>
+                <div class="step-card step-connector" data-aos="fade-up" data-aos-delay="150">
+                    <div class="step-circle">3</div>
+                    <h4>أضف الكورسات</h4>
+                    <p>أنشئ المحتوى، الدروس، والاختبارات بكل سهولة</p>
+                </div>
+                <div class="step-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="step-circle">4</div>
+                    <h4>ابدأ استقبال الطلاب</h4>
+                    <p>انشر منصتك وابدأ بالتعليم مع طلابك</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== STATS ======== -->
+    <section class="stats-section py-16 md:py-20">
+        <div class="container-custom">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                <div data-aos="fade-up" data-aos-delay="50">
+                    <div class="stat-number" data-count="25000">0</div>
+                    <p class="stat-label">طالب</p>
+                </div>
+                <div data-aos="fade-up" data-aos-delay="100">
+                    <div class="stat-number" data-count="1200">0</div>
+                    <p class="stat-label">كورس</p>
+                </div>
+                <div data-aos="fade-up" data-aos-delay="150">
+                    <div class="stat-number" data-count="700">0</div>
+                    <p class="stat-label">مدرس</p>
+                </div>
+                <div data-aos="fade-up" data-aos-delay="200">
+                    <div class="stat-number" data-count="98">0%</div>
+                    <p class="stat-label">رضا العملاء</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== TESTIMONIALS ======== -->
+    <section class="py-16 md:py-24 bg-white" id="testimonials">
+        <div class="container-custom text-center">
+            <span class="section-badge" data-aos="fade-up">آراء العملاء</span>
+            <h2 class="section-title" data-aos="fade-up" data-aos-delay="50">ما يقوله المستخدمون</h2>
+            <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">آلاف المعلمين والأكاديميات يثقون في مداد العلم</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+                <div class="testimonial-card" data-aos="fade-up" data-aos-delay="50">
+                    <div class="stars">★★★★★</div>
+                    <blockquote>"مداد العلم غيرت طريقة تدريسي بالكامل. أصبحت أستطيع متابعة جميع طلابي بسهولة وتقديم محتوى تفاعلي."</blockquote>
+                    <div class="author">
+                        <img src="https://i.pravatar.cc/60?img=1" alt="أحمد محمد" loading="lazy" />
+                        <div>
+                            <div class="name">أحمد محمد</div>
+                            <div class="role">مدرس رياضيات</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="stars">★★★★★</div>
+                    <blockquote>"منصة رائعة وسهلة الاستخدام. وفرت علينا الكثير من الوقت في إدارة الأكاديمية ومتابعة الطلاب."</blockquote>
+                    <div class="author">
+                        <img src="https://i.pravatar.cc/60?img=2" alt="سارة علي" loading="lazy" />
+                        <div>
+                            <div class="name">سارة علي</div>
+                            <div class="role">مديرة أكاديمية</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card" data-aos="fade-up" data-aos-delay="150">
+                    <div class="stars">★★★★★</div>
+                    <blockquote>"من أفضل القرارات التي اتخذتها هي استخدام مداد العلم. منصة متكاملة ومستقرة مع دعم فني ممتاز."</blockquote>
+                    <div class="author">
+                        <img src="https://i.pravatar.cc/60?img=3" alt="خالد بن سلمان" loading="lazy" />
+                        <div>
+                            <div class="name">خالد بن سلمان</div>
+                            <div class="role">مؤسس منصة تعليمية</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- ======== CTA ======== -->
-    <section class="py-12 md:py-16 lg:py-24 cta-section text-white" id="cta">
-        <div class="container-custom text-center">
-            <h2 class="text-2xl md:text-3xl lg:text-4xl font-extrabold">جاهز لبدء رحلتك التعليمية؟</h2>
-            <p class="text-white/70 text-base md:text-lg mt-2 max-w-xl mx-auto">انضم إلى آلاف المعلمين والأكاديميات الذين يثقون في مداد العلم</p>
-            <div class="flex flex-wrap justify-center gap-3 md:gap-4 mt-6 md:mt-8">
-                <a href="register.html" class="bg-white text-[#000000] font-bold px-6 md:px-8 py-2.5 md:py-3 rounded-full shadow-lg hover:shadow-xl transition hover:scale-105 text-sm md:text-base">
+    <section class="cta-section py-16 md:py-24" id="cta">
+        <div class="container-custom text-center cta-content">
+            <h2 class="text-3xl md:text-4xl font-extrabold" data-aos="fade-up">جاهز لبدء رحلتك التعليمية؟</h2>
+            <p class="text-white/70 text-lg mt-2 max-w-xl mx-auto" data-aos="fade-up" data-aos-delay="50">انضم إلى آلاف المعلمين والأكاديميات الذين يثقون في مداد العلم</p>
+            <div class="flex flex-wrap justify-center gap-4 mt-8" data-aos="fade-up" data-aos-delay="100">
+                <a href="register-academy.html" class="bg-white text-[#000000] font-bold px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition hover:scale-105">
                     ابدأ مجاناً الآن
                 </a>
-                <a href="contact.html" class="btn-outline-white text-sm md:text-base">احجز عرضاً توضيحياً</a>
+                <a href="contact.html" class="btn-outline-white">احجز عرضاً توضيحياً</a>
             </div>
         </div>
     </section>
 
     <!-- ======== FOOTER ======== -->
-    <footer class="bg-[#000000] text-[#888888] pt-12 md:pt-16 pb-6" id="contact">
+    <footer class="bg-[#000000] text-[#888888] pt-16 pb-6" id="contact">
         <div class="container-custom">
-            <div class="footer-grid grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 text-right">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
                 <div class="col-span-2 md:col-span-1">
                     <a href="index.html" class="flex items-center gap-2 text-xl font-extrabold text-white no-underline">
                         <i class="fas fa-feather-alt text-[#555555]"></i>
@@ -354,17 +928,17 @@
                     </a>
                     <p class="text-sm mt-3 max-w-xs text-[#666666]">منصة تعليمية متكاملة لإدارة الأكاديميات الإلكترونية بكل احترافية.</p>
                     <div class="flex gap-4 mt-4">
-                        <a href="#" class="text-[#666666] hover:text-white transition" aria-label="تويتر"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="text-[#666666] hover:text-white transition" aria-label="فيسبوك"><i class="fab fa-facebook"></i></a>
-                        <a href="#" class="text-[#666666] hover:text-white transition" aria-label="لينكد إن"><i class="fab fa-linkedin"></i></a>
-                        <a href="#" class="text-[#666666] hover:text-white transition" aria-label="يوتيوب"><i class="fab fa-youtube"></i></a>
+                        <a href="#" class="text-[#666666] hover:text-white transition"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-[#666666] hover:text-white transition"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="text-[#666666] hover:text-white transition"><i class="fab fa-youtube"></i></a>
+                        <a href="#" class="text-[#666666] hover:text-white transition"><i class="fab fa-instagram"></i></a>
                     </div>
                 </div>
                 <div>
                     <h4 class="text-white font-semibold text-sm">المنصة</h4>
                     <ul class="mt-3 space-y-2 text-sm">
-                        <li><a href="features.html" class="footer-link">المميزات</a></li>
-                        <li><a href="pricing.html" class="footer-link">الأسعار</a></li>
+                        <li><a href="#features" class="footer-link">المميزات</a></li>
+                        <li><a href="#pricing" class="footer-link">الأسعار</a></li>
                         <li><a href="about.html" class="footer-link">عن المنصة</a></li>
                         <li><a href="blog.html" class="footer-link">المدونة</a></li>
                     </ul>
@@ -375,7 +949,7 @@
                         <li><a href="contact.html" class="footer-link">تواصل معنا</a></li>
                         <li><a href="faq.html" class="footer-link">الأسئلة الشائعة</a></li>
                         <li><a href="login.html" class="footer-link">تسجيل الدخول</a></li>
-                        <li><a href="register.html" class="footer-link">إنشاء حساب</a></li>
+                        <li><a href="register-academy.html" class="footer-link">إنشاء أكاديمية</a></li>
                     </ul>
                 </div>
                 <div>
@@ -387,7 +961,7 @@
                     </ul>
                 </div>
             </div>
-            <div class="border-t border-[#222222] mt-8 md:mt-10 pt-6 flex flex-col md:flex-row justify-between items-center text-sm">
+            <div class="border-t border-[#222222] mt-10 pt-6 flex flex-col md:flex-row justify-between items-center text-sm">
                 <span>&copy; 2026 مداد العلم. جميع الحقوق محفوظة.</span>
                 <div class="flex gap-6 mt-2 md:mt-0">
                     <a href="privacy-policy.html" class="footer-link">سياسة الخصوصية</a>
@@ -399,6 +973,8 @@
 
     <!-- ======== SCRIPTS ======== -->
     <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
     <script>
         // ============================================================
         // 1. Lenis Smooth Scroll
@@ -412,32 +988,72 @@
             wheelMultiplier: 1,
             touchMultiplier: 2,
         });
-        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+        function raf(time) { lenis.raf(time);
+            requestAnimationFrame(raf); }
         requestAnimationFrame(raf);
 
         // ============================================================
-        // 2. Mobile Drawer
+        // 2. AOS Animations
+        // ============================================================
+        AOS.init({
+            duration: 600,
+            once: true,
+            offset: 30,
+            easing: 'ease-out-cubic',
+            disable: window.innerWidth < 768,
+        });
+
+        // ============================================================
+        // 3. Animated Counters
+        // ============================================================
+        const counters = document.querySelectorAll('[data-count]');
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const el = entry.target;
+                    const target = parseInt(el.dataset.count);
+                    if (isNaN(target)) return;
+                    let current = 0;
+                    const increment = Math.ceil(target / 50);
+                    const timer = setInterval(() => {
+                        current += increment;
+                        if (current >= target) {
+                            current = target;
+                            clearInterval(timer);
+                        }
+                        if (el.dataset.count.includes('%')) {
+                            el.textContent = current + '%';
+                        } else {
+                            el.textContent = current.toLocaleString();
+                        }
+                    }, 30);
+                    counterObserver.unobserve(el);
+                }
+            });
+        }, { threshold: 0.3 });
+        counters.forEach(el => counterObserver.observe(el));
+
+        // ============================================================
+        // 4. Mobile Drawer
         // ============================================================
         const menuToggle = document.getElementById('menuToggle');
         const drawer = document.getElementById('mobileDrawer');
         const drawerOverlay = document.getElementById('drawerOverlay');
         const drawerClose = document.getElementById('drawerClose');
 
-        function openDrawer() {
-            drawer.classList.add('open');
-            document.body.style.overflow = 'hidden';
-        }
-        function closeDrawer() {
-            drawer.classList.remove('open');
-            document.body.style.overflow = '';
-        }
+        function openDrawer() { drawer.classList.add('open');
+            document.body.style.overflow = 'hidden'; }
+
+        function closeDrawer() { drawer.classList.remove('open');
+            document.body.style.overflow = ''; }
+
         if (menuToggle) menuToggle.addEventListener('click', openDrawer);
         if (drawerClose) drawerClose.addEventListener('click', closeDrawer);
         if (drawerOverlay) drawerOverlay.addEventListener('click', closeDrawer);
         document.querySelectorAll('#mobileDrawer a').forEach(link => link.addEventListener('click', closeDrawer));
 
         // ============================================================
-        // 3. Navbar scroll effect
+        // 5. Navbar scroll effect
         // ============================================================
         const navbar = document.getElementById('navbar');
         window.addEventListener('scroll', () => {
@@ -451,7 +1067,7 @@
         });
 
         // ============================================================
-        // 4. Dark mode toggle (demo - toggles body class)
+        // 6. Dark mode toggle
         // ============================================================
         document.querySelectorAll('.dark-mode-toggle').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -462,7 +1078,7 @@
             });
         });
 
-        console.log('✅ مداد العلم — الصفحة الرئيسية (أبيض وأسود) جاهزة');
+        console.log('✅ مداد العلم — الصفحة التسويقية الاحترافية جاهزة');
     </script>
 
 </body>

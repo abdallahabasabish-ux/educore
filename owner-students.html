@@ -8,7 +8,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..700&family=Cairo:wght@300..700&display=swap" rel="stylesheet" />
-
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <link rel="stylesheet" href="https://unpkg.com/lenis@1.1.13/dist/lenis.css" />
@@ -17,15 +16,38 @@
     <link rel="stylesheet" href="assets/css/style.css" />
 
     <style>
-        /* ===== تنسيقات مشتركة ===== */
         body { background: #f5f5f5; margin: 0; padding: 0; font-family: 'Inter', 'Cairo', sans-serif; }
 
-        .sidebar { position: fixed; top: 0; right: 0; width: 280px; height: 100%; background: #000000; color: #aaaaaa; padding: 1.5rem; overflow-y: auto; z-index: 40; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); transform: translateX(100%); border-left: 1px solid #222222; }
+        /* ===== القائمة الجانبية ===== */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 280px;
+            height: 100%;
+            background: #000000;
+            color: #aaaaaa;
+            padding: 1.5rem;
+            overflow-y: auto;
+            z-index: 40;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateX(100%);
+            border-left: 1px solid #222222;
+        }
         .sidebar.open { transform: translateX(0); }
         .sidebar-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(4px); z-index: 39; display: none; }
         .sidebar-overlay.show { display: block; }
-
-        .sidebar-link { display: flex; align-items: center; gap: 0.75rem; padding: 0.625rem 0.875rem; border-radius: 10px; color: #aaaaaa; text-decoration: none; transition: all 0.2s ease; font-size: 0.85rem; }
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.625rem 0.875rem;
+            border-radius: 10px;
+            color: #aaaaaa;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            font-size: 0.85rem;
+        }
         .sidebar-link:hover { background: #1a1a1a; color: #ffffff; }
         .sidebar-link.active { background: #333333; color: #ffffff; }
         .sidebar-link i { width: 1.25rem; text-align: center; }
@@ -37,7 +59,7 @@
 
         .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 16px; }
         .table-wrap table { min-width: 700px; width: 100%; border-collapse: collapse; font-size: 0.875rem; background: white; border-radius: 16px; overflow: hidden; }
-        .table-wrap th { text-align: right; padding: 0.75rem 1rem; background: #f8fafc; color: #64748b; font-weight: 600; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e5e5e5; white-space: nowrap; }
+        .table-wrap th { text-align: right; padding: 0.75rem 1rem; background: #f8fafc; color: #64748b; font-weight: 600; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e5e5e5; }
         .table-wrap td { padding: 0.75rem 1rem; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
         .table-wrap tr:last-child td { border-bottom: none; }
         .table-wrap tr:hover td { background: #fafbfc; }
@@ -52,28 +74,49 @@
         .btn-edit:hover { background: #222222; }
         .btn-danger { background: #EF4444; color: white; }
         .btn-danger:hover { background: #dc2626; }
-        .btn-success { background: #22C55E; color: white; }
-        .btn-success:hover { background: #16a34a; }
 
-        .btn-primary { background: #000000; color: #ffffff; padding: 0.6rem 1.5rem; border-radius: 10px; font-weight: 600; font-size: 0.9rem; border: none; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 0.5rem; min-height: 44px; }
-        .btn-primary:hover { background: #222222; transform: translateY(-2px); box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.2); }
-
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 1rem; }
-        .modal-overlay.show { display: flex; }
-        .modal-box { background: white; border-radius: 20px; padding: 1.75rem; max-width: 520px; width: 100%; max-height: 90vh; overflow-y: auto; animation: modalIn 0.3s ease; }
-        @keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
-        .modal-box .close-btn { background: none; border: none; font-size: 1.25rem; color: #94a3b8; cursor: pointer; transition: color 0.2s; padding: 0.25rem; }
-        .modal-box .close-btn:hover { color: #1e293b; }
-
+        .form-control { width: 100%; padding: 0.55rem 0.875rem; border: 1.5px solid #e5e5e5; border-radius: 10px; background: #fafafa; font-size: 0.9rem; transition: all 0.2s ease; color: #000000; }
+        .form-control:focus { outline: none; border-color: #000000; background: #ffffff; box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05); }
         .form-group { margin-bottom: 1rem; }
-        .form-group label { display: block; font-size: 0.8rem; font-weight: 600; color: #1e293b; margin-bottom: 0.3rem; }
-        .form-control { width: 100%; padding: 0.55rem 0.875rem; border: 1.5px solid #e5e7eb; border-radius: 10px; background: #f8fafc; font-size: 0.9rem; transition: all 0.2s ease; color: #111827; }
-        .form-control:focus { outline: none; border-color: #000000; background: white; box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05); }
-        .form-control::placeholder { color: #94a3b8; }
+        .form-group label { display: block; font-size: 0.8rem; font-weight: 600; color: #000000; margin-bottom: 0.3rem; }
 
-        .message-box { padding: 0.5rem 1rem; border-radius: 10px; font-size: 0.85rem; margin-top: 0.5rem; display: none; }
-        .message-box.error { display: block; background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
-        .message-box.success { display: block; background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        .modal-overlay.show { display: flex; }
+        .modal-box {
+            background: white;
+            border-radius: 20px;
+            padding: 1.75rem;
+            max-width: 520px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalIn 0.3s ease;
+        }
+        @keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+
+        .btn-primary {
+            background: #000000;
+            color: #ffffff;
+            padding: 0.6rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 44px;
+        }
+        .btn-primary:hover { background: #222222; transform: translateY(-2px); box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.2); }
 
         @media (min-width: 768px) {
             .sidebar { transform: translateX(0) !important; }
@@ -86,13 +129,7 @@
             .sidebar { width: 260px; padding: 1rem; }
             .table-wrap table { min-width: 600px; font-size: 0.75rem; }
             .table-wrap th, .table-wrap td { padding: 0.5rem 0.75rem; }
-            .modal-box { padding: 1.25rem; }
         }
-        @media (max-width: 360px) {
-            .sidebar { width: 240px; padding: 0.75rem; }
-            .sidebar-link { font-size: 0.75rem; padding: 0.5rem 0.75rem; }
-        }
-
         .sidebar::-webkit-scrollbar { width: 4px; }
         .sidebar::-webkit-scrollbar-track { background: transparent; }
         .sidebar::-webkit-scrollbar-thumb { background: #334155; border-radius: 2px; }
@@ -135,8 +172,7 @@
     </aside>
 
     <!-- ======== المحتوى الرئيسي ======== -->
-    <main class="main-content" id="mainContent">
-
+    <main class="main-content">
         <div class="mobile-header">
             <button class="menu-btn" id="openSidebarBtn"><i class="fas fa-bars"></i></button>
             <a href="index.html" class="text-lg font-extrabold text-[#0f172a]">
@@ -146,16 +182,13 @@
         </div>
 
         <div class="hidden md:flex items-center justify-between mb-6">
-            <div>
-                <h1 class="text-2xl font-bold text-[#000000]">الطلاب</h1>
-                <p class="text-sm text-[#555555]">إدارة جميع الطلاب المسجلين في الأكاديمية</p>
-            </div>
-            <button id="addStudentBtn" class="btn-primary">
+            <h1 class="text-2xl font-bold text-[#000000]">إدارة الطلاب</h1>
+            <button id="addStudentBtn" class="btn-primary flex items-center gap-2">
                 <i class="fas fa-plus"></i> إضافة طالب
             </button>
         </div>
 
-        <!-- ===== جدول الطلاب ===== -->
+        <!-- جدول الطلاب -->
         <div class="bg-white rounded-2xl shadow-sm border border-[#E5E5E5] overflow-hidden">
             <div class="table-wrap">
                 <table>
@@ -163,38 +196,28 @@
                         <tr>
                             <th>الاسم</th>
                             <th>البريد الإلكتروني</th>
-                            <th class="hidden sm:table-cell">الهاتف</th>
+                            <th>الهاتف</th>
                             <th>الحالة</th>
                             <th>تاريخ التسجيل</th>
                             <th class="text-center">الإجراءات</th>
                         </tr>
                     </thead>
                     <tbody id="studentsTableBody">
-                        <tr>
-                            <td colspan="6" class="text-center text-gray-400 py-8">
-                                <i class="fas fa-spinner fa-spin ml-2"></i> جاري التحميل...
-                            </td>
-                        </tr>
+                        <tr><td colspan="6" class="text-center text-gray-400 py-4"><i class="fas fa-spinner fa-spin ml-2"></i> جاري التحميل...</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
-
-        <!-- ===== زر عرض الكل (في الهاتف) ===== -->
-        <div class="mt-4 text-center md:hidden">
-            <span class="text-sm text-[#555555]">اسحب الجدول يميناً لعرض جميع الأعمدة</span>
-        </div>
-
     </main>
 
-    <!-- ======== مودال إضافة/تعديل طالب ======== -->
+    <!-- ======== مودال إضافة طالب ======== -->
     <div id="studentModal" class="modal-overlay">
         <div class="modal-box">
             <div class="flex items-center justify-between mb-4">
-                <h2 id="modalTitle" class="text-lg font-bold text-[#0f172a]">إضافة طالب جديد</h2>
-                <button class="close-btn" id="closeModalBtn"><i class="fas fa-times"></i></button>
+                <h2 id="modalTitle" class="text-lg font-bold">إضافة طالب جديد</h2>
+                <button id="closeModalBtn" class="text-gray-500 hover:text-gray-700 text-xl"><i class="fas fa-times"></i></button>
             </div>
-            <form id="studentForm" novalidate>
+            <form id="studentForm">
                 <input type="hidden" id="studentId" />
                 <div class="form-group">
                     <label for="studentName">الاسم الكامل</label>
@@ -216,15 +239,11 @@
                         <option value="pending">معلق</option>
                     </select>
                 </div>
-                <div id="modalMessage" class="message-box"></div>
-                <button type="submit" class="btn-primary w-full justify-center mt-2" id="saveStudentBtn">
-                    <i class="fas fa-save"></i> حفظ
-                </button>
+                <button type="submit" class="btn-primary w-full">حفظ</button>
             </form>
         </div>
     </div>
 
-    <!-- ======== SCRIPTS ======== -->
     <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
@@ -240,10 +259,6 @@
     </script>
 
     <script type="module">
-        // ============================================================
-        // owner-students.js
-        // ============================================================
-
         import { initializeApp } from "firebase/app";
         import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
         import {
@@ -275,58 +290,24 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // ===== عناصر DOM =====
         const tbody = document.getElementById('studentsTableBody');
         const modal = document.getElementById('studentModal');
-        const modalTitle = document.getElementById('modalTitle');
-        const closeModalBtn = document.getElementById('closeModalBtn');
+        const closeBtn = document.getElementById('closeModalBtn');
         const addBtn = document.getElementById('addStudentBtn');
         const form = document.getElementById('studentForm');
-        const studentIdInput = document.getElementById('studentId');
+        const studentId = document.getElementById('studentId');
         const nameInput = document.getElementById('studentName');
         const emailInput = document.getElementById('studentEmail');
         const phoneInput = document.getElementById('studentPhone');
         const statusInput = document.getElementById('studentStatus');
-        const messageEl = document.getElementById('modalMessage');
-        const saveBtn = document.getElementById('saveStudentBtn');
 
         let academyId = null;
-        let unsubscribeStudents = null;
+        let unsubscribe = null;
 
         function showToast(message, type = "error") {
-            Toastify({
-                text: message,
-                duration: 4000,
-                gravity: "top",
-                position: "center",
-                style: {
-                    background: type === "success" ? "#22C55E" : "#EF4444",
-                    borderRadius: "12px",
-                    padding: "12px 24px",
-                    boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
-                },
-                stopOnFocus: true,
-            }).showToast();
-        }
-
-        function showMessage(text, type = 'error') {
-            messageEl.textContent = text;
-            messageEl.className = `message-box ${type}`;
-            clearTimeout(messageEl._timeout);
-            messageEl._timeout = setTimeout(() => {
-                messageEl.className = 'message-box';
-                messageEl.textContent = '';
-            }, 5000);
-        }
-
-        function setLoading(isLoading) {
-            if (isLoading) {
-                saveBtn.disabled = true;
-                saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الحفظ...';
-            } else {
-                saveBtn.disabled = false;
-                saveBtn.innerHTML = '<i class="fas fa-save"></i> حفظ';
-            }
+            Toastify({ text: message, duration: 4000, gravity: "top", position: "center", style: { background: type ===
+                        "success" ? "#22C55E" : "#EF4444", borderRadius: "12px", padding: "12px 24px",
+                    boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }, stopOnFocus: true }).showToast();
         }
 
         function getStatusBadge(status) {
@@ -335,109 +316,93 @@
             return `<span class="badge ${map[status] || 'badge-pending'}">${labels[status] || status}</span>`;
         }
 
-        // ===== تحميل الطلاب =====
         function loadStudents() {
-            if (unsubscribeStudents) unsubscribeStudents();
+            if (unsubscribe) unsubscribe();
+            if (!academyId) return;
 
             const q = query(
-                collection(db, "students"),
-                where("academyId", "==", academyId),
-                orderBy("createdAt", "desc")
+                collection(db, "academies", academyId, "students"),
+                orderBy("enrolledAt", "desc")
             );
 
-            unsubscribeStudents = onSnapshot(q, (snapshot) => {
+            unsubscribe = onSnapshot(q, (snapshot) => {
                 if (snapshot.empty) {
                     tbody.innerHTML =
-                        `<tr><td colspan="6" class="text-center text-gray-400 py-8">لا يوجد طلاب</td></tr>`;
+                        `<tr><td colspan="6" class="text-center text-gray-400 py-4">لا يوجد طلاب</td></tr>`;
                     return;
                 }
                 let html = '';
                 snapshot.forEach((doc) => {
                     const data = doc.data();
-                    const date = data.createdAt ? new Date(data.createdAt.toDate()).toLocaleDateString('ar') :
+                    const date = data.enrolledAt ? new Date(data.enrolledAt.toDate()).toLocaleDateString('ar') :
                         '-';
                     html += `
                         <tr>
                             <td class="font-medium">${data.fullName || 'غير محدد'}</td>
                             <td>${data.email || '-'}</td>
-                            <td class="hidden sm:table-cell">${data.phone || '-'}</td>
-                            <td>${getStatusBadge(data.status || 'pending')}</td>
-                            <td class="text-sm">${date}</td>
-                            <td class="text-center whitespace-nowrap">
-                                <button onclick="editStudent('${doc.id}')" class="btn-sm btn-edit ml-1" title="تعديل">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button onclick="deleteStudent('${doc.id}')" class="btn-sm btn-danger" title="حذف">
-                                    <i class="fas fa-trash"></i>
-                                </button>
+                            <td>${data.phone || '-'}</td>
+                            <td>${getStatusBadge(data.status || 'active')}</td>
+                            <td>${date}</td>
+                            <td class="text-center">
+                                <button onclick="editStudent('${doc.id}')" class="btn-sm btn-edit"><i class="fas fa-edit"></i></button>
+                                <button onclick="deleteStudent('${doc.id}')" class="btn-sm btn-danger"><i class="fas fa-trash"></i></button>
                             </td>
                         </tr>
                     `;
                 });
                 tbody.innerHTML = html;
             }, (error) => {
-                console.error("خطأ في تحميل الطلاب:", error);
+                console.error("خطأ:", error);
                 tbody.innerHTML =
-                    `<tr><td colspan="6" class="text-center text-red-500 py-4">فشل تحميل البيانات</td></tr>`;
+                    `<tr><td colspan="6" class="text-center text-red-500 py-4">فشل التحميل</td></tr>`;
             });
         }
 
-        // ===== إضافة/تعديل طالب =====
+        // إضافة/تعديل
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const id = studentIdInput.value;
+            const id = studentId.value;
             const data = {
                 fullName: nameInput.value.trim(),
                 email: emailInput.value.trim(),
                 phone: phoneInput.value.trim(),
                 status: statusInput.value,
-                academyId: academyId,
                 updatedAt: serverTimestamp(),
             };
-            if (!data.fullName || !data.email) {
-                showMessage('الاسم والبريد الإلكتروني مطلوبان', 'error');
-                return;
-            }
-            setLoading(true);
+
             try {
                 if (id) {
-                    await updateDoc(doc(db, "students", id), data);
+                    await updateDoc(doc(db, "academies", academyId, "students", id), data);
                     showToast('تم تحديث الطالب بنجاح', 'success');
                 } else {
-                    data.createdAt = serverTimestamp();
-                    await addDoc(collection(db, "students"), data);
+                    data.enrolledAt = serverTimestamp();
+                    data.academyId = academyId;
+                    await addDoc(collection(db, "academies", academyId, "students"), data);
                     showToast('تم إضافة الطالب بنجاح', 'success');
                 }
-                closeModal();
+                modal.classList.remove('show');
+                form.reset();
             } catch (error) {
-                showMessage('فشل حفظ الطالب: ' + error.message, 'error');
-            } finally {
-                setLoading(false);
+                showToast('فشل حفظ الطالب: ' + error.message);
             }
         });
 
-        // ===== تعديل طالب =====
+        // تعديل
         window.editStudent = async (id) => {
-            try {
-                const docSnap = await getDoc(doc(db, "students", id));
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    studentIdInput.value = id;
-                    nameInput.value = data.fullName || '';
-                    emailInput.value = data.email || '';
-                    phoneInput.value = data.phone || '';
-                    statusInput.value = data.status || 'active';
-                    modalTitle.textContent = 'تعديل الطالب';
-                    modal.classList.add('show');
-                    messageEl.className = 'message-box';
-                    messageEl.textContent = '';
-                }
-            } catch (error) {
-                showToast('فشل تحميل بيانات الطالب', 'error');
+            const docSnap = await getDoc(doc(db, "academies", academyId, "students", id));
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                studentId.value = id;
+                nameInput.value = data.fullName || '';
+                emailInput.value = data.email || '';
+                phoneInput.value = data.phone || '';
+                statusInput.value = data.status || 'active';
+                document.getElementById('modalTitle').textContent = 'تعديل الطالب';
+                modal.classList.add('show');
             }
         };
 
-        // ===== حذف طالب =====
+        // حذف
         window.deleteStudent = async (id) => {
             const result = await Swal.fire({
                 title: 'هل أنت متأكد؟',
@@ -445,68 +410,54 @@
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#EF4444',
-                cancelButtonColor: '#94a3b8',
                 confirmButtonText: 'نعم، احذف',
                 cancelButtonText: 'إلغاء',
             });
             if (result.isConfirmed) {
                 try {
-                    await deleteDoc(doc(db, "students", id));
+                    await deleteDoc(doc(db, "academies", academyId, "students", id));
                     showToast('تم حذف الطالب بنجاح', 'success');
                 } catch (error) {
-                    showToast('فشل حذف الطالب: ' + error.message, 'error');
+                    showToast('فشل حذف الطالب: ' + error.message);
                 }
             }
         };
 
-        // ===== التحكم بالمودال =====
-        function openModal() {
-            studentIdInput.value = '';
+        // مودال
+        addBtn.addEventListener('click', () => {
+            studentId.value = '';
             form.reset();
             statusInput.value = 'active';
-            modalTitle.textContent = 'إضافة طالب جديد';
-            messageEl.className = 'message-box';
-            messageEl.textContent = '';
+            document.getElementById('modalTitle').textContent = 'إضافة طالب جديد';
             modal.classList.add('show');
-        }
+        });
+        closeBtn.addEventListener('click', () => modal.classList.remove('show'));
+        modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('show'); });
 
-        function closeModal() { modal.classList.remove('show'); }
-
-        addBtn.addEventListener('click', openModal);
-        closeModalBtn.addEventListener('click', closeModal);
-        modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
-
-        // ===== مراقبة حالة المصادقة =====
+        // Auth
         onAuthStateChanged(auth, async (user) => {
             if (!user) { window.location.href = "login.html"; return; }
-            try {
-                const userDoc = await getDoc(doc(db, "users", user.uid));
-                if (userDoc.exists()) {
-                    const data = userDoc.data();
-                    if (data.role !== 'owner') {
-                        showToast('ليس لديك صلاحية الوصول', 'error');
-                        setTimeout(() => window.location.href = "dashboard.html", 1500);
-                        return;
-                    }
-                    academyId = data.academyId || user.uid;
-                    loadStudents();
-                } else {
-                    window.location.href = "register.html";
+            const userDoc = await getDoc(doc(db, "users", user.uid));
+            if (userDoc.exists()) {
+                const data = userDoc.data();
+                if (data.role !== 'owner') {
+                    showToast('ليس لديك صلاحية', 'error');
+                    setTimeout(() => window.location.href = "dashboard.html", 1500);
+                    return;
                 }
-            } catch (error) {
-                console.error("خطأ في تحميل بيانات المستخدم:", error);
-                showToast("فشل تحميل بيانات المستخدم", "error");
+                academyId = data.academyId || user.uid;
+                loadStudents();
             }
         });
 
-        // ===== تسجيل الخروج =====
+        // Logout
         document.getElementById('logoutBtn').addEventListener('click', async () => {
             try { await signOut(auth);
                 window.location.href = "login.html"; } catch (error) { showToast("فشل تسجيل الخروج: " + error.message,
                     "error"); }
         });
 
-        // ===== القائمة الجانبية =====
+        // Sidebar
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('sidebarOverlay');
         const openBtn = document.getElementById('openSidebarBtn');
@@ -526,14 +477,12 @@
         document.querySelectorAll('#sidebar a').forEach(link => link.addEventListener('click', closeSidebar));
         window.addEventListener('resize', () => { if (window.innerWidth >= 768) closeSidebar(); });
 
-        // ===== Lenis =====
         const lenis = new Lenis({ duration: 1.2 });
         function raf(time) { lenis.raf(time);
             requestAnimationFrame(raf); }
         requestAnimationFrame(raf);
 
-        console.log('✅ مداد العلم — صفحة الطلاب (Owner) جاهزة');
+        console.log('✅ مداد العلم — صفحة الطلاب جاهزة');
     </script>
-
 </body>
 </html>

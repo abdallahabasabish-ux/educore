@@ -1,55 +1,30 @@
 // ============================================================
 // assets/js/auth.js
-// نظام المصادقة الكامل مع تصدير auth و db للاستخدام في الصفحات
+// نظام المصادقة الكامل - تسجيل الدخول، إنشاء حساب، Google، استعادة كلمة المرور
 // ============================================================
 
-import { initializeApp } from "firebase/app";
+import { auth, db } from "./firebase-config.js";
 import {
-  getAuth,
-  createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
   sendPasswordResetEmail,
   onAuthStateChanged,
   signOut,
+  setPersistence,
+  browserLocalPersistence,
 } from "firebase/auth";
 import {
-  getFirestore,
   doc,
-  setDoc,
   getDoc,
+  setDoc,
   updateDoc,
-  collection,
-  query,
-  where,
-  getDocs,
-  addDoc,
-  deleteDoc,
-  onSnapshot,
-  orderBy,
+  serverTimestamp,
 } from "firebase/firestore";
 
-// إعداد Firebase
-const firebaseConfig = {
-  apiKey: "AIzaSyBsSP8Le5_nDG2YFiyGcZ6BFR7aLi3djLU",
-  authDomain: "edu-core-ddb48.firebaseapp.com",
-  projectId: "edu-core-ddb48",
-  storageBucket: "edu-core-ddb48.firebasestorage.app",
-  messagingSenderId: "4743644287",
-  appId: "1:4743644287:web:9167749cc80417b6876b4a",
-  measurementId: "G-S94FBCFCXW",
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-
-// تصدير auth و db لاستخدامها في الصفحات الأخرى
-export { auth, db };
-
 // ============================================================
-// دوال مساعدة للرسائل
+// دوال مساعدة للرسائل (بدون alert)
 // ============================================================
 function showToast(message, type = "error") {
   Toastify({
@@ -90,7 +65,7 @@ function showError(message) {
 }
 
 // ============================================================
-// 1. تسجيل الدخول
+// 1. تسجيل الدخول بالبريد الإلكتروني وكلمة المرور
 // ============================================================
 document.addEventListener("DOMContentLoaded", () => {
   const loginForm = document.getElementById("loginForm");
@@ -99,6 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
       const email = document.getElementById("loginEmail").value.trim();
       const password = document.getElementById("loginPassword").value;
+      const remember = document.getElementById("loginRemember")?.checked || false;
 
       if (!email || !password) {
         showToast("يرجى إدخال البريد الإلكتروني وكلمة المرور");
@@ -106,6 +82,11 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       try {
+        // تعيين استمرارية الجلسة
+        await setPersistence(
+          auth,
+          remember ? browserLocalPersistence : browserSessionPersistence
+        );
         await signInWithEmailAndPassword(auth, email, password);
         showSuccess("تم تسجيل الدخول بنجاح!");
         setTimeout(() => {
@@ -117,6 +98,8 @@ document.addEventListener("DOMContentLoaded", () => {
         else if (error.code === "auth/wrong-password") msg = "كلمة المرور غير صحيحة";
         else if (error.code === "auth/too-many-requests")
           msg = "تم إرسال العديد من المحاولات، حاول لاحقاً";
+        else if (error.code === "auth/invalid-email") msg = "البريد الإلكتروني غير صحيح";
+        else if (error.code === "auth/user-disabled") msg = "تم تعطيل هذا الحساب";
         else msg = error.message;
         showError(msg);
       }
@@ -124,35 +107,86 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ============================================================
-  // 2. التسجيل
+  // 2. تسجيل الدخول بواسطة Google
+  // ============================================================
+  const googleLoginBtn = document.getElementById("googleLoginBtn");
+  if (googleLoginBtn) {
+    googleLoginBtn.addEventListener("click", async () => {
+      const provider = new GoogleAuthProvider();
+      try {
+        await setPersistence(auth, browserLocalPersistence);
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+
+        // التحقق من وجود المستخدم في Firestore
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (!userDoc.exists()) {
+          // إنشاء مستخدم جديد
+          await setDoc(doc(db, "users", user.uid), {
+            fullName: user.displayName || "مستخدم",
+            email: user.email,
+            avatar: user.photoURL || "",
+            role: "student", // افتراضي
+            status: "active",
+            academyId: null, // سيتم تعيينه لاحقاً
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp(),
+          });
+        }
+        showSuccess("تم تسجيل الدخول بواسطة Google بنجاح!");
+        setTimeout(() => {
+          window.location.href = "dashboard.html";
+        }, 1500);
+      } catch (error) {
+        let msg = "فشل تسجيل الدخول عبر Google";
+        if (error.code === "auth/popup-closed-by-user")
+          msg = "تم إغلاق النافذة المنبثقة قبل إكمال التسجيل";
+        else if (error.code === "auth/cancelled-popup-request")
+          msg = "تم إلغاء طلب تسجيل الدخول";
+        else if (error.code === "auth/account-exists-with-different-credential")
+          msg = "يوجد حساب بنفس البريد الإلكتروني باستخدام طريقة أخرى";
+        else msg = error.message;
+        showError(msg);
+      }
+    });
+  }
+
+  // ============================================================
+  // 3. إنشاء حساب جديد (التسجيل)
   // ============================================================
   const registerForm = document.getElementById("registerForm");
   if (registerForm) {
     registerForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      const name = document.getElementById("registerName").value.trim();
-      const academy = document.getElementById("registerAcademy").value.trim();
+      const fullName = document.getElementById("registerName").value.trim();
+      const academyName = document.getElementById("registerAcademy").value.trim();
       const email = document.getElementById("registerEmail").value.trim();
       const phone = document.getElementById("registerPhone").value.trim();
       const password = document.getElementById("registerPassword").value;
       const confirm = document.getElementById("registerConfirm").value;
       const terms = document.getElementById("registerTerms").checked;
 
-      if (!name || !academy || !email || !password || !confirm) {
+      // التحقق من صحة المدخلات
+      if (!fullName || !academyName || !email || !password || !confirm) {
         showToast("يرجى ملء جميع الحقول المطلوبة");
-        return;
-      }
-      if (password !== confirm) {
-        showToast("كلمات المرور غير متطابقة");
         return;
       }
       if (password.length < 6) {
         showToast("كلمة المرور يجب أن تكون 6 أحرف على الأقل");
         return;
       }
+      if (password !== confirm) {
+        showToast("كلمات المرور غير متطابقة");
+        return;
+      }
       if (!terms) {
         showToast("يجب الموافقة على الشروط والأحكام");
+        return;
+      }
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        showToast("البريد الإلكتروني غير صحيح");
         return;
       }
 
@@ -164,30 +198,35 @@ document.addEventListener("DOMContentLoaded", () => {
         );
         const user = userCredential.user;
 
+        // حفظ بيانات المستخدم في Firestore
         await setDoc(doc(db, "users", user.uid), {
-          fullName: name,
-          academyName: academy,
-          email: email,
-          phone: phone,
-          role: "owner",
+          fullName,
+          academyName,
+          email,
+          phone: phone || "",
+          role: "owner", // المدرس هو مالك الأكاديمية
           status: "active",
-          createdAt: new Date().toISOString(),
-          academyId: user.uid,
-          emailVerified: user.emailVerified || false,
+          academyId: user.uid, // يستخدم كمعرف للأكاديمية
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
         });
 
+        // إنشاء وثيقة الأكاديمية
         await setDoc(doc(db, "academies", user.uid), {
-          academyName: academy,
+          academyName,
           ownerId: user.uid,
+          slug: academyName.toLowerCase().replace(/\s+/g, "-"),
           status: "active",
-          createdAt: new Date().toISOString(),
           language: "ar",
           currency: "SAR",
+          studentCount: 0,
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
         });
 
-        showSuccess("تم إنشاء الحساب بنجاح!");
+        showSuccess("تم إنشاء الحساب بنجاح! جاري التوجيه...");
         setTimeout(() => {
-          window.location.href = "dashboard.html";
+          window.location.href = "owner-dashboard.html";
         }, 2000);
       } catch (error) {
         let msg = "فشل إنشاء الحساب";
@@ -197,101 +236,56 @@ document.addEventListener("DOMContentLoaded", () => {
           msg = "البريد الإلكتروني غير صحيح";
         else if (error.code === "auth/weak-password")
           msg = "كلمة المرور ضعيفة جداً";
+        else if (error.code === "auth/network-request-failed")
+          msg = "فشل الاتصال بالشبكة، تأكد من اتصال الإنترنت";
         else msg = error.message;
         showError(msg);
       }
     });
   }
-
-  // ============================================================
-  // 3. Google Auth
-  // ============================================================
-  function handleGoogleAuth() {
-    const provider = new GoogleAuthProvider();
-    signInWithPopup(auth, provider)
-      .then(async (result) => {
-        const user = result.user;
-        const userDoc = await getDoc(doc(db, "users", user.uid));
-        if (!userDoc.exists()) {
-          await setDoc(doc(db, "users", user.uid), {
-            fullName: user.displayName || "مستخدم",
-            email: user.email,
-            avatar: user.photoURL || "",
-            role: "owner",
-            status: "active",
-            createdAt: new Date().toISOString(),
-            academyId: user.uid,
-          });
-          await setDoc(doc(db, "academies", user.uid), {
-            academyName: "أكاديميتي",
-            ownerId: user.uid,
-            status: "active",
-            createdAt: new Date().toISOString(),
-          });
-        }
-        showSuccess("تم تسجيل الدخول بواسطة Google بنجاح!");
-        setTimeout(() => {
-          window.location.href = "dashboard.html";
-        }, 1500);
-      })
-      .catch((error) => {
-        let msg = "فشل Google";
-        if (error.code === "auth/popup-closed-by-user")
-          msg = "تم إغلاق النافذة المنبثقة قبل إكمال التسجيل";
-        else if (error.code === "auth/cancelled-popup-request")
-          msg = "تم إلغاء طلب تسجيل الدخول";
-        else if (error.code === "auth/account-exists-with-different-credential")
-          msg = "يوجد حساب بنفس البريد الإلكتروني باستخدام طريقة أخرى";
-        else msg = error.message;
-        showError(msg);
-      });
-  }
-
-  document
-    .getElementById("googleLoginBtn")
-    ?.addEventListener("click", handleGoogleAuth);
-  document
-    .getElementById("googleRegisterBtn")
-    ?.addEventListener("click", handleGoogleAuth);
 
   // ============================================================
   // 4. استعادة كلمة المرور
   // ============================================================
-  document
-    .getElementById("forgotPasswordLink")
-    ?.addEventListener("click", async (e) => {
+  const forgotForm = document.getElementById("forgotForm");
+  if (forgotForm) {
+    forgotForm.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const { value: email } = await Swal.fire({
-        title: "استعادة كلمة المرور",
-        text: "أدخل بريدك الإلكتروني لإرسال رابط الاستعادة",
-        input: "email",
-        inputPlaceholder: "example@email.com",
-        confirmButtonColor: "#4B5563",
-        confirmButtonText: "إرسال",
-        showCancelButton: true,
-        cancelButtonText: "إلغاء",
-      });
-      if (email) {
-        try {
-          await sendPasswordResetEmail(auth, email);
-          showSuccess(
-            "تم إرسال رابط استعادة كلمة المرور إلى بريدك الإلكتروني"
-          );
-        } catch (error) {
-          let msg = "فشل إرسال الرابط";
-          if (error.code === "auth/user-not-found")
-            msg = "لا يوجد حساب بهذا البريد";
-          else msg = error.message;
-          showError(msg);
-        }
+      const email = document.getElementById("forgotEmail").value.trim();
+      if (!email) {
+        showToast("يرجى إدخال البريد الإلكتروني");
+        return;
+      }
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        showToast("البريد الإلكتروني غير صحيح");
+        return;
+      }
+      try {
+        await sendPasswordResetEmail(auth, email);
+        showSuccess("تم إرسال رابط استعادة كلمة المرور إلى بريدك الإلكتروني");
+        setTimeout(() => {
+          window.location.href = "login.html";
+        }, 3000);
+      } catch (error) {
+        let msg = "فشل إرسال رابط الاستعادة";
+        if (error.code === "auth/user-not-found")
+          msg = "لا يوجد حساب بهذا البريد";
+        else if (error.code === "auth/invalid-email")
+          msg = "البريد الإلكتروني غير صحيح";
+        else if (error.code === "auth/too-many-requests")
+          msg = "تم إرسال العديد من الطلبات، حاول لاحقاً";
+        else msg = error.message;
+        showError(msg);
       }
     });
+  }
 
   // ============================================================
   // 5. تسجيل الخروج
   // ============================================================
   document.addEventListener("click", (e) => {
-    const target = e.target.closest("#logout-btn");
+    const target = e.target.closest("#logoutBtn");
     if (target) {
       e.preventDefault();
       signOut(auth)
@@ -306,7 +300,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // ============================================================
-  // 6. مراقبة حالة المصادقة
+  // 6. مراقبة حالة المصادقة وتوجيه المستخدم حسب الدور
   // ============================================================
   onAuthStateChanged(auth, async (user) => {
     const currentPath = window.location.pathname.split("/").pop();
@@ -315,6 +309,15 @@ document.addEventListener("DOMContentLoaded", () => {
       "register.html",
       "forgot-password.html",
       "index.html",
+      "features.html",
+      "pricing.html",
+      "contact.html",
+      "faq.html",
+      "about.html",
+      "blog.html",
+      "privacy-policy.html",
+      "terms.html",
+      "404.html",
       "",
     ];
     const isPublic = publicPages.includes(currentPath);
@@ -323,30 +326,41 @@ document.addEventListener("DOMContentLoaded", () => {
       window.location.href = "login.html";
       return;
     }
-    if (
-      user &&
-      (currentPath === "login.html" ||
-        currentPath === "register.html" ||
-        currentPath === "forgot-password.html")
-    ) {
-      window.location.href = "dashboard.html";
-      return;
-    }
+
     if (user) {
       try {
         const userDoc = await getDoc(doc(db, "users", user.uid));
         if (userDoc.exists()) {
           const data = userDoc.data();
-          const userNameEl = document.getElementById("user-name");
-          if (userNameEl)
+          const role = data.role || "student";
+
+          // تحديث اسم المستخدم في الواجهة
+          const userNameEl = document.getElementById("userName");
+          if (userNameEl) {
             userNameEl.textContent = `مرحباً، ${data.fullName || "مستخدم"}`;
-          const avatarEl = document.getElementById("user-avatar");
-          if (avatarEl)
+          }
+          const avatarEl = document.getElementById("userAvatar");
+          if (avatarEl) {
             avatarEl.src =
               data.avatar ||
               `https://ui-avatars.com/api/?name=${encodeURIComponent(
                 data.fullName || "U"
               )}&size=40`;
+          }
+
+          // توجيه المستخدم حسب دوره إذا كان في الصفحات العامة
+          if (isPublic || currentPath === "dashboard.html") {
+            const roleMap = {
+              super_admin: "super-admin-dashboard.html",
+              owner: "owner-dashboard.html",
+              teacher: "teacher-dashboard.html",
+              student: "student-dashboard.html",
+            };
+            const targetPage = roleMap[role] || "student-dashboard.html";
+            if (currentPath !== targetPage && !isPublic) {
+              window.location.href = targetPage;
+            }
+          }
         }
       } catch (error) {
         console.error("خطأ في تحميل بيانات المستخدم:", error);
@@ -355,4 +369,4 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-console.log("✅ مداد العلم - Auth Module Loaded (مع تصدير auth و db)");
+console.log("✅ Auth Module Loaded");

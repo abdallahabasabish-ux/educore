@@ -3,12 +3,16 @@
 // التهيئة المركزية لـ Firebase
 // ============================================================
 
-import { initializeApp } from "firebase/app";
-import { getAuth, setPersistence, browserLocalPersistence } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
-import { getStorage } from "firebase/storage";
+// 1. الاستدعاء المباشر عبر روابط (CDN) لضمان العمل في جميع المتصفحات 
+// بدون الحاجة لتعريف importmap في كل صفحة HTML
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getStorage } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
-// إعدادات Firebase (تأكد من تطابقها مع مشروعك)
+// ============================================================
+// 2. إعدادات Firebase (من Firebase Console)
+// ============================================================
 const firebaseConfig = {
   apiKey: "AIzaSyBsSP8Le5_nDG2YFiyGcZ6BFR7aLi3djLU",
   authDomain: "edu-core-ddb48.firebaseapp.com",
@@ -19,24 +23,26 @@ const firebaseConfig = {
   measurementId: "G-S94FBCFCXW"
 };
 
-// تهيئة التطبيق
+// ============================================================
+// 3. تهيئة التطبيق والخدمات
+// ============================================================
 const app = initializeApp(firebaseConfig);
-
-// المصادقة
 const auth = getAuth(app);
-
-// إعداد استمرارية الجلسة (تذكرني)
-setPersistence(auth, browserLocalPersistence)
-  .then(() => console.log('✅ جلسة Firebase مهيأة (Local)'))
-  .catch((error) => console.error('❌ فشل تعيين الجلسة:', error));
-
-// قاعدة البيانات
 const db = getFirestore(app);
-
-// التخزين
 const storage = getStorage(app);
 
-// تصدير الخدمات للاستخدام في جميع الصفحات
+// ============================================================
+// 4. إعداد استمرارية الجلسة (تذكرني)
+// ملاحظة: فايربيس يستخدم browserLocalPersistence كإعداد افتراضي، 
+// ولكن تأكيده هنا يضمن بقاء الجلسة نشطة حتى تسجيل الخروج.
+// ============================================================
+setPersistence(auth, browserLocalPersistence)
+  .then(() => console.log('✅ Firebase: جلسة Local مهيأة'))
+  .catch((error) => console.error('❌ Firebase: فشل تعيين الجلسة:', error));
+
+// ============================================================
+// 5. تصدير الخدمات للاستخدام في جميع الصفحات
+// ============================================================
 export { app, auth, db, storage };
 
-console.log('✅ Firebase initialized successfully');
+console.log('✅ Firebase: تم التهيئة بنجاح');

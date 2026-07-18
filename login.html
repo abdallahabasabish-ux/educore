@@ -25,13 +25,13 @@
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <!-- Main CSS -->
+    <!-- Main CSS (Black & White Identity) -->
     <link rel="stylesheet" href="assets/css/style.css" />
 
     <style>
-        /* ===== تنسيقات خاصة بصفحة تسجيل الدخول ===== */
+        /* ===== تنسيقات خاصة بصفحة تسجيل الدخول (أبيض وأسود) ===== */
         body {
-            background: #f1f5f9;
+            background: #f5f5f5;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -39,38 +39,36 @@
             padding: 1rem;
             margin: 0;
         }
-
         .auth-card {
-            background: white;
+            background: #ffffff;
             border-radius: 20px;
             padding: 2rem 1.75rem;
             max-width: 440px;
             width: 100%;
-            box-shadow: 0 20px 60px -12px rgba(0, 0, 0, 0.12);
+            box-shadow: 0 16px 48px -12px rgba(0, 0, 0, 0.08);
             transition: all 0.3s ease;
+            border: 1px solid #e5e5e5;
         }
-
         .auth-logo {
             text-align: center;
             margin-bottom: 1.75rem;
         }
         .auth-logo i {
             font-size: 2.2rem;
-            color: #2563EB;
+            color: #000000;
         }
         .auth-logo h1 {
             font-size: 1.5rem;
             font-weight: 800;
             margin-top: 0.25rem;
-            color: #111827;
+            color: #000000;
         }
         .auth-logo p {
-            color: #64748b;
+            color: #555555;
             font-size: 0.875rem;
             margin-top: 0.25rem;
         }
 
-        /* ===== الحقول ===== */
         .form-group {
             margin-bottom: 1.25rem;
         }
@@ -78,33 +76,32 @@
             display: block;
             font-size: 0.8rem;
             font-weight: 600;
-            color: #1e293b;
+            color: #000000;
             margin-bottom: 0.35rem;
         }
         .form-control {
             width: 100%;
             padding: 0.6rem 0.875rem;
-            border: 1.5px solid #e5e7eb;
+            border: 1.5px solid #e5e5e5;
             border-radius: 10px;
-            background: #f8fafc;
+            background: #fafafa;
             font-size: 0.9rem;
             transition: all 0.2s ease;
-            color: #111827;
+            color: #000000;
         }
         .form-control:focus {
             outline: none;
-            border-color: #2563EB;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            border-color: #000000;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
         }
         .form-control::placeholder {
-            color: #94a3b8;
+            color: #aaaaaa;
         }
 
-        /* ===== الأزرار ===== */
         .btn-primary {
-            background: #2563EB;
-            color: white;
+            background: #000000;
+            color: #ffffff;
             padding: 0.7rem 1.5rem;
             border-radius: 10px;
             font-weight: 600;
@@ -120,12 +117,17 @@
             min-height: 48px;
         }
         .btn-primary:hover {
-            background: #1D4ED8;
+            background: #222222;
             transform: translateY(-2px);
-            box-shadow: 0 8px 24px -6px rgba(37, 99, 235, 0.3);
+            box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.2);
         }
         .btn-primary:active {
             transform: scale(0.98);
+        }
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
         }
 
         .btn-google {
@@ -135,26 +137,25 @@
             gap: 0.5rem;
             width: 100%;
             padding: 0.7rem;
-            border: 1.5px solid #e5e7eb;
+            border: 1.5px solid #e5e5e5;
             border-radius: 10px;
-            background: white;
+            background: #ffffff;
             font-weight: 500;
             font-size: 0.9rem;
-            color: #1e293b;
+            color: #000000;
             transition: all 0.2s ease;
             cursor: pointer;
             min-height: 48px;
         }
         .btn-google:hover {
-            background: #f8fafc;
-            border-color: #2563EB;
+            background: #f5f5f5;
+            border-color: #000000;
         }
         .btn-google i {
             font-size: 1.2rem;
             color: #ea4335;
         }
 
-        /* ===== الفاصل ===== */
         .divider {
             display: flex;
             align-items: center;
@@ -166,24 +167,23 @@
             content: '';
             flex: 1;
             height: 1px;
-            background: #e5e7eb;
+            background: #e5e5e5;
         }
         .divider span {
-            color: #94a3b8;
+            color: #888888;
             font-size: 0.8rem;
             font-weight: 500;
             white-space: nowrap;
         }
 
-        /* ===== روابط ===== */
         .auth-footer {
             text-align: center;
             margin-top: 1.5rem;
             font-size: 0.9rem;
-            color: #64748b;
+            color: #555555;
         }
         .auth-footer a {
-            color: #2563EB;
+            color: #000000;
             font-weight: 600;
             text-decoration: none;
         }
@@ -193,14 +193,13 @@
 
         .forgot-link {
             font-size: 0.85rem;
-            color: #2563EB;
+            color: #000000;
             text-decoration: none;
         }
         .forgot-link:hover {
             text-decoration: underline;
         }
 
-        /* ===== رسائل الخطأ/النجاح ===== */
         .message-box {
             padding: 0.6rem 1rem;
             border-radius: 10px;
@@ -210,15 +209,15 @@
         }
         .message-box.error {
             display: block;
-            background: #fee2e2;
-            color: #991b1b;
-            border: 1px solid #fecaca;
+            background: #fde8e8;
+            color: #8a1a1a;
+            border: 1px solid #fccccc;
         }
         .message-box.success {
             display: block;
-            background: #dcfce7;
-            color: #166534;
-            border: 1px solid #bbf7d0;
+            background: #e6f7e6;
+            color: #0a5e0a;
+            border: 1px solid #b8e6b8;
         }
 
         /* ===== استجابة الهواتف ===== */
@@ -227,66 +226,24 @@
                 padding: 1.5rem 1.25rem;
                 border-radius: 16px;
             }
-            .auth-logo i {
-                font-size: 1.8rem;
-            }
-            .auth-logo h1 {
-                font-size: 1.25rem;
-            }
-            .form-control {
-                padding: 0.5rem 0.75rem;
-                font-size: 0.85rem;
-            }
-            .btn-primary,
-            .btn-google {
-                font-size: 0.85rem;
-                min-height: 44px;
-                padding: 0.6rem 1rem;
-            }
-            .auth-footer {
-                font-size: 0.8rem;
-            }
-            .forgot-link {
-                font-size: 0.75rem;
-            }
-            .divider span {
-                font-size: 0.7rem;
-            }
+            .auth-logo i { font-size: 1.8rem; }
+            .auth-logo h1 { font-size: 1.25rem; }
+            .form-control { padding: 0.5rem 0.75rem; font-size: 0.85rem; }
+            .btn-primary, .btn-google { font-size: 0.85rem; min-height: 44px; padding: 0.6rem 1rem; }
+            .auth-footer { font-size: 0.8rem; }
+            .forgot-link { font-size: 0.75rem; }
+            .divider span { font-size: 0.7rem; }
         }
-
         @media (max-width: 360px) {
-            .auth-card {
-                padding: 1.25rem 1rem;
-            }
-            .auth-logo h1 {
-                font-size: 1.1rem;
-            }
-            .auth-logo p {
-                font-size: 0.75rem;
-            }
-            .btn-primary,
-            .btn-google {
-                font-size: 0.8rem;
-                min-height: 40px;
-                padding: 0.5rem 0.75rem;
-            }
-            .form-group {
-                margin-bottom: 0.75rem;
-            }
+            .auth-card { padding: 1.25rem 1rem; }
+            .auth-logo h1 { font-size: 1.1rem; }
+            .auth-logo p { font-size: 0.75rem; }
+            .btn-primary, .btn-google { font-size: 0.8rem; min-height: 40px; padding: 0.5rem 0.75rem; }
         }
-
-        /* ===== تحسينات للشاشات الكبيرة ===== */
         @media (min-width: 1024px) {
-            .auth-card {
-                padding: 2.5rem;
-                max-width: 460px;
-            }
-            .auth-logo i {
-                font-size: 2.5rem;
-            }
-            .auth-logo h1 {
-                font-size: 1.75rem;
-            }
+            .auth-card { padding: 2.5rem; max-width: 460px; }
+            .auth-logo i { font-size: 2.5rem; }
+            .auth-logo h1 { font-size: 1.75rem; }
         }
     </style>
 </head>
@@ -295,58 +252,46 @@
     <!-- ======== بطاقة تسجيل الدخول ======== -->
     <div class="auth-card">
 
-        <!-- Logo -->
         <div class="auth-logo">
             <i class="fas fa-feather-alt"></i>
             <h1>مداد العلم</h1>
             <p>سجل الدخول إلى حسابك</p>
         </div>
 
-        <!-- ===== نموذج تسجيل الدخول ===== -->
         <form id="loginForm" novalidate>
 
-            <!-- البريد الإلكتروني -->
             <div class="form-group">
                 <label for="loginEmail">البريد الإلكتروني</label>
                 <input type="email" id="loginEmail" class="form-control" placeholder="example@email.com" required autocomplete="email" />
             </div>
 
-            <!-- كلمة المرور -->
             <div class="form-group">
                 <label for="loginPassword">كلمة المرور</label>
                 <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" required autocomplete="current-password" minlength="6" />
             </div>
 
-            <!-- تذكرني + نسيت كلمة المرور -->
             <div class="flex items-center justify-between text-sm mb-3">
                 <label class="flex items-center gap-1.5 text-gray-600 cursor-pointer">
-                    <input type="checkbox" id="rememberMe" class="accent-[#2563EB] w-4 h-4" />
-                    <span class="text-sm md:text-base">تذكرني</span>
+                    <input type="checkbox" id="rememberMe" class="accent-black w-4 h-4" />
+                    <span class="text-sm md:text-base text-[#333333]">تذكرني</span>
                 </label>
                 <a href="forgot-password.html" class="forgot-link">نسيت كلمة المرور؟</a>
             </div>
 
-            <!-- رسائل الخطأ/النجاح -->
             <div id="loginMessage" class="message-box"></div>
 
-            <!-- زر تسجيل الدخول -->
             <button type="submit" class="btn-primary" id="loginBtn">
                 <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
             </button>
 
         </form>
 
-        <!-- ===== الفاصل ===== -->
-        <div class="divider">
-            <span>أو</span>
-        </div>
+        <div class="divider"><span>أو</span></div>
 
-        <!-- ===== زر Google ===== -->
         <button id="googleLoginBtn" class="btn-google">
             <i class="fab fa-google"></i> تسجيل الدخول عبر Google
         </button>
 
-        <!-- ===== رابط إنشاء حساب ===== -->
         <div class="auth-footer">
             ليس لديك حساب؟ <a href="register.html">إنشاء حساب</a>
         </div>
@@ -357,7 +302,6 @@
     <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
-    <!-- Import Map for Firebase -->
     <script type="importmap">
         {
             "imports": {
@@ -371,7 +315,7 @@
 
     <script type="module">
         // ============================================================
-        // login.js – نظام تسجيل الدخول مع Firebase
+        // login.js – نظام تسجيل الدخول مع Firebase (Black & White)
         // ============================================================
 
         import { initializeApp } from "firebase/app";
@@ -385,7 +329,6 @@
             browserSessionPersistence
         } from "firebase/auth";
 
-        // ===== Firebase Config =====
         const firebaseConfig = {
             apiKey: "AIzaSyBsSP8Le5_nDG2YFiyGcZ6BFR7aLi3djLU",
             authDomain: "edu-core-ddb48.firebaseapp.com",
@@ -399,7 +342,6 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
-        // ===== عناصر DOM =====
         const loginForm = document.getElementById('loginForm');
         const messageEl = document.getElementById('loginMessage');
         const loginBtn = document.getElementById('loginBtn');
@@ -407,11 +349,9 @@
         const passwordInput = document.getElementById('loginPassword');
         const rememberMe = document.getElementById('rememberMe');
 
-        // ===== دالة عرض الرسائل =====
         function showMessage(text, type = 'error') {
             messageEl.textContent = text;
             messageEl.className = `message-box ${type}`;
-            // إخفاء الرسالة بعد 5 ثوان
             clearTimeout(messageEl._timeout);
             messageEl._timeout = setTimeout(() => {
                 messageEl.className = 'message-box';
@@ -419,7 +359,6 @@
             }, 5000);
         }
 
-        // ===== دالة تعطيل الزر أثناء التحميل =====
         function setLoading(isLoading) {
             if (isLoading) {
                 loginBtn.disabled = true;
@@ -430,10 +369,8 @@
             }
         }
 
-        // ===== تسجيل الدخول بالبريد وكلمة المرور =====
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-
             const email = emailInput.value.trim();
             const password = passwordInput.value;
 
@@ -441,27 +378,19 @@
                 showMessage('يرجى إدخال البريد الإلكتروني وكلمة المرور', 'error');
                 return;
             }
-
             if (password.length < 6) {
                 showMessage('كلمة المرور يجب أن تكون 6 أحرف على الأقل', 'error');
                 return;
             }
 
-            // تعيين نوع الجلسة (تذكرني)
             const persistence = rememberMe.checked ? browserLocalPersistence : browserSessionPersistence;
-            try {
-                await setPersistence(auth, persistence);
-            } catch (error) {
-                console.warn('فشل تعيين حالة الجلسة:', error);
-            }
+            try { await setPersistence(auth, persistence); } catch (error) { console.warn(error); }
 
             setLoading(true);
             try {
                 await signInWithEmailAndPassword(auth, email, password);
                 showMessage('تم تسجيل الدخول بنجاح! جاري التوجيه...', 'success');
-                setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 1000);
+                setTimeout(() => window.location.href = 'dashboard.html', 1000);
             } catch (error) {
                 let msg = 'فشل تسجيل الدخول';
                 if (error.code === 'auth/user-not-found') msg = 'البريد الإلكتروني غير مسجل';
@@ -476,28 +405,17 @@
             }
         });
 
-        // ===== تسجيل الدخول بـ Google =====
         document.getElementById('googleLoginBtn').addEventListener('click', async () => {
             const provider = new GoogleAuthProvider();
-
-            // تعيين الجلسة للتذكر (Google)
-            try {
-                await setPersistence(auth, browserLocalPersistence);
-            } catch (error) {
-                console.warn('فشل تعيين حالة الجلسة:', error);
-            }
-
+            try { await setPersistence(auth, browserLocalPersistence); } catch (error) { console.warn(error); }
             setLoading(true);
             try {
                 await signInWithPopup(auth, provider);
                 showMessage('تم تسجيل الدخول بواسطة Google بنجاح!', 'success');
-                setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 1000);
+                setTimeout(() => window.location.href = 'dashboard.html', 1000);
             } catch (error) {
                 let msg = 'فشل تسجيل الدخول عبر Google';
-                if (error.code === 'auth/popup-closed-by-user') msg = 'تم إغلاق النافذة المنبثقة قبل إكمال التسجيل';
-                else if (error.code === 'auth/cancelled-popup-request') msg = 'تم إلغاء طلب تسجيل الدخول';
+                if (error.code === 'auth/popup-closed-by-user') msg = 'تم إغلاق النافذة المنبثقة';
                 else if (error.code === 'auth/account-exists-with-different-credential')
                     msg = 'يوجد حساب بنفس البريد الإلكتروني باستخدام طريقة أخرى';
                 else msg = error.message;
@@ -507,7 +425,6 @@
             }
         });
 
-        // ===== إزالة الرسائل عند الكتابة =====
         emailInput.addEventListener('input', () => {
             if (messageEl.className !== 'message-box') {
                 messageEl.className = 'message-box';
@@ -521,24 +438,11 @@
             }
         });
 
-        // ===== Lenis Smooth Scroll =====
-        const lenis = new Lenis({
-            duration: 1.2,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            orientation: 'vertical',
-            gestureOrientation: 'vertical',
-            smoothWheel: true,
-            wheelMultiplier: 1,
-            touchMultiplier: 2,
-        });
-
-        function raf(time) {
-            lenis.raf(time);
-            requestAnimationFrame(raf);
-        }
+        const lenis = new Lenis({ duration: 1.2 });
+        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
         requestAnimationFrame(raf);
 
-        console.log('✅ مداد العلم — صفحة تسجيل الدخول جاهزة');
+        console.log('✅ مداد العلم — صفحة تسجيل الدخول (أبيض وأسود) جاهزة');
     </script>
 
 </body>

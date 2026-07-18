@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>تسجيل طالب – مداد العلم</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..700&family=Cairo:wght@300..700&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="stylesheet" href="https://unpkg.com/lenis@1.1.13/dist/lenis.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="assets/css/style.css" />
+
+    <style>
+        body {
+            background: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 1rem;
+            margin: 0;
+            font-family: 'Inter', 'Cairo', sans-serif;
+        }
+        .auth-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 2rem 1.75rem;
+            max-width: 480px;
+            width: 100%;
+            box-shadow: 0 16px 48px -12px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e5e5e5;
+        }
+        .auth-logo {
+            text-align: center;
+            margin-bottom: 1.75rem;
+        }
+        .auth-logo i {
+            font-size: 2.2rem;
+            color: #000000;
+        }
+        .auth-logo h1 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-top: 0.25rem;
+            color: #000000;
+        }
+        .auth-logo p {
+            color: #555555;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        /* ===== معلومات الأكاديمية ===== */
+        .academy-info {
+            background: #f5f5f5;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 1.25rem;
+            border: 1px solid #e5e5e5;
+        }
+        .academy-info h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #000000;
+            margin: 0;
+        }
+        .academy-info p {
+            font-size: 0.75rem;
+            color: #555555;
+            margin: 0.15rem 0 0 0;
+        }
+        .academy-info .badge {
+            display: inline-block;
+            padding: 0.1rem 0.6rem;
+            border-radius: 9999px;
+            font-size: 0.6rem;
+            font-weight: 600;
+            background: #dcfce7;
+            color: #166534;
+            margin-top: 0.25rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.1rem;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 0.3rem;
+        }
+        .form-control {
+            width: 100%;
+            padding: 0.55rem 0.875rem;
+            border: 1.5px solid #e5e5e5;
+            border-radius: 10px;
+            background: #fafafa;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            color: #111827;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: #000000;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+        }
+        .form-control::placeholder {
+            color: #94a3b8;
+        }
+        .form-hint {
+            font-size: 0.7rem;
+            color: #888888;
+            margin-top: 0.25rem;
+        }
+
+        .btn-primary {
+            background: #000000;
+            color: #ffffff;
+            padding: 0.7rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            min-height: 48px;
+        }
+        .btn-primary:hover {
+            background: #222222;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.2);
+        }
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e5e5e5;
+        }
+        .divider span {
+            color: #888888;
+            font-size: 0.8rem;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: #555555;
+        }
+        .auth-footer a {
+            color: #000000;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .message-box {
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+        .message-box.error {
+            display: block;
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+        .message-box.success {
+            display: block;
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        /* ===== Terms checkbox ===== */
+        .terms-check {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            margin-top: 0.25rem;
+        }
+        .terms-check input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-top: 2px;
+            accent-color: #000000;
+            flex-shrink: 0;
+        }
+        .terms-check label {
+            font-size: 0.75rem;
+            color: #555555;
+            line-height: 1.5;
+        }
+        .terms-check a {
+            color: #000000;
+            text-decoration: none;
+        }
+        .terms-check a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== Loading skeleton for academy info ===== */
+        .skeleton-text {
+            height: 14px;
+            background: #e5e5e5;
+            border-radius: 4px;
+            margin: 4px auto;
+            width: 70%;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        @media (max-width: 480px) {
+            .auth-card {
+                padding: 1.5rem 1.25rem;
+                border-radius: 16px;
+            }
+            .auth-logo i { font-size: 1.8rem; }
+            .auth-logo h1 { font-size: 1.25rem; }
+            .form-control { padding: 0.5rem 0.75rem; font-size: 0.85rem; }
+            .btn-primary { font-size: 0.85rem; min-height: 44px; padding: 0.6rem 1rem; }
+        }
+        @media (max-width: 360px) {
+            .auth-card { padding: 1.25rem 1rem; }
+            .auth-logo h1 { font-size: 1.1rem; }
+            .btn-primary { font-size: 0.8rem; min-height: 40px; padding: 0.5rem 0.75rem; }
+        }
+        @media (min-width: 1024px) {
+            .auth-card { padding: 2.5rem; }
+            .auth-logo i { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="auth-card">
+
+        <div class="auth-logo">
+            <i class="fas fa-feather-alt"></i>
+            <h1>مداد العلم</h1>
+            <p>سجل كطالب في الأكاديمية</p>
+        </div>
+
+        <!-- ===== معلومات الأكاديمية ===== -->
+        <div id="academyInfo" class="academy-info">
+            <div class="skeleton-text" style="width:60%;"></div>
+            <div class="skeleton-text" style="width:40%;"></div>
+        </div>
+
+        <form id="studentRegisterForm" novalidate>
+
+            <!-- الاسم الكامل -->
+            <div class="form-group">
+                <label for="studentName">الاسم الكامل</label>
+                <input type="text" id="studentName" class="form-control" placeholder="خالد محمد" required />
+            </div>
+
+            <!-- البريد الإلكتروني -->
+            <div class="form-group">
+                <label for="studentEmail">البريد الإلكتروني</label>
+                <input type="email" id="studentEmail" class="form-control" placeholder="student@example.com" required />
+            </div>
+
+            <!-- رقم الهاتف (اختياري) -->
+            <div class="form-group">
+                <label for="studentPhone">رقم الهاتف <span class="text-xs text-[#888888]">(اختياري)</span></label>
+                <input type="tel" id="studentPhone" class="form-control" placeholder="+966 55 123 4567" />
+            </div>
+
+            <!-- كلمة المرور -->
+            <div class="form-group">
+                <label for="studentPassword">كلمة المرور</label>
+                <input type="password" id="studentPassword" class="form-control" placeholder="••••••••" required minlength="6" />
+            </div>
+
+            <!-- تأكيد كلمة المرور -->
+            <div class="form-group">
+                <label for="studentConfirm">تأكيد كلمة المرور</label>
+                <input type="password" id="studentConfirm" class="form-control" placeholder="••••••••" required minlength="6" />
+            </div>
+
+            <!-- الموافقة على الشروط -->
+            <div class="terms-check">
+                <input type="checkbox" id="studentTerms" required />
+                <label for="studentTerms">
+                    أوافق على <a href="terms.html" target="_blank">الشروط والأحكام</a> و <a href="privacy-policy.html" target="_blank">سياسة الخصوصية</a>
+                </label>
+            </div>
+
+            <!-- رسالة الخطأ/النجاح -->
+            <div id="registerMessage" class="message-box"></div>
+
+            <button type="submit" class="btn-primary" id="registerBtn">
+                <i class="fas fa-user-plus"></i> تسجيل كطالب
+            </button>
+
+        </form>
+
+        <div class="divider"><span>أو</span></div>
+
+        <p class="text-center text-sm text-[#555555]">
+            لديك حساب بالفعل؟ <a href="login.html">تسجيل الدخول</a>
+        </p>
+
+        <div class="auth-footer">
+            <span class="text-xs text-[#888888]">سيتم إنشاء حسابك كـ <strong>طالب</strong> في الأكاديمية</span>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "firebase/app": "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js",
+                "firebase/auth": "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js",
+                "firebase/firestore": "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js",
+                "firebase/storage": "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js"
+            }
+        }
+    </script>
+
+    <script type="module">
+        // ============================================================
+        // student-register.js – تسجيل طالب عبر الرابط
+        // ============================================================
+
+        import { initializeApp } from "firebase/app";
+        import { getAuth, createUserWithEmailAndPassword, setPersistence, browserLocalPersistence } from "firebase/auth";
+        import { getFirestore, doc, getDoc, setDoc, getDocs, collection, query, where, serverTimestamp, updateDoc, increment } from "firebase/firestore";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBsSP8Le5_nDG2YFiyGcZ6BFR7aLi3djLU",
+            authDomain: "edu-core-ddb48.firebaseapp.com",
+            projectId: "edu-core-ddb48",
+            storageBucket: "edu-core-ddb48.firebasestorage.app",
+            messagingSenderId: "4743644287",
+            appId: "1:4743644287:web:9167749cc80417b6876b4a",
+            measurementId: "G-S94FBCFCXW"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // ===== عناصر DOM =====
+        const form = document.getElementById('studentRegisterForm');
+        const messageEl = document.getElementById('registerMessage');
+        const registerBtn = document.getElementById('registerBtn');
+        const academyInfoEl = document.getElementById('academyInfo');
+
+        const nameInput = document.getElementById('studentName');
+        const emailInput = document.getElementById('studentEmail');
+        const phoneInput = document.getElementById('studentPhone');
+        const passwordInput = document.getElementById('studentPassword');
+        const confirmInput = document.getElementById('studentConfirm');
+        const termsCheck = document.getElementById('studentTerms');
+
+        // ===== متغيرات =====
+        let academyId = null;
+        let academySlug = null;
+        let academyName = null;
+
+        // ===== عرض الرسائل =====
+        function showMessage(text, type = 'error') {
+            messageEl.textContent = text;
+            messageEl.className = `message-box ${type}`;
+            clearTimeout(messageEl._timeout);
+            messageEl._timeout = setTimeout(() => {
+                messageEl.className = 'message-box';
+                messageEl.textContent = '';
+            }, 5000);
+        }
+
+        function setLoading(isLoading) {
+            if (isLoading) {
+                registerBtn.disabled = true;
+                registerBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التسجيل...';
+            } else {
+                registerBtn.disabled = false;
+                registerBtn.innerHTML = '<i class="fas fa-user-plus"></i> تسجيل كطالب';
+            }
+        }
+
+        // ===== جلب معلمات الرابط =====
+        function getAcademyFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('academy');
+        }
+
+        // ===== البحث عن الأكاديمية بواسطة slug =====
+        async function loadAcademyInfo(slug) {
+            try {
+                const q = query(collection(db, 'academies'), where('slug', '==', slug));
+                const snapshot = await getDocs(q);
+
+                if (snapshot.empty) {
+                    academyInfoEl.innerHTML = `
+                        <div class="text-red-600 text-sm">
+                            <i class="fas fa-exclamation-circle ml-1"></i>
+                            الأكاديمية غير موجودة
+                        </div>
+                    `;
+                    registerBtn.disabled = true;
+                    registerBtn.style.opacity = '0.5';
+                    registerBtn.style.cursor = 'not-allowed';
+                    return false;
+                }
+
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    academyId = doc.id;
+                    academySlug = data.slug;
+                    academyName = data.academyName;
+                });
+
+                academyInfoEl.innerHTML = `
+                    <h3><i class="fas fa-school ml-1"></i> ${academyName}</h3>
+                    <p>رابط الأكاديمية: midad.com/${academySlug}</p>
+                    <span class="badge">نشطة</span>
+                `;
+
+                return true;
+
+            } catch (error) {
+                console.error("خطأ في تحميل معلومات الأكاديمية:", error);
+                academyInfoEl.innerHTML = `
+                    <div class="text-red-600 text-sm">
+                        <i class="fas fa-exclamation-circle ml-1"></i>
+                        فشل تحميل معلومات الأكاديمية
+                    </div>
+                `;
+                return false;
+            }
+        }
+
+        // ===== التحقق من عدم وجود بريد مكرر في نفس الأكاديمية =====
+        async function checkEmailExists(email) {
+            if (!academyId) return false;
+            try {
+                const studentsRef = collection(db, 'academies', academyId, 'students');
+                const q = query(studentsRef, where('email', '==', email));
+                const snapshot = await getDocs(q);
+                return !snapshot.empty;
+            } catch (error) {
+                console.error("خطأ في التحقق من البريد:", error);
+                return false;
+            }
+        }
+
+        // ===== تهيئة الصفحة =====
+        const slug = getAcademyFromURL();
+        if (slug) {
+            await loadAcademyInfo(slug);
+        } else {
+            academyInfoEl.innerHTML = `
+                <div class="text-red-600 text-sm">
+                    <i class="fas fa-exclamation-circle ml-1"></i>
+                    الرابط غير صحيح، يرجى الحصول على رابط صحيح من المدرس
+                </div>
+            `;
+            registerBtn.disabled = true;
+            registerBtn.style.opacity = '0.5';
+            registerBtn.style.cursor = 'not-allowed';
+        }
+
+        // ===== إرسال النموذج =====
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (!academyId) {
+                showMessage('الأكاديمية غير موجودة، يرجى التحقق من الرابط', 'error');
+                return;
+            }
+
+            const studentName = nameInput.value.trim();
+            const studentEmail = emailInput.value.trim();
+            const studentPhone = phoneInput.value.trim();
+            const studentPassword = passwordInput.value;
+            const studentConfirm = confirmInput.value;
+            const terms = termsCheck.checked;
+
+            // التحقق من الحقول
+            if (!studentName || !studentEmail || !studentPassword || !studentConfirm) {
+                showMessage('يرجى ملء جميع الحقول المطلوبة', 'error');
+                return;
+            }
+
+            if (studentPassword.length < 6) {
+                showMessage('كلمة المرور يجب أن تكون 6 أحرف على الأقل', 'error');
+                return;
+            }
+
+            if (studentPassword !== studentConfirm) {
+                showMessage('كلمات المرور غير متطابقة', 'error');
+                return;
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(studentEmail)) {
+                showMessage('البريد الإلكتروني غير صحيح', 'error');
+                return;
+            }
+
+            if (!terms) {
+                showMessage('يجب الموافقة على الشروط والأحكام', 'error');
+                return;
+            }
+
+            // التحقق من عدم تكرار البريد الإلكتروني في نفس الأكاديمية
+            const emailExists = await checkEmailExists(studentEmail);
+            if (emailExists) {
+                showMessage('هذا البريد الإلكتروني مسجل بالفعل في الأكاديمية', 'error');
+                return;
+            }
+
+            setLoading(true);
+
+            try {
+                // 1. إنشاء حساب الطالب في Firebase Authentication
+                const userCredential = await createUserWithEmailAndPassword(auth, studentEmail, studentPassword);
+                const user = userCredential.user;
+
+                // 2. حفظ بيانات الطالب في Firestore
+                const studentData = {
+                    uid: user.uid,
+                    fullName: studentName,
+                    email: studentEmail,
+                    phone: studentPhone || '',
+                    role: 'student',
+                    status: 'active',
+                    academyId: academyId,
+                    academyName: academyName,
+                    academySlug: academySlug,
+                    createdAt: serverTimestamp(),
+                    updatedAt: serverTimestamp(),
+                };
+                await setDoc(doc(db, 'users', user.uid), studentData);
+
+                // 3. إضافة الطالب إلى مجموعة الطلاب في الأكاديمية
+                const studentRef = doc(db, 'academies', academyId, 'students', user.uid);
+                await setDoc(studentRef, {
+                    fullName: studentName,
+                    email: studentEmail,
+                    phone: studentPhone || '',
+                    status: 'active',
+                    enrolledAt: serverTimestamp(),
+                    updatedAt: serverTimestamp(),
+                });
+
+                // 4. تحديث عداد الطلاب في الأكاديمية
+                const academyRef = doc(db, 'academies', academyId);
+                await updateDoc(academyRef, {
+                    studentCount: increment(1),
+                    updatedAt: serverTimestamp(),
+                });
+
+                // 5. تسجيل نشاط (اختياري)
+                const activityRef = collection(db, 'activities');
+                await setDoc(doc(activityRef), {
+                    text: `تم تسجيل طالب جديد: "${studentName}" في أكاديمية ${academyName}`,
+                    academyId: academyId,
+                    userId: user.uid,
+                    createdAt: serverTimestamp(),
+                });
+
+                showMessage('✅ تم تسجيلك كطالب بنجاح! جاري التوجيه...', 'success');
+
+                setTimeout(() => {
+                    window.location.href = 'student-dashboard.html';
+                }, 2000);
+
+            } catch (error) {
+                let msg = 'فشل التسجيل';
+                if (error.code === 'auth/email-already-in-use') {
+                    msg = 'البريد الإلكتروني مستخدم بالفعل';
+                } else if (error.code === 'auth/invalid-email') {
+                    msg = 'البريد الإلكتروني غير صحيح';
+                } else if (error.code === 'auth/weak-password') {
+                    msg = 'كلمة المرور ضعيفة جداً';
+                } else if (error.code === 'auth/network-request-failed') {
+                    msg = 'فشل الاتصال بالشبكة، تأكد من اتصال الإنترنت';
+                } else {
+                    msg = error.message;
+                }
+                showMessage(msg, 'error');
+            } finally {
+                setLoading(false);
+            }
+        });
+
+        // ===== إزالة الرسائل عند الكتابة =====
+        const inputs = [nameInput, emailInput, phoneInput, passwordInput, confirmInput];
+        inputs.forEach(input => {
+            input.addEventListener('input', () => {
+                if (messageEl.className !== 'message-box') {
+                    messageEl.className = 'message-box';
+                    messageEl.textContent = '';
+                }
+            });
+        });
+
+        // ===== Lenis Smooth Scroll =====
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            orientation: 'vertical',
+            gestureOrientation: 'vertical',
+            smoothWheel: true,
+            wheelMultiplier: 1,
+            touchMultiplier: 2,
+        });
+
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        console.log('✅ student-register.html جاهزة');
+    </script>
+
+</body>
+</html>

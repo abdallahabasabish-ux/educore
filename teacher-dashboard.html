@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>لوحة المدرس – مداد العلم</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..700&family=Cairo:wght@300..700&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="stylesheet" href="https://unpkg.com/lenis@1.1.13/dist/lenis.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="assets/css/style.css" />
+
+    <style>
+        body { background: #f5f5f5; margin: 0; padding: 0; font-family: 'Inter', 'Cairo', sans-serif; }
+
+        .sidebar {
+            position: fixed; top: 0; right: 0; width: 280px; height: 100%;
+            background: #0f172a; color: #94a3b8; padding: 1.5rem; overflow-y: auto;
+            z-index: 40; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateX(100%); border-left: 1px solid #1e293b;
+        }
+        .sidebar.open { transform: translateX(0); }
+        .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 39; display: none; }
+        .sidebar-overlay.show { display: block; }
+        .sidebar-link {
+            display: flex; align-items: center; gap: 0.75rem; padding: 0.625rem 0.875rem;
+            border-radius: 10px; color: #94a3b8; text-decoration: none;
+            transition: all 0.2s ease; font-size: 0.85rem;
+        }
+        .sidebar-link:hover { background: #1e293b; color: #ffffff; }
+        .sidebar-link.active { background: #2563EB; color: #ffffff; }
+        .sidebar-link i { width: 1.25rem; text-align: center; }
+
+        .main-content { margin-right: 0; padding: 1rem; min-height: 100vh; transition: margin-right 0.3s ease; }
+        .mobile-header { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 0; margin-bottom: 1rem; }
+        .menu-btn { background: none; border: none; font-size: 1.5rem; color: #4b5563; cursor: pointer; padding: 0.25rem; transition: color 0.2s; }
+        .menu-btn:hover { color: #000000; }
+
+        .stat-card {
+            background: #ffffff; padding: 1rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            border: 1px solid #e5e5e5; transition: all 0.3s ease; cursor: default;
+        }
+        .stat-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px -8px rgba(0,0,0,0.06); }
+        .stat-card .stat-number { font-size: 1.5rem; font-weight: 700; color: #000000; }
+        .stat-card .stat-label { font-size: 0.75rem; color: #6b7280; }
+
+        .activity-item {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0.75rem 1rem; border-radius: 10px; transition: background 0.2s ease;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .activity-item:last-child { border-bottom: none; }
+        .activity-item:hover { background: #f8fafc; }
+        .activity-time { font-size: 0.7rem; color: #94a3b8; white-space: nowrap; }
+
+        .quick-action-btn {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 1rem 0.5rem; border: 1px solid #e5e5e5; border-radius: 12px;
+            transition: all 0.3s ease; text-decoration: none; color: #111827;
+        }
+        .quick-action-btn:hover { background: #f5f5f5; transform: translateY(-2px); box-shadow: 0 8px 24px -8px rgba(0,0,0,0.06); }
+        .quick-action-btn i { font-size: 1.25rem; color: #000000; }
+        .quick-action-btn span { font-size: 0.7rem; margin-top: 0.25rem; color: #555555; }
+
+        .role-badge { background: #333333; color: white; font-size: 0.6rem; padding: 0.15rem 0.6rem; border-radius: 9999px; }
+        .user-avatar { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #e5e5e5; object-fit: cover; }
+
+        @media (max-width: 640px) {
+            .main-content { padding: 0.75rem; }
+            .sidebar { width: 260px; padding: 1rem; }
+            .stat-card { padding: 0.75rem; }
+            .stat-card .stat-number { font-size: 1.25rem; }
+        }
+        @media (max-width: 360px) {
+            .sidebar { width: 240px; padding: 0.75rem; }
+            .sidebar-link { font-size: 0.75rem; padding: 0.5rem 0.75rem; }
+        }
+        @media (min-width: 768px) {
+            .sidebar { transform: translateX(0) !important; }
+            .sidebar-overlay { display: none !important; }
+            .main-content { margin-right: 280px; padding: 1.5rem 2rem; }
+            .mobile-header { display: none !important; }
+        }
+        .sidebar::-webkit-scrollbar { width: 4px; }
+        .sidebar::-webkit-scrollbar-track { background: transparent; }
+        .sidebar::-webkit-scrollbar-thumb { background: #334155; border-radius: 2px; }
+    </style>
+</head>
+<body>
+
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+    <!-- ======== القائمة الجانبية ======== -->
+    <aside id="sidebar" class="sidebar">
+        <div class="hidden md:block mb-8">
+            <a href="index.html" class="flex items-center gap-2 text-xl font-extrabold text-white no-underline">
+                <i class="fas fa-feather-alt text-[#555555]"></i>
+                <span>مداد العلم</span>
+                <span class="role-badge">TEACHER</span>
+            </a>
+        </div>
+        <div class="flex items-center justify-between mb-6 md:hidden">
+            <a href="index.html" class="text-lg font-extrabold text-white no-underline"><i class="fas fa-feather-alt text-[#555555] ml-2"></i>مداد</a>
+            <button id="closeSidebarBtn" class="text-gray-400 hover:text-white text-xl"><i class="fas fa-times"></i></button>
+        </div>
+        <nav class="space-y-0.5">
+            <a href="teacher-dashboard.html" class="sidebar-link active"><i class="fas fa-chart-pie"></i> لوحة التحكم</a>
+            <a href="teacher-courses.html" class="sidebar-link"><i class="fas fa-book-open"></i> كورساتي</a>
+            <a href="teacher-students.html" class="sidebar-link"><i class="fas fa-user-graduate"></i> طلابي</a>
+            <a href="teacher-classes.html" class="sidebar-link"><i class="fas fa-calendar-check"></i> حصصي</a>
+            <a href="teacher-exams.html" class="sidebar-link"><i class="fas fa-pencil-alt"></i> الامتحانات</a>
+            <a href="teacher-assignments.html" class="sidebar-link"><i class="fas fa-tasks"></i> الواجبات</a>
+            <a href="teacher-profile.html" class="sidebar-link"><i class="fas fa-user"></i> الملف الشخصي</a>
+            <button id="logoutBtn" class="sidebar-link text-red-400 hover:bg-red-900/30 hover:text-red-300 w-full text-right mt-4">
+                <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+            </button>
+        </nav>
+    </aside>
+
+    <!-- ======== المحتوى الرئيسي ======== -->
+    <main class="main-content">
+
+        <div class="mobile-header">
+            <button class="menu-btn" id="openSidebarBtn" aria-label="فتح القائمة"><i class="fas fa-bars"></i></button>
+            <a href="index.html" class="text-lg font-extrabold text-[#0f172a]"><i class="fas fa-feather-alt text-[#000000] ml-1"></i>مداد العلم</a>
+            <div class="w-8"></div>
+        </div>
+
+        <div class="hidden md:flex items-center justify-between mb-6">
+            <div>
+                <h1 class="text-2xl font-bold text-[#000000]">لوحة المدرس</h1>
+                <p class="text-sm text-[#555555]">مرحباً بك في لوحة التدريس</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <span class="role-badge">Teacher</span>
+                <span id="userName" class="text-sm font-medium text-[#000000]">مرحباً، مدرس</span>
+                <img id="userAvatar" src="https://ui-avatars.com/api/?name=Teacher&size=40&background=333333&color=fff" alt="صورة" class="user-avatar" loading="lazy" />
+            </div>
+        </div>
+
+        <!-- ===== بطاقات الإحصائيات ===== -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
+            <div class="stat-card"><p class="stat-number" id="totalCourses">0</p><p class="stat-label">كورساتي</p></div>
+            <div class="stat-card"><p class="stat-number" id="totalStudents">0</p><p class="stat-label">طلابي</p></div>
+            <div class="stat-card"><p class="stat-number" id="todayClasses">0</p><p class="stat-label">حصص اليوم</p></div>
+            <div class="stat-card"><p class="stat-number" id="pendingAssignments">0</p><p class="stat-label">واجبات معلقة</p></div>
+        </div>
+
+        <!-- ===== الإجراءات السريعة ===== -->
+        <div class="bg-white rounded-2xl shadow-sm border border-[#E5E5E5] p-4 mb-5">
+            <h2 class="text-sm font-semibold text-[#000000] mb-3">إجراءات سريعة</h2>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <a href="teacher-courses.html" class="quick-action-btn"><i class="fas fa-plus-circle"></i><span>إضافة كورس</span></a>
+                <a href="teacher-students.html" class="quick-action-btn"><i class="fas fa-user-plus"></i><span>إضافة طالب</span></a>
+                <a href="teacher-classes.html" class="quick-action-btn"><i class="fas fa-calendar-plus"></i><span>إضافة حصة</span></a>
+                <a href="teacher-exams.html" class="quick-action-btn"><i class="fas fa-pencil-alt"></i><span>إنشاء امتحان</span></a>
+            </div>
+        </div>
+
+        <!-- ===== آخر النشاطات ===== -->
+        <div class="bg-white rounded-2xl shadow-sm border border-[#E5E5E5] p-4">
+            <h2 class="text-sm font-semibold text-[#000000] mb-3">آخر النشاطات</h2>
+            <div id="recentActivity" class="space-y-1"><p class="text-sm text-gray-400 text-center py-4">جاري التحميل...</p></div>
+        </div>
+
+        <div class="mt-3 text-center md:hidden">
+            <button id="refreshBtnMobile" class="text-sm text-[#2563EB] hover:underline flex items-center justify-center gap-1 w-full py-2">
+                <i class="fas fa-sync-alt"></i> تحديث البيانات
+            </button>
+        </div>
+
+    </main>
+
+    <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "firebase/app": "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js",
+                "firebase/auth": "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js",
+                "firebase/firestore": "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js",
+                "firebase/storage": "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js"
+            }
+        }
+    </script>
+
+    <script type="module">
+        import { auth, db } from './assets/js/firebase-config.js';
+        import { onAuthStateChanged, signOut } from "firebase/auth";
+        import { collection, getCountFromServer, getDocs, query, where, orderBy, limit, onSnapshot, doc, getDoc } from "firebase/firestore";
+
+        function showToast(m, t='error'){ Toastify({ text:m, duration:4000, gravity:'top', position:'center', style:{ background: t==='success' ? '#22C55E' : '#EF4444', borderRadius:'12px', padding:'12px 24px', boxShadow:'0 8px 24px rgba(0,0,0,0.15)' }, stopOnFocus:true }).showToast(); }
+
+        function formatTime(d){ const n=new Date(); const diff=n-d; if(diff<60000) return 'منذ لحظات'; if(diff<3600000) return `منذ ${Math.floor(diff/60000)} دقيقة`; if(diff<86400000) return `منذ ${Math.floor(diff/3600000)} ساعة`; return d.toLocaleDateString('ar'); }
+
+        const userNameEl=document.getElementById('userName'), userAvatarEl=document.getElementById('userAvatar');
+        const totalCoursesEl=document.getElementById('totalCourses'), totalStudentsEl=document.getElementById('totalStudents');
+        const todayClassesEl=document.getElementById('todayClasses'), pendingAssignmentsEl=document.getElementById('pendingAssignments');
+        const recentActivityEl=document.getElementById('recentActivity');
+
+        let academyId = null;
+        let teacherId = null;
+
+        async function loadStats(){
+            if(!academyId || !teacherId) return;
+            try {
+                // عدد الكورسات التي يدرسها المدرس
+                const coursesRef = collection(db, 'courses');
+                const coursesQuery = query(coursesRef, where('academyId', '==', academyId), where('teacherId', '==', teacherId));
+                const coursesSnap = await getCountFromServer(coursesQuery);
+                totalCoursesEl.textContent = coursesSnap.data().count || 0;
+
+                // عدد الطلاب (تقريبي من الكورسات)
+                // في التطبيق الحقيقي، يمكن جلب عدد الطلاب المسجلين في كورسات المدرس
+                const studentsRef = collection(db, 'academies', academyId, 'students');
+                const studentsSnap = await getCountFromServer(studentsRef);
+                totalStudentsEl.textContent = studentsSnap.data().count || 0;
+
+                // حصص اليوم (تقريبي)
+                const today = new Date().toDateString();
+                const classesRef = collection(db, 'classes');
+                const classesQuery = query(classesRef, where('academyId', '==', academyId), where('teacherId', '==', teacherId));
+                const classesSnap = await getDocs(classesQuery);
+                let todayCount = 0;
+                classesSnap.forEach(d => {
+                    const data = d.data();
+                    if(data.date){
+                        const classDate = data.date.toDate ? data.date.toDate() : new Date(data.date);
+                        if(classDate.toDateString() === today) todayCount++;
+                    }
+                });
+                todayClassesEl.textContent = todayCount;
+
+                // واجبات معلقة (تقريبي)
+                const assignmentsRef = collection(db, 'assignments');
+                const assignmentsQuery = query(assignmentsRef, where('academyId', '==', academyId), where('status', '==', 'pending'));
+                const assignmentsSnap = await getCountFromServer(assignmentsQuery);
+                pendingAssignmentsEl.textContent = assignmentsSnap.data().count || 0;
+
+            } catch(e){ console.error(e); }
+        }
+
+        function loadRecentActivity(){
+            if(!academyId) return;
+            try {
+                const q = query(collection(db, 'activities'), where('academyId', '==', academyId), orderBy('createdAt', 'desc'), limit(5));
+                onSnapshot(q, (snap) => {
+                    if(snap.empty){ recentActivityEl.innerHTML='<p class="text-sm text-gray-400 text-center py-4">لا توجد أنشطة</p>'; return; }
+                    let html=''; snap.forEach(d=>{ const data=d.data(); html+=`<div class="activity-item"><span class="text-sm text-[#111827]">${data.text||'نشاط جديد'}</span><span class="activity-time">${data.createdAt?formatTime(data.createdAt.toDate()):'منذ فترة'}</span></div>`; });
+                    recentActivityEl.innerHTML=html;
+                });
+            } catch(e){ recentActivityEl.innerHTML='<p class="text-sm text-gray-400 text-center py-4">لا توجد أنشطة</p>'; }
+        }
+
+        onAuthStateChanged(auth, async (user)=>{
+            if(!user){ window.location.href='login.html'; return; }
+            try {
+                const userDoc=await getDoc(doc(db,'users',user.uid));
+                if(userDoc.exists()){
+                    const data=userDoc.data();
+                    if(data.role !== 'teacher'){ showToast('ليس لديك صلاحية الوصول لهذه الصفحة','error'); setTimeout(()=>window.location.href='dashboard.html',1500); return; }
+                    academyId = data.academyId || user.uid;
+                    teacherId = user.uid;
+                    userNameEl.textContent = `مرحباً، ${data.fullName||'مدرس'}`;
+                    userAvatarEl.src = data.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(data.fullName||'Teacher')}&size=40&background=333333&color=fff`;
+                    await loadStats(); loadRecentActivity();
+                } else { window.location.href='register.html'; }
+            } catch(e){ console.error(e); showToast('فشل تحميل بيانات المستخدم','error'); }
+        });
+
+        document.getElementById('logoutBtn')?.addEventListener('click', async ()=>{ try{ await signOut(auth); window.location.href='login.html'; } catch(e){ showToast('فشل تسجيل الخروج','error'); } });
+        document.getElementById('refreshBtnMobile')?.addEventListener('click', ()=>{ loadStats(); loadRecentActivity(); showToast('تم تحديث البيانات','success'); });
+
+        const sidebar=document.getElementById('sidebar'), overlay=document.getElementById('sidebarOverlay'), openBtn=document.getElementById('openSidebarBtn'), closeBtn=document.getElementById('closeSidebarBtn');
+        function openSidebar(){ sidebar.classList.add('open'); overlay.classList.add('show'); document.body.style.overflow='hidden'; }
+        function closeSidebar(){ sidebar.classList.remove('open'); overlay.classList.remove('show'); document.body.style.overflow=''; }
+        if(openBtn) openBtn.addEventListener('click', openSidebar);
+        if(closeBtn) closeBtn.addEventListener('click', closeSidebar);
+        if(overlay) overlay.addEventListener('click', closeSidebar);
+        document.querySelectorAll('#sidebar a').forEach(l=>l.addEventListener('click', closeSidebar));
+        window.addEventListener('resize', ()=>{ if(window.innerWidth>=768) closeSidebar(); });
+
+        const lenis=new Lenis({ duration:1.2, easing:(t)=>Math.min(1,1.001-Math.pow(2,-10*t)), orientation:'vertical', gestureOrientation:'vertical', smoothWheel:true, wheelMultiplier:1, touchMultiplier:2 });
+        function raf(time){ lenis.raf(time); requestAnimationFrame(raf); } requestAnimationFrame(raf);
+        console.log('✅ teacher-dashboard.html جاهزة');
+    </script>
+
+</body>
+</html>

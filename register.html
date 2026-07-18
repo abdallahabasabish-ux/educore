@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>إنشاء حساب – مداد العلم</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..700&family=Cairo:wght@300..700&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="stylesheet" href="https://unpkg.com/lenis@1.1.13/dist/lenis.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <style>
+        body { background: #f5f5f5; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 1rem; margin: 0; }
+        .auth-card { background: #fff; border-radius: 20px; padding: 2rem 1.75rem; max-width: 480px; width: 100%; box-shadow: 0 16px 48px -12px rgba(0,0,0,0.08); border: 1px solid #e5e5e5; }
+        .auth-logo { text-align: center; margin-bottom: 1.75rem; }
+        .auth-logo i { font-size: 2.2rem; color: #000; }
+        .auth-logo h1 { font-size: 1.5rem; font-weight: 800; margin-top: 0.25rem; color: #000; }
+        .auth-logo p { color: #555; font-size: 0.875rem; margin-top: 0.25rem; }
+        .form-group { margin-bottom: 1.1rem; }
+        .form-group label { display: block; font-size: 0.8rem; font-weight: 600; color: #000; margin-bottom: 0.3rem; }
+        .form-control { width: 100%; padding: 0.55rem 0.875rem; border: 1.5px solid #e5e5e5; border-radius: 10px; background: #fafafa; font-size: 0.9rem; transition: all 0.2s ease; color: #111827; }
+        .form-control:focus { outline: none; border-color: #000; background: #fff; box-shadow: 0 0 0 3px rgba(0,0,0,0.05); }
+        .form-control::placeholder { color: #94a3b8; }
+        .btn-primary { background: #000; color: #fff; padding: 0.7rem 1.5rem; border-radius: 10px; font-weight: 600; font-size: 0.95rem; border: none; cursor: pointer; transition: all 0.3s ease; width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; min-height: 48px; }
+        .btn-primary:hover { background: #222; transform: translateY(-2px); box-shadow: 0 8px 24px -6px rgba(0,0,0,0.2); }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .btn-google { display: flex; align-items: center; justify-content: center; gap: 0.5rem; width: 100%; padding: 0.7rem; border: 1.5px solid #e5e5e5; border-radius: 10px; background: #fff; font-weight: 500; font-size: 0.9rem; color: #000; transition: all 0.2s ease; cursor: pointer; min-height: 48px; }
+        .btn-google:hover { background: #f5f5f5; border-color: #000; }
+        .btn-google i { font-size: 1.2rem; color: #ea4335; }
+        .divider { display: flex; align-items: center; gap: 1rem; margin: 1.5rem 0; }
+        .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: #e5e5e5; }
+        .divider span { color: #888; font-size: 0.8rem; font-weight: 500; white-space: nowrap; }
+        .auth-footer { text-align: center; margin-top: 1.5rem; font-size: 0.9rem; color: #555; }
+        .auth-footer a { color: #000; font-weight: 600; text-decoration: none; }
+        .auth-footer a:hover { text-decoration: underline; }
+        .terms-check { display: flex; align-items: flex-start; gap: 0.5rem; margin-top: 0.25rem; }
+        .terms-check input[type="checkbox"] { width: 18px; height: 18px; margin-top: 2px; accent-color: #000; flex-shrink: 0; }
+        .terms-check label { font-size: 0.8rem; color: #555; line-height: 1.5; }
+        .terms-check a { color: #000; text-decoration: none; }
+        .terms-check a:hover { text-decoration: underline; }
+        .message-box { padding: 0.5rem 1rem; border-radius: 10px; font-size: 0.85rem; margin-top: 0.5rem; display: none; }
+        .message-box.error { display: block; background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+        .message-box.success { display: block; background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+        .role-hint { background: #f0f0f0; padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.75rem; color: #333; display: inline-flex; align-items: center; gap: 0.3rem; margin-top: 0.25rem; }
+        @media (max-width: 480px) { .auth-card { padding: 1.5rem 1.25rem; border-radius: 16px; } .auth-logo i { font-size: 1.8rem; } .auth-logo h1 { font-size: 1.25rem; } .form-control { padding: 0.5rem 0.75rem; font-size: 0.85rem; } .btn-primary { font-size: 0.85rem; min-height: 44px; padding: 0.6rem 1rem; } }
+    </style>
+</head>
+<body>
+    <div class="auth-card">
+        <div class="auth-logo"><i class="fas fa-feather-alt"></i><h1>مداد العلم</h1><p>أنشئ حسابك كمدرس</p></div>
+        <form id="registerForm">
+            <div class="form-group"><label for="registerName">الاسم الكامل</label><input type="text" id="registerName" class="form-control" placeholder="أحمد محمد" required /></div>
+            <div class="form-group"><label for="registerAcademy">اسم الأكاديمية</label><input type="text" id="registerAcademy" class="form-control" placeholder="أكاديمية المستقبل" required /></div>
+            <div class="form-group"><label for="registerEmail">البريد الإلكتروني</label><input type="email" id="registerEmail" class="form-control" placeholder="example@email.com" required /></div>
+            <div class="form-group"><label for="registerPhone">رقم الهاتف</label><input type="tel" id="registerPhone" class="form-control" placeholder="+966 55 123 4567" /></div>
+            <div class="form-group"><label for="registerPassword">كلمة المرور</label><input type="password" id="registerPassword" class="form-control" placeholder="••••••••" required minlength="6" /></div>
+            <div class="form-group"><label for="registerConfirm">تأكيد كلمة المرور</label><input type="password" id="registerConfirm" class="form-control" placeholder="••••••••" required minlength="6" /></div>
+            <div class="terms-check"><input type="checkbox" id="registerTerms" required /><label for="registerTerms">أوافق على <a href="terms.html" target="_blank">الشروط والأحكام</a> و <a href="privacy-policy.html" target="_blank">سياسة الخصوصية</a></label></div>
+            <div class="role-hint"><i class="fas fa-chalkboard-teacher"></i> سيتم إنشاء حسابك كمدرس (Teacher)</div>
+            <div id="registerMessage" class="message-box"></div>
+            <button type="submit" class="btn-primary" id="registerBtn"><i class="fas fa-user-plus"></i> إنشاء الحساب</button>
+        </form>
+        <div class="divider"><span>أو</span></div>
+        <button id="googleRegisterBtn" class="btn-google"><i class="fab fa-google"></i> التسجيل عبر Google</button>
+        <div class="auth-footer">لديك حساب بالفعل؟ <a href="login.html">تسجيل الدخول</a></div>
+    </div>
+    <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script type="importmap">{"imports":{"firebase/app":"https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js","firebase/auth":"https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js","firebase/firestore":"https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js","firebase/storage":"https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js"}}</script>
+    <script type="module">
+        import { initializeApp } from "firebase/app"; import { getAuth, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, setPersistence, browserLocalPersistence } from "firebase/auth"; import { getFirestore, doc, setDoc, serverTimestamp, getDoc } from "firebase/firestore";
+        const firebaseConfig = { apiKey: "AIzaSyBsSP8Le5_nDG2YFiyGcZ6BFR7aLi3djLU", authDomain: "edu-core-ddb48.firebaseapp.com", projectId: "edu-core-ddb48", storageBucket: "edu-core-ddb48.firebasestorage.app", messagingSenderId: "4743644287", appId: "1:4743644287:web:9167749cc80417b6876b4a", measurementId: "G-S94FBCFCXW" };
+        const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getFirestore(app);
+        const form = document.getElementById('registerForm'), messageEl = document.getElementById('registerMessage'), registerBtn = document.getElementById('registerBtn');
+        const nameInput = document.getElementById('registerName'), academyInput = document.getElementById('registerAcademy'), emailInput = document.getElementById('registerEmail'), phoneInput = document.getElementById('registerPhone'), passwordInput = document.getElementById('registerPassword'), confirmInput = document.getElementById('registerConfirm'), termsCheck = document.getElementById('registerTerms');
+        function showMessage(text, type='error') { messageEl.textContent = text; messageEl.className = `message-box ${type}`; clearTimeout(messageEl._timeout); messageEl._timeout = setTimeout(() => { messageEl.className = 'message-box'; messageEl.textContent = ''; }, 5000); }
+        function setLoading(isLoading) { if (isLoading) { registerBtn.disabled = true; registerBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحميل...'; } else { registerBtn.disabled = false; registerBtn.innerHTML = '<i class="fas fa-user-plus"></i> إنشاء الحساب'; } }
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault(); const name = nameInput.value.trim(), academy = academyInput.value.trim(), email = emailInput.value.trim(), phone = phoneInput.value.trim(), password = passwordInput.value, confirm = confirmInput.value, terms = termsCheck.checked;
+            if (!name || !academy || !email || !password || !confirm) { showMessage('يرجى ملء جميع الحقول المطلوبة', 'error'); return; }
+            if (password.length < 6) { showMessage('كلمة المرور يجب أن تكون 6 أحرف على الأقل', 'error'); return; }
+            if (password !== confirm) { showMessage('كلمات المرور غير متطابقة', 'error'); return; }
+            if (!terms) { showMessage('يجب الموافقة على الشروط والأحكام', 'error'); return; }
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; if (!emailRegex.test(email)) { showMessage('البريد الإلكتروني غير صحيح', 'error'); return; }
+            try { await setPersistence(auth, browserLocalPersistence); } catch(e) {}
+            setLoading(true);
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password); const user = userCredential.user;
+                const userData = { fullName: name, academyName: academy, email, phone: phone || '', role: 'teacher', status: 'active', academyId: user.uid, createdAt: serverTimestamp(), updatedAt: serverTimestamp() };
+                await setDoc(doc(db, 'users', user.uid), userData);
+                const academyData = { academyName: academy, ownerId: user.uid, status: 'active', language: 'ar', currency: 'SAR', createdAt: serverTimestamp(), updatedAt: serverTimestamp() };
+                await setDoc(doc(db, 'academies', user.uid), academyData);
+                showMessage('تم إنشاء الحساب بنجاح! جاري التوجيه...', 'success');
+                setTimeout(() => window.location.href = 'owner-dashboard.html', 1500);
+            } catch (error) { let msg = 'فشل إنشاء الحساب'; if (error.code === 'auth/email-already-in-use') msg = 'البريد الإلكتروني مستخدم بالفعل'; else if (error.code === 'auth/invalid-email') msg = 'البريد الإلكتروني غير صحيح'; else if (error.code === 'auth/weak-password') msg = 'كلمة المرور ضعيفة جداً'; else msg = error.message; showMessage(msg, 'error'); }
+            finally { setLoading(false); }
+        });
+        document.getElementById('googleRegisterBtn').addEventListener('click', async () => {
+            const provider = new GoogleAuthProvider(); try { await setPersistence(auth, browserLocalPersistence); } catch(e) {}
+            setLoading(true);
+            try {
+                const result = await signInWithPopup(auth, provider); const user = result.user;
+                const userDoc = await getDoc(doc(db, 'users', user.uid));
+                if (!userDoc.exists()) {
+                    const userData = { fullName: user.displayName || 'مستخدم', email: user.email, avatar: user.photoURL || '', role: 'teacher', status: 'active', academyId: user.uid, academyName: 'أكاديميتي', createdAt: serverTimestamp(), updatedAt: serverTimestamp() };
+                    await setDoc(doc(db, 'users', user.uid), userData);
+                    const academyData = { academyName: 'أكاديميتي', ownerId: user.uid, status: 'active', language: 'ar', currency: 'SAR', createdAt: serverTimestamp(), updatedAt: serverTimestamp() };
+                    await setDoc(doc(db, 'academies', user.uid), academyData);
+                }
+                showMessage('تم التسجيل بواسطة Google بنجاح!', 'success');
+                setTimeout(() => window.location.href = 'owner-dashboard.html', 1500);
+            } catch (error) { let msg = 'فشل التسجيل عبر Google'; if (error.code === 'auth/popup-closed-by-user') msg = 'تم إغلاق النافذة المنبثقة'; else msg = error.message; showMessage(msg, 'error'); }
+            finally { setLoading(false); }
+        });
+        const lenis = new Lenis({ duration: 1.2 }); function raf(time) { lenis.raf(time); requestAnimationFrame(raf); } requestAnimationFrame(raf);
+        console.log('✅ register.html ready');
+    </script>
+</body>
+</html>

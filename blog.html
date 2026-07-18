@@ -1,70 +1,127 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>المدونة – مداد العلم</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cairo&display=swap" rel="stylesheet">
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>المدونة – مداد العلم</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..700&family=Cairo:wght@300..700&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="stylesheet" href="https://unpkg.com/lenis@1.1.13/dist/lenis.css" />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        .blog-card { transition: all 0.3s ease; }
+        .blog-card:hover { transform: translateY(-6px); box-shadow: 0 16px 40px -12px rgba(0,0,0,0.08); }
+        .blog-card .image { height: 200px; background: #f1f5f9; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .blog-card .image img { width: 100%; height: 100%; object-fit: cover; }
+        .blog-card .content { padding: 1.25rem; }
+        .blog-card .content .title { font-size: 1rem; font-weight: 700; color: #000; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .blog-card .content .summary { font-size: 0.85rem; color: #555; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin-top: 0.25rem; }
+        .admin-badge { background: #000; color: #fff; font-size: 0.6rem; padding: 0.1rem 0.5rem; border-radius: 9999px; }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 1rem; }
+        .modal-overlay.show { display: flex; }
+        .modal-box { background: #fff; border-radius: 20px; padding: 1.75rem; max-width: 560px; width: 100%; max-height: 90vh; overflow-y: auto; animation: modalIn 0.3s ease; }
+        @keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; font-size: 0.8rem; font-weight: 600; color: #1e293b; margin-bottom: 0.3rem; }
+        .form-control { width: 100%; padding: 0.55rem 0.875rem; border: 1.5px solid #e5e5e5; border-radius: 10px; background: #fafafa; font-size: 0.9rem; transition: all 0.2s ease; color: #111827; }
+        .form-control:focus { outline: none; border-color: #000; background: #fff; box-shadow: 0 0 0 3px rgba(0,0,0,0.05); }
+        textarea.form-control { resize: vertical; min-height: 60px; }
+        .btn-primary { background: #000; color: #fff; padding: 0.6rem 1.5rem; border-radius: 10px; font-weight: 600; font-size: 0.9rem; border: none; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; min-height: 44px; }
+        .btn-primary:hover { background: #222; transform: translateY(-2px); box-shadow: 0 8px 24px -6px rgba(0,0,0,0.2); }
+        .btn-danger { background: #EF4444; color: #fff; padding: 0.3rem 0.8rem; border-radius: 8px; font-weight: 600; font-size: 0.7rem; border: none; cursor: pointer; transition: all 0.2s ease; }
+        .btn-danger:hover { background: #dc2626; }
+        .btn-edit { background: #000; color: #fff; padding: 0.3rem 0.8rem; border-radius: 8px; font-weight: 600; font-size: 0.7rem; border: none; cursor: pointer; transition: all 0.2s ease; }
+        .btn-edit:hover { background: #222; }
+    </style>
 </head>
-<body class="bg-gray-50 min-h-screen flex flex-col">
-  <nav class="bg-white shadow-sm border-b border-gray-200">
-    <div class="container mx-auto px-4 flex justify-between items-center h-16">
-      <a href="/" class="text-2xl font-extrabold text-[#4B5563]"><i class="fas fa-feather-alt ml-2"></i>مداد العلم</a>
-      <a href="/" class="text-sm text-[#4B5563] hover:underline">العودة للرئيسية</a>
-    </div>
-  </nav>
-
-  <div class="container mx-auto px-4 py-12 flex-1">
-    <h1 class="text-3xl font-extrabold text-center mb-8" data-aos="fade-up">المدونة والأخبار</h1>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-      <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all hover:-translate-y-1" data-aos="fade-up" data-aos-delay="100">
-        <img src="https://picsum.photos/seed/1/400/250" alt="أفضل استراتيجيات التعليم عن بعد" loading="lazy" class="w-full h-48 object-cover" />
-        <div class="p-4 text-right">
-          <span class="text-xs text-[#4B5563] bg-[#4B5563]/10 px-2 py-1 rounded-full">تعليم</span>
-          <h3 class="font-bold mt-2">أفضل استراتيجيات التعليم عن بعد</h3>
-          <p class="text-sm text-gray-500 mt-1">نصائح عملية لتحسين تجربة الطلاب.</p>
-          <a href="#" class="text-[#4B5563] text-sm font-semibold hover:underline inline-block mt-2">اقرأ المزيد <i class="fas fa-arrow-left mr-1"></i></a>
+<body>
+    <nav class="fixed top-0 left-0 right-0 z-50 glass border-b border-[#e5e5e5]/40 shadow-sm" id="navbar">
+        <div class="container-custom flex items-center justify-between h-16"><a href="index.html" class="flex items-center gap-2 text-xl font-extrabold text-[#111827] no-underline"><i class="fas fa-feather-alt text-[#4B5563]"></i><span>مداد العلم</span></a>
+            <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-[#4B5563]"><a href="features.html" class="hover:text-[#2563EB] transition">المميزات</a><a href="pricing.html" class="hover:text-[#2563EB] transition">الأسعار</a><a href="contact.html" class="hover:text-[#2563EB] transition">تواصل</a><a href="faq.html" class="hover:text-[#2563EB] transition">الأسئلة</a><a href="about.html" class="hover:text-[#2563EB] transition">عن المنصة</a></nav>
+            <div class="hidden md:flex items-center gap-3"><a href="login.html" class="text-sm font-medium text-[#4B5563] hover:text-[#2563EB] transition">تسجيل الدخول</a><a href="register.html" class="btn-primary text-sm py-1.5 px-5">ابدأ مجانًا</a></div>
+            <button class="md:hidden text-2xl text-[#4B5563] p-1" id="menuToggle"><i class="fas fa-bars"></i></button>
         </div>
-      </div>
-      <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all hover:-translate-y-1" data-aos="fade-up" data-aos-delay="200">
-        <img src="https://picsum.photos/seed/2/400/250" alt="كيف تبني منصة تعليمية ناجحة" loading="lazy" class="w-full h-48 object-cover" />
-        <div class="p-4 text-right">
-          <span class="text-xs text-[#4B5563] bg-[#4B5563]/10 px-2 py-1 rounded-full">تكنولوجيا</span>
-          <h3 class="font-bold mt-2">كيف تبني منصة تعليمية ناجحة</h3>
-          <p class="text-sm text-gray-500 mt-1">خطوات عملية لبناء منصة احترافية.</p>
-          <a href="#" class="text-[#4B5563] text-sm font-semibold hover:underline inline-block mt-2">اقرأ المزيد <i class="fas fa-arrow-left mr-1"></i></a>
-        </div>
-      </div>
-      <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all hover:-translate-y-1" data-aos="fade-up" data-aos-delay="300">
-        <img src="https://picsum.photos/seed/3/400/250" alt="مستقبل التعليم الإلكتروني" loading="lazy" class="w-full h-48 object-cover" />
-        <div class="p-4 text-right">
-          <span class="text-xs text-[#4B5563] bg-[#4B5563]/10 px-2 py-1 rounded-full">مستقبل</span>
-          <h3 class="font-bold mt-2">مستقبل التعليم الإلكتروني</h3>
-          <p class="text-sm text-gray-500 mt-1">توجهات جديدة في مجال التعليم الرقمي.</p>
-          <a href="#" class="text-[#4B5563] text-sm font-semibold hover:underline inline-block mt-2">اقرأ المزيد <i class="fas fa-arrow-left mr-1"></i></a>
-        </div>
-      </div>
-    </div>
-  </div>
+        <div class="drawer" id="mobileDrawer"><div class="drawer-overlay" id="drawerOverlay"></div><div class="drawer-panel"><button class="close-btn" id="drawerClose"><i class="fas fa-times"></i></button><nav class="flex flex-col gap-1 mt-8"><a href="features.html">المميزات</a><a href="pricing.html">الأسعار</a><a href="contact.html">تواصل</a><a href="faq.html">الأسئلة</a><a href="about.html">عن المنصة</a><a href="login.html" class="text-[#4B5563] font-medium mt-2">تسجيل الدخول</a><a href="register.html" class="btn-primary text-center mt-1">ابدأ مجانًا</a></nav></div></div>
+    </nav>
+    <section class="relative pt-28 pb-16 md:pt-36 md:pb-20 overflow-hidden gradient-bg"><div class="container-custom text-center"><span class="section-badge">المدونة</span><h1 class="text-4xl md:text-5xl font-extrabold">آخر المقالات والأخبار</h1><p class="text-lg text-[#4B5563] max-w-2xl mx-auto mt-3">كل ما هو جديد في عالم التعليم الإلكتروني</p></div></section>
+    <section class="py-16 md:py-24 bg-white"><div class="container-custom"><div class="flex justify-between items-center mb-8"><h2 class="text-xl font-bold">المقالات</h2><button id="addArticleBtn" class="btn-primary text-sm py-2 px-5 hidden"><i class="fas fa-plus ml-1"></i> إضافة مقالة</button></div><div id="articlesGrid" class="grid grid-cols-1 md:grid-cols-3 gap-6"><div class="col-span-full text-center text-gray-400 py-12"><i class="fas fa-spinner fa-spin text-3xl"></i><p class="mt-2">جاري تحميل المقالات...</p></div></div></div></section>
+    <section class="py-16 md:py-24 bg-[#4B5563] text-white"><div class="container-custom text-center"><h2 class="text-3xl md:text-4xl font-extrabold">تابع آخر الأخبار</h2><form class="flex flex-wrap justify-center gap-3 mt-6 max-w-md mx-auto" id="newsletterForm"><input type="email" placeholder="بريدك الإلكتروني" class="flex-1 min-w-[200px] px-4 py-2 rounded-full border-0 text-[#111827] focus:ring-2 focus:ring-white" required /><button type="submit" class="bg-white text-[#4B5563] font-bold px-6 py-2 rounded-full hover:shadow-lg transition">اشتراك</button></form></div></section>
+    <footer class="bg-[#111827] text-[#9CA3AF] pt-12 pb-6"><div class="container-custom text-center text-sm"><p>&copy; 2026 مداد العلم. جميع الحقوق محفوظة.</p><div class="flex justify-center gap-6 mt-2"><a href="privacy-policy.html" class="hover:text-white transition">سياسة الخصوصية</a><a href="terms.html" class="hover:text-white transition">الشروط</a></div></div></footer>
 
-  <footer class="bg-gray-900 text-gray-400 py-4 text-center text-sm">
-    &copy; 2026 مداد العلم. جميع الحقوق محفوظة.
-  </footer>
+    <!-- ======== مودال إضافة/تعديل مقالة ======== -->
+    <div id="articleModal" class="modal-overlay"><div class="modal-box"><div class="flex justify-between items-center mb-4"><h2 id="modalTitle" class="text-lg font-bold">إضافة مقالة جديدة</h2><button id="closeModal" class="text-gray-500 hover:text-gray-700 text-xl"><i class="fas fa-times"></i></button></div><form id="articleForm"><input type="hidden" id="articleId" /><div class="form-group"><label for="articleTitle">عنوان المقالة</label><input type="text" id="articleTitle" class="form-control" placeholder="أفضل استراتيجيات التعليم عن بعد" required /></div><div class="form-group"><label for="articleSummary">ملخص قصير</label><input type="text" id="articleSummary" class="form-control" placeholder="ملخص المقالة..." required /></div><div class="form-group"><label for="articleContent">المحتوى (نص أو HTML)</label><textarea id="articleContent" rows="4" class="form-control" placeholder="نص المقالة..."></textarea></div><div class="form-group"><label for="articleImageUrl">رابط الصورة</label><input type="url" id="articleImageUrl" class="form-control" placeholder="https://example.com/image.jpg" /></div><div class="form-group"><label for="articleAuthor">اسم الكاتب</label><input type="text" id="articleAuthor" class="form-control" placeholder="أحمد محمد" required /></div><div id="modalMessage" class="message-box"></div><button type="submit" class="btn-primary w-full justify-center">حفظ المقالة</button></form></div></div>
 
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-  <script src="https://unpkg.com/lenis@1.0.45/dist/lenis.min.js"></script>
-  <script>
-    AOS.init({ duration: 800, once: true });
-    const lenis = new Lenis({ duration: 1.2 });
-    function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
-    requestAnimationFrame(raf);
-  </script>
-  <script type="module" src="assets/js/app.js"></script>
+    <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script type="importmap">{"imports":{"firebase/app":"https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js","firebase/auth":"https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js","firebase/firestore":"https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js","firebase/storage":"https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js"}}</script>
+    <script type="module">
+        import { initializeApp } from "firebase/app";
+        import { getAuth, onAuthStateChanged } from "firebase/auth";
+        import { getFirestore, collection, query, orderBy, onSnapshot, addDoc, updateDoc, deleteDoc, doc, getDoc, serverTimestamp } from "firebase/firestore";
+        const firebaseConfig = { apiKey: "AIzaSyBsSP8Le5_nDG2YFiyGcZ6BFR7aLi3djLU", authDomain: "edu-core-ddb48.firebaseapp.com", projectId: "edu-core-ddb48", storageBucket: "edu-core-ddb48.firebasestorage.app", messagingSenderId: "4743644287", appId: "1:4743644287:web:9167749cc80417b6876b4a", measurementId: "G-S94FBCFCXW" };
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const articlesGrid = document.getElementById('articlesGrid');
+        const addBtn = document.getElementById('addArticleBtn');
+        const modal = document.getElementById('articleModal');
+        const closeModalBtn = document.getElementById('closeModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const form = document.getElementById('articleForm');
+        const idInput = document.getElementById('articleId');
+        const titleInput = document.getElementById('articleTitle');
+        const summaryInput = document.getElementById('articleSummary');
+        const contentInput = document.getElementById('articleContent');
+        const imageInput = document.getElementById('articleImageUrl');
+        const authorInput = document.getElementById('articleAuthor');
+        const messageEl = document.getElementById('modalMessage');
+        let currentUser = null, userRole = null, unsubscribe = null;
+
+        function showToast(m, t='error') { Toastify({ text:m, duration:4000, gravity:'top', position:'center', style:{ background: t==='success' ? '#22C55E' : '#EF4444', borderRadius:'12px', padding:'12px 24px', boxShadow:'0 8px 24px rgba(0,0,0,0.15)' }, stopOnFocus:true }).showToast(); }
+        function showModalMessage(text, type='error') { messageEl.textContent = text; messageEl.className = `message-box ${type}`; clearTimeout(messageEl._timeout); messageEl._timeout = setTimeout(() => { messageEl.className = 'message-box'; messageEl.textContent = ''; }, 5000); }
+
+        async function checkUserRole(user) { if (!user) return null; try { const docSnap = await getDoc(doc(db,'users',user.uid)); return docSnap.exists() ? docSnap.data().role : null; } catch(e) { return null; } }
+
+        function loadArticles() {
+            if (unsubscribe) unsubscribe();
+            const q = query(collection(db,'articles'), orderBy('createdAt','desc'));
+            unsubscribe = onSnapshot(q, (snapshot) => {
+                if (snapshot.empty) { articlesGrid.innerHTML = `<div class="col-span-full text-center text-gray-400 py-12"><i class="fas fa-newspaper text-4xl opacity-30 block mb-2"></i><p>لا توجد مقالات بعد</p></div>`; return; }
+                let html = ''; snapshot.forEach(doc => { const data = doc.data(); const date = data.createdAt ? new Date(data.createdAt.toDate()).toLocaleDateString('ar') : ''; html += `<div class="blog-card bg-white rounded-2xl overflow-hidden shadow-sm border border-[#E5E7EB]"><div class="image"><img src="${data.imageUrl || 'https://images.unsplash.com/photo-1501504905252-473c47e087f8?w=600&auto=format&fit=crop'}" alt="${data.title}" loading="lazy" /></div><div class="content"><span class="text-xs text-[#2563EB] bg-[#2563EB]/10 px-2 py-1 rounded-full">${date}</span><h3 class="title mt-1">${data.title||'بدون عنوان'}</h3><p class="summary">${data.summary||''}</p><div class="flex items-center justify-between mt-2"><span class="text-xs text-[#6B7280]"><i class="fas fa-user ml-1"></i> ${data.author||'غير معروف'}</span>${userRole === 'owner' || userRole === 'super_admin' ? `<div><button onclick="window.editArticle('${doc.id}')" class="btn-edit"><i class="fas fa-edit"></i></button> <button onclick="window.deleteArticle('${doc.id}')" class="btn-danger"><i class="fas fa-trash"></i></button></div>` : ''}</div></div></div>`; });
+                articlesGrid.innerHTML = html;
+            });
+        }
+
+        window.editArticle = async (id) => { try { const docSnap = await getDoc(doc(db,'articles',id)); if (docSnap.exists()) { const data = docSnap.data(); idInput.value = id; titleInput.value = data.title||''; summaryInput.value = data.summary||''; contentInput.value = data.content||''; imageInput.value = data.imageUrl||''; authorInput.value = data.author||''; modalTitle.textContent = 'تعديل المقالة'; modal.classList.add('show'); } } catch(e) { showToast('فشل تحميل المقالة'); } };
+        window.deleteArticle = async (id) => { const result = await Swal.fire({ title:'هل أنت متأكد؟', text:'سيتم حذف المقالة!', icon:'warning', showCancelButton:true, confirmButtonColor:'#EF4444', confirmButtonText:'نعم، احذف', cancelButtonText:'إلغاء' }); if (result.isConfirmed) { try { await deleteDoc(doc(db,'articles',id)); showToast('تم الحذف','success'); } catch(e) { showToast('فشل الحذف'); } } };
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault(); const id = idInput.value; const data = { title: titleInput.value.trim(), summary: summaryInput.value.trim(), content: contentInput.value.trim(), imageUrl: imageInput.value.trim(), author: authorInput.value.trim(), updatedAt: serverTimestamp() };
+            if (!data.title || !data.summary || !data.author) { showModalMessage('العنوان والملخص والكاتب مطلوبة','error'); return; }
+            try { if (id) { await updateDoc(doc(db,'articles',id), data); showToast('تم التحديث','success'); } else { data.createdAt = serverTimestamp(); await addDoc(collection(db,'articles'), data); showToast('تم الإضافة','success'); } modal.classList.remove('show'); form.reset(); idInput.value = ''; modalTitle.textContent = 'إضافة مقالة جديدة'; } catch(e) { showModalMessage('فشل الحفظ: '+e.message,'error'); }
+        });
+
+        addBtn.addEventListener('click', () => { idInput.value = ''; form.reset(); modalTitle.textContent = 'إضافة مقالة جديدة'; messageEl.className = 'message-box'; messageEl.textContent = ''; modal.classList.add('show'); });
+        closeModalBtn.addEventListener('click', () => modal.classList.remove('show'));
+        modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('show'); });
+
+        onAuthStateChanged(auth, async (user) => { if (user) { currentUser = user; userRole = await checkUserRole(user); if (userRole === 'owner' || userRole === 'super_admin') addBtn.classList.remove('hidden'); } loadArticles(); });
+
+        document.getElementById('newsletterForm')?.addEventListener('submit', (e) => { e.preventDefault(); showToast('تم الاشتراك بنجاح!','success'); e.target.reset(); });
+
+        AOS.init({ duration: 600, once: true, offset: 30, easing: 'ease-out-cubic', disable: window.innerWidth < 768 });
+        const lenis = new Lenis({ duration: 1.2 }); function raf(time) { lenis.raf(time); requestAnimationFrame(raf); } requestAnimationFrame(raf);
+        const menuToggle = document.getElementById('menuToggle'), drawer = document.getElementById('mobileDrawer'), drawerOverlay = document.getElementById('drawerOverlay'), drawerClose = document.getElementById('drawerClose');
+        function openDrawer() { drawer.classList.add('open'); document.body.style.overflow = 'hidden'; } function closeDrawer() { drawer.classList.remove('open'); document.body.style.overflow = ''; }
+        menuToggle.addEventListener('click', openDrawer); drawerClose.addEventListener('click', closeDrawer); drawerOverlay.addEventListener('click', closeDrawer); document.querySelectorAll('#mobileDrawer a').forEach(l => l.addEventListener('click', closeDrawer));
+        console.log('✅ blog.html ready');
+    </script>
 </body>
 </html>

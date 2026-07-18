@@ -290,6 +290,13 @@
             <a href="dashboard.html" class="sidebar-link"><i class="fas fa-chart-pie"></i> لوحة التحكم</a>
             <a href="students.html" class="sidebar-link active"><i class="fas fa-user-graduate"></i> الطلاب</a>
             <a href="courses.html" class="sidebar-link"><i class="fas fa-book-open"></i> الكورسات</a>
+            <a href="teachers.html" class="sidebar-link"><i class="fas fa-chalkboard-teacher"></i> المدرسون</a>
+            <a href="classes.html" class="sidebar-link"><i class="fas fa-calendar-check"></i> الحصص</a>
+            <a href="exams.html" class="sidebar-link"><i class="fas fa-pencil-alt"></i> الامتحانات</a>
+            <a href="assignments.html" class="sidebar-link"><i class="fas fa-tasks"></i> الواجبات</a>
+            <a href="finance.html" class="sidebar-link"><i class="fas fa-coins"></i> المالية</a>
+            <a href="settings.html" class="sidebar-link"><i class="fas fa-cog"></i> الإعدادات</a>
+            <a href="profile.html" class="sidebar-link"><i class="fas fa-user"></i> الملف الشخصي</a>
             <button id="logoutBtn" class="sidebar-link text-red-400 hover:bg-red-900/30 hover:text-red-300 w-full text-right mt-4">
                 <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
             </button>
@@ -497,6 +504,7 @@
         import { onAuthStateChanged, signOut } from "firebase/auth";
         import { collection, doc, getDoc, getDocs, addDoc, updateDoc, deleteDoc, onSnapshot, query, where, orderBy, serverTimestamp } from "firebase/firestore";
 
+        // متغير عام لتخزين معرف الأكاديمية
         let academyId = null;
 
         // دالة لعرض حالة الطالب في الجدول
@@ -508,14 +516,18 @@
 
         // جلب المجموعات
         function loadGroups() {
-            if (!academyId) return;
+            if (!academyId) {
+                console.warn("⚠️ academyId غير معرف، لا يمكن تحميل المجموعات");
+                return;
+            }
             const q = query(collection(db, "academies", academyId, "groups"), orderBy("name", "asc"));
             onSnapshot(q, (snapshot) => {
                 let html = `<span class="group-badge active" data-group="all">جميع الطلاب</span>`;
                 let options = `<option value="all">جميع الطلاب</option>`;
                 snapshot.forEach((doc) => {
-                    html += `<span class="group-badge" data-group="${doc.id}">${doc.data().name}</span>`;
-                    options += `<option value="${doc.id}">${doc.data().name}</option>`;
+                    const data = doc.data();
+                    html += `<span class="group-badge" data-group="${doc.id}">${data.name}</span>`;
+                    options += `<option value="${doc.id}">${data.name}</option>`;
                 });
                 document.getElementById("groupsContainer").innerHTML = html;
                 document.getElementById("studentGroup").innerHTML = options;
@@ -528,6 +540,8 @@
                         loadStudents(this.dataset.group);
                     });
                 });
+            }, (error) => {
+                console.error("❌ خطأ في تحميل المجموعات:", error);
             });
         }
 
@@ -540,23 +554,34 @@
             }
 
             const ref = collection(db, "academies", academyId, "students");
-            const q = groupId === "all" ? query(ref, orderBy("createdAt", "desc")) : query(ref, where("groupId", "==", groupId), orderBy("createdAt", "desc"));
+            let q;
+            
+            // ✅ إصلاح: تحقق مما إذا كانت `groupId` موجودة وليست "all"
+            if (groupId && groupId !== "all") {
+                q = query(ref, where("groupId", "==", groupId), orderBy("createdAt", "desc"));
+            } else {
+                q = query(ref, orderBy("createdAt", "desc"));
+            }
 
-            onSnapshot(q, (snapshot) => {
+            // ✅ استخدام onSnapshot للاستماع الفوري
+            const unsubscribe = onSnapshot(q, (snapshot) => {
+                console.log(`📊 تم جلب ${snapshot.size} طالب`); // ✅ طباعة عدد الطلاب في الكونسول
+            
                 if (snapshot.empty) {
                     tbody.innerHTML = `<tr><td colspan="6" class="text-center text-gray-400 py-8">لا يوجد طلاب حتى الآن</td></tr>`;
                     return;
                 }
+                
                 let html = "";
                 snapshot.forEach((doc) => {
                     const data = doc.data();
                     html += `
                         <tr>
-                            <td class="font-medium">${data.fullName}</td>
-                            <td>${data.email}</td>
+                            <td class="font-medium">${data.fullName || "غير محدد"}</td>
+                            <td>${data.email || "-"}</td>
                             <td class="hidden sm:table-cell">${data.phone || "-"}</td>
                             <td><span class="text-xs text-[#555555]">${data.groupName || "-"}</span></td>
-                            <td>${getStatusBadge(data.status)}</td>
+                            <td>${getStatusBadge(data.status || "pending")}</td>
                             <td class="text-center whitespace-nowrap">
                                 <button onclick="editStudent('${doc.id}')" class="btn-sm btn-edit"><i class="fas fa-edit"></i></button>
                                 <button onclick="deleteStudent('${doc.id}')" class="btn-sm btn-danger"><i class="fas fa-trash"></i></button>
@@ -565,15 +590,21 @@
                 });
                 tbody.innerHTML = html;
             }, (error) => {
-                console.error("Fetch Error:", error);
+                console.error("❌ خطأ في جلب الطلاب:", error);
                 tbody.innerHTML = `<tr><td colspan="6" class="text-center text-red-500 py-4">خطأ في جلب البيانات: ${error.message}</td></tr>`;
             });
-        }
+
+            // ✅ حفظ مرجع الـ unsubscribe للتخلص منه لاحقاً (اختياري)
+            window.__unsubscribeStudents = unsubscribe;
+        };
 
         // إضافة أو تعديل طالب
         document.getElementById("studentForm").addEventListener("submit", async (e) => {
             e.preventDefault();
-            if(!academyId) return showToast("غير مصرح لك بإضافة بيانات", "error");
+            if(!academyId) {
+                showToast("غير مصرح لك بإضافة بيانات", "error");
+                return;
+            }
 
             const id = document.getElementById("studentId").value;
             const groupSelect = document.getElementById("studentGroup");
@@ -588,6 +619,13 @@
                 updatedAt: serverTimestamp()
             };
 
+            // التحقق من البيانات
+            if (!data.fullName || !data.email) {
+                document.getElementById("modalMessage").textContent = "الاسم والبريد الإلكتروني مطلوبان";
+                document.getElementById("modalMessage").className = "message-box error";
+                return;
+            }
+
             try {
                 if (id) {
                     await updateDoc(doc(db, "academies", academyId, "students", id), data);
@@ -598,7 +636,10 @@
                     showToast("تمت الإضافة بنجاح", "success");
                 }
                 document.getElementById("studentModal").classList.remove("show");
+                // ✅ إعادة تحميل الطلاب بعد الإضافة
+                loadStudents();
             } catch (error) {
+                console.error("❌ خطأ في حفظ الطالب:", error);
                 showToast("فشل الحفظ: " + error.message, "error");
             }
         });
@@ -606,13 +647,25 @@
         // إنشاء مجموعة
         document.getElementById("groupForm").addEventListener("submit", async (e) => {
             e.preventDefault();
-            if(!academyId) return;
+            if(!academyId) {
+                showToast("غير مصرح لك بإضافة بيانات", "error");
+                return;
+            }
             const name = document.getElementById("groupName").value.trim();
+            if (!name) {
+                document.getElementById("groupMessage").textContent = "يرجى إدخال اسم المجموعة";
+                document.getElementById("groupMessage").className = "message-box error";
+                return;
+            }
             try {
-                await addDoc(collection(db, "academies", academyId, "groups"), { name, createdAt: serverTimestamp() });
+                await addDoc(collection(db, "academies", academyId, "groups"), { 
+                    name, 
+                    createdAt: serverTimestamp() 
+                });
                 showToast("تم إنشاء المجموعة", "success");
                 document.getElementById("groupModal").classList.remove("show");
             } catch (error) {
+                console.error("❌ خطأ في إنشاء المجموعة:", error);
                 showToast("فشل الإنشاء: " + error.message, "error");
             }
         });
@@ -624,26 +677,43 @@
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     document.getElementById("studentId").value = id;
-                    document.getElementById("studentName").value = data.fullName;
-                    document.getElementById("studentEmail").value = data.email;
+                    document.getElementById("studentName").value = data.fullName || "";
+                    document.getElementById("studentEmail").value = data.email || "";
                     document.getElementById("studentPhone").value = data.phone || "";
                     document.getElementById("studentGroup").value = data.groupId || "all";
                     document.getElementById("studentStatus").value = data.status || "active";
                     document.getElementById("modalTitle").textContent = "تعديل الطالب";
                     document.getElementById("studentModal").classList.add("show");
+                } else {
+                    showToast("الطالب غير موجود", "error");
                 }
             } catch (error) {
-                showToast("فشل جلب البيانات", "error");
+                console.error("❌ خطأ في جلب بيانات الطالب:", error);
+                showToast("فشل جلب البيانات: " + error.message, "error");
             }
         };
 
         window.deleteStudent = async (id) => {
-            if (confirm("هل أنت متأكد من حذف هذا الطالب؟")) {
+            const result = await Swal.fire({
+                title: "هل أنت متأكد؟",
+                text: "لن تتمكن من استعادة هذا الطالب!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#EF4444",
+                cancelButtonColor: "#94a3b8",
+                confirmButtonText: "نعم، احذف",
+                cancelButtonText: "إلغاء",
+            });
+            
+            if (result.isConfirmed) {
                 try {
                     await deleteDoc(doc(db, "academies", academyId, "students", id));
                     showToast("تم الحذف بنجاح", "success");
+                    // ✅ إعادة تحميل الطلاب بعد الحذف
+                    loadStudents();
                 } catch (error) {
-                    showToast("فشل الحذف", "error");
+                    console.error("❌ خطأ في حذف الطالب:", error);
+                    showToast("فشل الحذف: " + error.message, "error");
                 }
             }
         };
@@ -653,25 +723,46 @@
             signOut(auth).then(() => window.location.href = "../login.html");
         });
 
-        // التحقق من حالة تسجيل الدخول وبدء التشغيل
+        // ✅ التحقق من حالة تسجيل الدخول وبدء التشغيل
         onAuthStateChanged(auth, async (user) => {
+            console.log("🔄 onAuthStateChanged:", user ? user.uid : "لا يوجد مستخدم");
+            
             if (!user) {
                 window.location.href = "../login.html";
                 return;
             }
+            
             try {
                 const userDoc = await getDoc(doc(db, "users", user.uid));
+                console.log("📄 بيانات المستخدم:", userDoc.exists() ? userDoc.data() : "غير موجود");
+                
                 if (userDoc.exists()) {
-                    academyId = userDoc.data().academyId || user.uid; // احتياطي في حال لم يكن الحقل موجوداً
+                    const data = userDoc.data();
+                    // ✅ التحقق من وجود academyId في بيانات المستخدم
+                    if (data.academyId) {
+                        academyId = data.academyId;
+                    } else {
+                        // ✅ إذا لم يكن موجوداً، استخدم uid كـ academyId (احتياطي)
+                        academyId = user.uid;
+                        console.warn("⚠️ academyId غير موجود في بيانات المستخدم، تم استخدام uid كقيمة احتياطية:", academyId);
+                    }
+                    console.log("🏫 academyId المستخدم:", academyId);
+                    
+                    // ✅ تحميل البيانات
+                    loadGroups();
+                    loadStudents();
                 } else {
-                    academyId = user.uid; // احتياطي للعمل في بيئة التطوير
+                    console.error("❌ لم يتم العثور على وثيقة المستخدم في Firestore");
+                    window.location.href = "../register.html";
                 }
-                loadGroups();
-                loadStudents();
             } catch (error) {
-                document.getElementById("studentsTableBody").innerHTML = `<tr><td colspan="6" class="text-center text-red-500 py-4">فشل الاتصال بقاعدة البيانات</td></tr>`;
+                console.error("❌ خطأ في تحميل بيانات المستخدم:", error);
+                document.getElementById("studentsTableBody").innerHTML = 
+                    `<tr><td colspan="6" class="text-center text-red-500 py-4">فشل الاتصال بقاعدة البيانات: ${error.message}</td></tr>`;
             }
         });
+
+        console.log("✅ صفحة الطلاب جاهزة مع Firebase");
     </script>
 </body>
 </html>

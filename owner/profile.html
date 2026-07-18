@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>الملف الشخصي – مداد العلم</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..700&family=Cairo:wght@300..700&display=swap" rel="stylesheet" />
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+    <!-- Lenis CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/lenis@1.1.13/dist/lenis.css" />
+
+    <!-- Toastify -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="../assets/css/style.css" />
+
+    <style>
+        /* ===== تنسيقات خاصة بصفحة الملف الشخصي ===== */
+        body {
+            background: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', 'Cairo', sans-serif;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 280px;
+            height: 100%;
+            background: #0f172a;
+            color: #94a3b8;
+            padding: 1.5rem;
+            overflow-y: auto;
+            z-index: 40;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateX(100%);
+            border-left: 1px solid #1e293b;
+        }
+        .sidebar.open {
+            transform: translateX(0);
+        }
+        .sidebar-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 39;
+            display: none;
+        }
+        .sidebar-overlay.show {
+            display: block;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.625rem 0.875rem;
+            border-radius: 10px;
+            color: #94a3b8;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            font-size: 0.85rem;
+        }
+        .sidebar-link:hover {
+            background: #1e293b;
+            color: #ffffff;
+        }
+        .sidebar-link.active {
+            background: #2563EB;
+            color: #ffffff;
+        }
+        .sidebar-link i {
+            width: 1.25rem;
+            text-align: center;
+        }
+
+        .main-content {
+            margin-right: 0;
+            padding: 1rem;
+            min-height: 100vh;
+            transition: margin-right 0.3s ease;
+        }
+
+        .mobile-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            margin-bottom: 1rem;
+        }
+        .menu-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #4b5563;
+            cursor: pointer;
+            padding: 0.25rem;
+            transition: color 0.2s;
+        }
+        .menu-btn:hover {
+            color: #000000;
+        }
+
+        .profile-card {
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid #e5e5e5;
+            padding: 1.5rem;
+            margin-bottom: 1.25rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            transition: all 0.3s ease;
+        }
+        .profile-card:hover {
+            box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.06);
+        }
+        .profile-card .card-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .avatar-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .avatar-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid #e5e5e5;
+            object-fit: cover;
+            flex-shrink: 0;
+            background: #fafafa;
+        }
+        .avatar-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 0.3rem;
+        }
+        .form-control {
+            width: 100%;
+            padding: 0.55rem 0.875rem;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 10px;
+            background: #fafafa;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            color: #111827;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: #000000;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+        }
+        .form-control::placeholder {
+            color: #94a3b8;
+        }
+        textarea.form-control {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .btn-primary {
+            background: #000000;
+            color: #ffffff;
+            padding: 0.6rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            min-height: 44px;
+        }
+        .btn-primary:hover {
+            background: #222222;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.2);
+        }
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .btn-danger {
+            background: #EF4444;
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+        .btn-outline {
+            background: transparent;
+            color: #1e293b;
+            padding: 0.4rem 1rem;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.8rem;
+            border: 1.5px solid #e5e7eb;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .btn-outline:hover {
+            background: #f8fafc;
+        }
+
+        .message-box {
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+        .message-box.error {
+            display: block;
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+        .message-box.success {
+            display: block;
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        @media (max-width: 640px) {
+            .main-content {
+                padding: 0.75rem;
+            }
+            .sidebar {
+                width: 260px;
+                padding: 1rem;
+            }
+            .profile-card {
+                padding: 1rem;
+            }
+            .btn-primary {
+                font-size: 0.8rem;
+                min-height: 40px;
+                padding: 0.5rem 1rem;
+            }
+            .form-control {
+                font-size: 0.85rem;
+                padding: 0.45rem 0.75rem;
+            }
+            .avatar-wrapper {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            .avatar-image {
+                width: 80px;
+                height: 80px;
+            }
+            .avatar-actions {
+                align-items: center;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .sidebar {
+                width: 240px;
+                padding: 0.75rem;
+            }
+            .sidebar-link {
+                font-size: 0.75rem;
+                padding: 0.5rem 0.75rem;
+            }
+            .profile-card {
+                padding: 0.75rem;
+            }
+            .btn-primary {
+                font-size: 0.75rem;
+                min-height: 36px;
+                padding: 0.4rem 0.75rem;
+            }
+            .avatar-image {
+                width: 64px;
+                height: 64px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .sidebar {
+                transform: translateX(0) !important;
+            }
+            .sidebar-overlay {
+                display: none !important;
+            }
+            .main-content {
+                margin-right: 280px;
+                padding: 1.5rem 2rem;
+            }
+            .mobile-header {
+                display: none !important;
+            }
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .sidebar::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 2px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #e5e5e5;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ======== طبقة خلفية القائمة ======== -->
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+    <!-- ======== القائمة الجانبية ======== -->
+    <aside id="sidebar" class="sidebar">
+        <div class="hidden md:block mb-8">
+            <a href="../index.html" class="flex items-center gap-2 text-xl font-extrabold text-white no-underline">
+                <i class="fas fa-feather-alt text-[#555555]"></i>
+                <span>مداد العلم</span>
+                <span class="text-[10px] bg-[#1a1a1a] px-2 py-0.5 rounded-full text-white">OWNER</span>
+            </a>
+        </div>
+        <div class="flex items-center justify-between mb-6 md:hidden">
+            <a href="../index.html" class="text-lg font-extrabold text-white no-underline">
+                <i class="fas fa-feather-alt text-[#555555] ml-2"></i>مداد
+            </a>
+            <button id="closeSidebarBtn" class="text-gray-400 hover:text-white text-xl">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <nav class="space-y-0.5">
+            <a href="dashboard.html" class="sidebar-link">
+                <i class="fas fa-chart-pie"></i> لوحة التحكم
+            </a>
+            <a href="students.html" class="sidebar-link">
+                <i class="fas fa-user-graduate"></i> الطلاب
+            </a>
+            <a href="courses.html" class="sidebar-link">
+                <i class="fas fa-book-open"></i> الكورسات
+            </a>
+            <a href="teachers.html" class="sidebar-link">
+                <i class="fas fa-chalkboard-teacher"></i> المدرسون
+            </a>
+            <a href="classes.html" class="sidebar-link">
+                <i class="fas fa-calendar-check"></i> الحصص
+            </a>
+            <a href="exams.html" class="sidebar-link">
+                <i class="fas fa-pencil-alt"></i> الامتحانات
+            </a>
+            <a href="assignments.html" class="sidebar-link">
+                <i class="fas fa-tasks"></i> الواجبات
+            </a>
+            <a href="finance.html" class="sidebar-link">
+                <i class="fas fa-coins"></i> المالية
+            </a>
+            <a href="settings.html" class="sidebar-link">
+                <i class="fas fa-cog"></i> الإعدادات
+            </a>
+            <a href="profile.html" class="sidebar-link active">
+                <i class="fas fa-user"></i> الملف الشخصي
+            </a>
+            <button id="logoutBtn" class="sidebar-link text-red-400 hover:bg-red-900/30 hover:text-red-300 w-full text-right mt-4">
+                <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+            </button>
+        </nav>
+    </aside>
+
+    <!-- ======== المحتوى الرئيسي ======== -->
+    <main class="main-content">
+
+        <!-- ===== رأس الهواتف ===== -->
+        <div class="mobile-header">
+            <button class="menu-btn" id="openSidebarBtn" aria-label="فتح القائمة">
+                <i class="fas fa-bars"></i>
+            </button>
+            <a href="../index.html" class="text-lg font-extrabold text-[#0f172a]">
+                <i class="fas fa-feather-alt text-[#000000] ml-1"></i>مداد العلم
+            </a>
+            <div class="w-8"></div>
+        </div>
+
+        <!-- ===== رأس الصفحة ===== -->
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
+            <h1 class="text-xl md:text-2xl font-bold text-[#000000]">الملف الشخصي</h1>
+            <span class="text-xs bg-[#1a1a1a] text-white px-3 py-1 rounded-full">Owner</span>
+        </div>
+
+        <!-- ===== بطاقة الملف الشخصي ===== -->
+        <div class="profile-card">
+            <h2 class="card-title"><i class="fas fa-user ml-2"></i> بياناتي الشخصية</h2>
+
+            <!-- الصورة الشخصية -->
+            <div class="avatar-wrapper mb-4">
+                <img id="avatarImg" src="https://ui-avatars.com/api/?name=U&size=100&background=4B5563&color=fff" alt="الصورة الشخصية" class="avatar-image" loading="lazy" />
+                <div class="avatar-actions">
+                    <label class="btn-primary text-sm cursor-pointer" style="min-height:36px;padding:0.4rem 1rem;">
+                        <i class="fas fa-camera"></i> تغيير الصورة
+                        <input type="file" id="avatarUpload" accept="image/*" class="hidden" />
+                    </label>
+                    <button id="removeAvatarBtn" class="btn-danger text-sm"><i class="fas fa-trash"></i> حذف الصورة</button>
+                </div>
+            </div>
+
+            <!-- نموذج تحديث البيانات -->
+            <form id="profileForm">
+                <div class="form-group">
+                    <label for="fullName">الاسم الكامل</label>
+                    <input type="text" id="fullName" class="form-control" placeholder="أحمد محمد" required />
+                </div>
+                <div class="form-group">
+                    <label for="email">البريد الإلكتروني</label>
+                    <input type="email" id="email" class="form-control" placeholder="example@email.com" required disabled />
+                    <p class="text-xs text-[#94a3b8] mt-1">لا يمكن تغيير البريد الإلكتروني</p>
+                </div>
+                <div class="form-group">
+                    <label for="phone">رقم الهاتف</label>
+                    <input type="tel" id="phone" class="form-control" placeholder="+966 55 123 4567" />
+                </div>
+                <div class="form-group">
+                    <label for="bio">السيرة الذاتية</label>
+                    <textarea id="bio" class="form-control" rows="2" placeholder="نبذة عنك..."></textarea>
+                </div>
+                <div id="profileMessage" class="message-box"></div>
+                <button type="submit" class="btn-primary"><i class="fas fa-save"></i> تحديث الملف الشخصي</button>
+            </form>
+        </div>
+
+        <!-- ===== تغيير كلمة المرور ===== -->
+        <div class="profile-card">
+            <h2 class="card-title"><i class="fas fa-lock ml-2"></i> تغيير كلمة المرور</h2>
+            <button id="changePasswordBtn" class="btn-primary"><i class="fas fa-key"></i> تغيير كلمة المرور</button>
+        </div>
+
+        <!-- ===== زر تحديث ===== -->
+        <div class="mt-3 text-center md:hidden">
+            <button id="refreshBtnMobile" class="text-sm text-[#2563EB] hover:underline flex items-center justify-center gap-1 w-full py-2">
+                <i class="fas fa-sync-alt"></i> تحديث البيانات
+            </button>
+        </div>
+
+    </main>
+
+    <!-- ======== SCRIPTS ======== -->
+    <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    <!-- ===== Import Map ===== -->
+    <script type="importmap">
+        {
+            "imports": {
+                "firebase/app": "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js",
+                "firebase/auth": "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js",
+                "firebase/firestore": "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js",
+                "firebase/storage": "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js"
+            }
+        }
+    </script>
+
+    <script type="module">
+        // ============================================================
+        // owner/profile.js – الملف الشخصي
+        // ============================================================
+
+        import { auth, db, storage } from '../assets/js/firebase-config.js';
+        import { onAuthStateChanged, signOut, updatePassword, reauthenticateWithCredential, EmailAuthProvider } from "firebase/auth";
+        import { doc, getDoc, updateDoc, serverTimestamp } from "firebase/firestore";
+        import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
+
+        // ============================================================
+        // دوال مساعدة
+        // ============================================================
+        function showToast(message, type = "error") {
+            Toastify({
+                text: message,
+                duration: 4000,
+                gravity: "top",
+                position: "center",
+                style: {
+                    background: type === "success" ? "#22C55E" : "#EF4444",
+                    borderRadius: "12px",
+                    padding: "12px 24px",
+                    boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
+                },
+                stopOnFocus: true,
+            }).showToast();
+        }
+
+        function showSuccess(message) {
+            Swal.fire({
+                icon: "success",
+                title: "نجاح",
+                text: message,
+                confirmButtonColor: "#4B5563",
+                confirmButtonText: "حسناً",
+                timer: 3000,
+                timerProgressBar: true,
+            });
+        }
+
+        function showError(message) {
+            Swal.fire({
+                icon: "error",
+                title: "خطأ",
+                text: message,
+                confirmButtonColor: "#EF4444",
+                confirmButtonText: "حسناً",
+            });
+        }
+
+        // ============================================================
+        // عناصر DOM
+        // ============================================================
+        const profileForm = document.getElementById('profileForm');
+        const avatarImg = document.getElementById('avatarImg');
+        const avatarUpload = document.getElementById('avatarUpload');
+        const removeAvatarBtn = document.getElementById('removeAvatarBtn');
+        const changePasswordBtn = document.getElementById('changePasswordBtn');
+        const fullNameInput = document.getElementById('fullName');
+        const emailInput = document.getElementById('email');
+        const phoneInput = document.getElementById('phone');
+        const bioInput = document.getElementById('bio');
+        const profileMessage = document.getElementById('profileMessage');
+        const refreshBtnMobile = document.getElementById('refreshBtnMobile');
+
+        let currentUser = null;
+        let userData = null;
+        let currentAvatarUrl = null;
+
+        // ============================================================
+        // عرض رسائل
+        // ============================================================
+        function showProfileMessage(text, type = "success") {
+            profileMessage.textContent = text;
+            profileMessage.className = `message-box ${type}`;
+            clearTimeout(profileMessage._timeout);
+            profileMessage._timeout = setTimeout(() => {
+                profileMessage.className = "message-box";
+                profileMessage.textContent = "";
+            }, 5000);
+        }
+
+        // ============================================================
+        // تحميل بيانات المستخدم
+        // ============================================================
+        async function loadUserProfile() {
+            if (!currentUser) return;
+
+            try {
+                const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+                if (userDoc.exists()) {
+                    userData = userDoc.data();
+
+                    fullNameInput.value = userData.fullName || "";
+                    emailInput.value = userData.email || currentUser.email || "";
+                    phoneInput.value = userData.phone || "";
+                    bioInput.value = userData.bio || "";
+
+                    if (userData.avatar) {
+                        currentAvatarUrl = userData.avatar;
+                        avatarImg.src = userData.avatar;
+                    } else {
+                        const name = userData.fullName || "U";
+                        avatarImg.src =
+                            `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&size=100&background=4B5563&color=fff`;
+                    }
+                }
+            } catch (error) {
+                console.error("خطأ في تحميل بيانات المستخدم:", error);
+                showToast("فشل تحميل بيانات المستخدم", "error");
+            }
+        }
+
+        // ============================================================
+        // تحديث الملف الشخصي
+        // ============================================================
+        profileForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (!currentUser) {
+                showToast("يرجى تسجيل الدخول أولاً", "error");
+                return;
+            }
+
+            const data = {
+                fullName: fullNameInput.value.trim(),
+                phone: phoneInput.value.trim(),
+                bio: bioInput.value.trim(),
+                updatedAt: serverTimestamp(),
+            };
+
+            if (!data.fullName) {
+                showProfileMessage("الاسم الكامل مطلوب", "error");
+                return;
+            }
+
+            try {
+                await updateDoc(doc(db, "users", currentUser.uid), data);
+                showSuccess("تم تحديث الملف الشخصي بنجاح");
+
+                // تحديث الاسم في الواجهة
+                const userNameEl = document.getElementById('userName');
+                if (userNameEl) {
+                    userNameEl.textContent = `مرحباً، ${data.fullName}`;
+                }
+            } catch (error) {
+                showError("فشل تحديث الملف الشخصي: " + error.message);
+            }
+        });
+
+        // ============================================================
+        // رفع الصورة الشخصية
+        // ============================================================
+        avatarUpload.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            if (!file.type.startsWith('image/')) {
+                showToast("يرجى اختيار ملف صورة", "error");
+                return;
+            }
+            if (file.size > 2 * 1024 * 1024) {
+                showToast("حجم الصورة يجب أن يكون أقل من 2 ميجابايت", "error");
+                return;
+            }
+
+            try {
+                // حذف الصورة القديمة
+                if (currentAvatarUrl && !currentAvatarUrl.includes('ui-avatars.com')) {
+                    try {
+                        const oldRef = ref(storage, currentAvatarUrl);
+                        await deleteObject(oldRef);
+                    } catch (e) { /* تجاهل */ }
+                }
+
+                const storageRef = ref(storage,
+                    `users/${currentUser.uid}/avatar/${Date.now()}_${file.name}`);
+                await uploadBytes(storageRef, file);
+                const downloadUrl = await getDownloadURL(storageRef);
+
+                await updateDoc(doc(db, "users", currentUser.uid), {
+                    avatar: downloadUrl,
+                    updatedAt: serverTimestamp(),
+                });
+
+                currentAvatarUrl = downloadUrl;
+                avatarImg.src = downloadUrl;
+                showToast("تم تحديث الصورة الشخصية بنجاح", "success");
+            } catch (error) {
+                showToast("فشل رفع الصورة: " + error.message, "error");
+            }
+            avatarUpload.value = '';
+        });
+
+        // ============================================================
+        // حذف الصورة الشخصية
+        // ============================================================
+        removeAvatarBtn.addEventListener('click', async () => {
+            if (!currentAvatarUrl || currentAvatarUrl.includes('ui-avatars.com')) {
+                showToast("لا توجد صورة شخصية لحذفها", "error");
+                return;
+            }
+
+            const result = await Swal.fire({
+                title: "هل أنت متأكد؟",
+                text: "سيتم حذف الصورة الشخصية بشكل دائم",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#EF4444",
+                confirmButtonText: "نعم، احذف",
+                cancelButtonText: "إلغاء",
+            });
+
+            if (result.isConfirmed) {
+                try {
+                    await deleteObject(ref(storage, currentAvatarUrl));
+
+                    await updateDoc(doc(db, "users", currentUser.uid), {
+                        avatar: null,
+                        updatedAt: serverTimestamp(),
+                    });
+
+                    currentAvatarUrl = null;
+                    const name = fullNameInput.value || "U";
+                    avatarImg.src =
+                        `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&size=100&background=4B5563&color=fff`;
+                    showToast("تم حذف الصورة الشخصية بنجاح", "success");
+                } catch (error) {
+                    showToast("فشل حذف الصورة: " + error.message, "error");
+                }
+            }
+        });
+
+        // ============================================================
+        // تغيير كلمة المرور
+        // ============================================================
+        changePasswordBtn.addEventListener('click', async () => {
+            if (!currentUser) {
+                showToast("يرجى تسجيل الدخول أولاً", "error");
+                return;
+            }
+
+            const { value: formValues } = await Swal.fire({
+                title: "تغيير كلمة المرور",
+                html: `
+                    <div class="text-right">
+                        <div class="form-group">
+                            <label for="currentPassword" class="block text-sm font-medium text-gray-700">كلمة المرور الحالية</label>
+                            <input type="password" id="currentPassword" class="form-control" placeholder="••••••••" required />
+                        </div>
+                        <div class="form-group mt-3">
+                            <label for="newPassword" class="block text-sm font-medium text-gray-700">كلمة المرور الجديدة</label>
+                            <input type="password" id="newPassword" class="form-control" placeholder="••••••••" required minlength="6" />
+                        </div>
+                        <div class="form-group mt-3">
+                            <label for="confirmPassword" class="block text-sm font-medium text-gray-700">تأكيد كلمة المرور الجديدة</label>
+                            <input type="password" id="confirmPassword" class="form-control" placeholder="••••••••" required minlength="6" />
+                        </div>
+                    </div>
+                `,
+                confirmButtonColor: "#2563EB",
+                confirmButtonText: "تغيير كلمة المرور",
+                showCancelButton: true,
+                cancelButtonText: "إلغاء",
+                preConfirm: () => {
+                    const current = document.getElementById("currentPassword").value;
+                    const newPass = document.getElementById("newPassword").value;
+                    const confirm = document.getElementById("confirmPassword").value;
+
+                    if (!current || !newPass || !confirm) {
+                        Swal.showValidationMessage("يرجى ملء جميع الحقول");
+                        return false;
+                    }
+                    if (newPass.length < 6) {
+                        Swal.showValidationMessage("كلمة المرور الجديدة يجب أن تكون 6 أحرف على الأقل");
+                        return false;
+                    }
+                    if (newPass !== confirm) {
+                        Swal.showValidationMessage("كلمات المرور غير متطابقة");
+                        return false;
+                    }
+                    return { current, newPass };
+                },
+            });
+
+            if (formValues) {
+                try {
+                    // إعادة المصادقة
+                    const credential = EmailAuthProvider.credential(
+                        currentUser.email,
+                        formValues.current
+                    );
+                    await reauthenticateWithCredential(currentUser, credential);
+
+                    // تغيير كلمة المرور
+                    await updatePassword(currentUser, formValues.newPass);
+                    showSuccess("تم تغيير كلمة المرور بنجاح");
+                } catch (error) {
+                    let msg = "فشل تغيير كلمة المرور";
+                    if (error.code === "auth/wrong-password") {
+                        msg = "كلمة المرور الحالية غير صحيحة";
+                    } else if (error.code === "auth/too-many-requests") {
+                        msg = "تم إرسال العديد من المحاولات، حاول لاحقاً";
+                    } else {
+                        msg = error.message;
+                    }
+                    showError(msg);
+                }
+            }
+        });
+
+        // ============================================================
+        // تحديث البيانات
+        // ============================================================
+        async function refreshData() {
+            await loadUserProfile();
+            showToast("تم تحديث البيانات", "success");
+        }
+
+        if (refreshBtnMobile) {
+            refreshBtnMobile.addEventListener('click', refreshData);
+        }
+
+        // ============================================================
+        // مراقبة حالة المصادقة
+        // ============================================================
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.href = "../login.html";
+                return;
+            }
+            currentUser = user;
+
+            try {
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                if (userDoc.exists()) {
+                    const data = userDoc.data();
+                    if (data.role !== "owner") {
+                        showToast("ليس لديك صلاحية الوصول لهذه الصفحة", "error");
+                        setTimeout(() => {
+                            window.location.href = "../dashboard.html";
+                        }, 1500);
+                        return;
+                    }
+                    await loadUserProfile();
+                } else {
+                    window.location.href = "../register.html";
+                }
+            } catch (error) {
+                console.error("خطأ في تحميل بيانات المستخدم:", error);
+                showToast("فشل تحميل بيانات المستخدم", "error");
+            }
+        });
+
+        // ============================================================
+        // تسجيل الخروج
+        // ============================================================
+        document.getElementById("logoutBtn")?.addEventListener("click", async () => {
+            try {
+                await signOut(auth);
+                window.location.href = "../login.html";
+            } catch (error) {
+                showToast("فشل تسجيل الخروج: " + error.message, "error");
+            }
+        });
+
+        // ============================================================
+        // القائمة الجانبية
+        // ============================================================
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.getElementById("sidebarOverlay");
+        const openBtn = document.getElementById("openSidebarBtn");
+        const closeBtn = document.getElementById("closeSidebarBtn");
+
+        function openSidebar() {
+            sidebar.classList.add("open");
+            overlay.classList.add("show");
+            document.body.style.overflow = "hidden";
+        }
+
+        function closeSidebar() {
+            sidebar.classList.remove("open");
+            overlay.classList.remove("show");
+            document.body.style.overflow = "";
+        }
+
+        if (openBtn) openBtn.addEventListener("click", openSidebar);
+        if (closeBtn) closeBtn.addEventListener("click", closeSidebar);
+        if (overlay) overlay.addEventListener("click", closeSidebar);
+        document.querySelectorAll("#sidebar a").forEach((link) => {
+            link.addEventListener("click", closeSidebar);
+        });
+
+        window.addEventListener("resize", () => {
+            if (window.innerWidth >= 768) closeSidebar();
+        });
+
+        // ============================================================
+        // Lenis Smooth Scroll
+        // ============================================================
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            orientation: "vertical",
+            gestureOrientation: "vertical",
+            smoothWheel: true,
+            wheelMultiplier: 1,
+            touchMultiplier: 2,
+        });
+
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        console.log("✅ مداد العلم — صفحة الملف الشخصي (Owner) جاهزة");
+    </script>
+
+</body>
+</html>

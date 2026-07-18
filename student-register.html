@@ -1,0 +1,37 @@
+<!-- أضف هذا القسم في لوحة الأكاديمية -->
+
+<div class="bg-white rounded-2xl shadow-sm border border-[#E5E5E5] p-4 md:p-6 mb-6">
+    <h2 class="text-lg font-semibold text-[#000000] mb-3">رابط تسجيل الطلاب</h2>
+    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+        <div class="flex-1 w-full">
+            <div class="flex items-center border border-[#e5e5e5] rounded-10 bg-[#f8f8f8] overflow-hidden">
+                <input type="text" id="studentRegisterUrl" class="flex-1 border-0 bg-transparent px-3 py-2 text-sm focus:outline-none text-[#555555] cursor-pointer" readonly dir="ltr" />
+                <button id="copyUrlBtn" class="bg-[#000000] text-white px-4 py-2 hover:bg-[#222222] transition text-sm">
+                    <i class="fas fa-copy"></i> نسخ
+                </button>
+            </div>
+        </div>
+        <span class="text-xs text-[#555555] whitespace-nowrap">شارك هذا الرابط مع الطلاب</span>
+    </div>
+</div>
+
+<script>
+    // بعد تحميل الصفحة، جلب رابط التسجيل
+    const academySlug = localStorage.getItem('academySlug');
+    if (academySlug) {
+        const url = `${window.location.origin}/student-register.html?academy=${academySlug}`;
+        document.getElementById('studentRegisterUrl').value = url;
+    }
+
+    // زر نسخ الرابط
+    document.getElementById('copyUrlBtn')?.addEventListener('click', function() {
+        const input = document.getElementById('studentRegisterUrl');
+        input.select();
+        navigator.clipboard.writeText(input.value).then(() => {
+            showToast('تم نسخ الرابط بنجاح', 'success');
+        }).catch(() => {
+            document.execCommand('copy');
+            showToast('تم نسخ الرابط بنجاح', 'success');
+        });
+    });
+</script>

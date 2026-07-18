@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>الإعدادات – مداد العلم</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..700&family=Cairo:wght@300..700&display=swap" rel="stylesheet" />
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+    <!-- Lenis CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/lenis@1.1.13/dist/lenis.css" />
+
+    <!-- Toastify -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="../assets/css/style.css" />
+
+    <style>
+        /* ===== تنسيقات خاصة بصفحة الإعدادات ===== */
+        body {
+            background: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', 'Cairo', sans-serif;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 280px;
+            height: 100%;
+            background: #0f172a;
+            color: #94a3b8;
+            padding: 1.5rem;
+            overflow-y: auto;
+            z-index: 40;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateX(100%);
+            border-left: 1px solid #1e293b;
+        }
+        .sidebar.open {
+            transform: translateX(0);
+        }
+        .sidebar-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 39;
+            display: none;
+        }
+        .sidebar-overlay.show {
+            display: block;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.625rem 0.875rem;
+            border-radius: 10px;
+            color: #94a3b8;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            font-size: 0.85rem;
+        }
+        .sidebar-link:hover {
+            background: #1e293b;
+            color: #ffffff;
+        }
+        .sidebar-link.active {
+            background: #2563EB;
+            color: #ffffff;
+        }
+        .sidebar-link i {
+            width: 1.25rem;
+            text-align: center;
+        }
+
+        .main-content {
+            margin-right: 0;
+            padding: 1rem;
+            min-height: 100vh;
+            transition: margin-right 0.3s ease;
+        }
+
+        .mobile-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            margin-bottom: 1rem;
+        }
+        .menu-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #4b5563;
+            cursor: pointer;
+            padding: 0.25rem;
+            transition: color 0.2s;
+        }
+        .menu-btn:hover {
+            color: #000000;
+        }
+
+        .settings-card {
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid #e5e5e5;
+            padding: 1.25rem;
+            margin-bottom: 1.25rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            transition: all 0.3s ease;
+        }
+        .settings-card:hover {
+            box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.06);
+        }
+        .settings-card .card-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 0.3rem;
+        }
+        .form-control {
+            width: 100%;
+            padding: 0.55rem 0.875rem;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 10px;
+            background: #fafafa;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            color: #111827;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: #000000;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+        }
+        .form-control::placeholder {
+            color: #94a3b8;
+        }
+        select.form-control {
+            appearance: auto;
+        }
+        textarea.form-control {
+            resize: vertical;
+            min-height: 60px;
+        }
+        input[type="color"].form-control {
+            padding: 0.2rem;
+            height: 44px;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: #000000;
+            color: #ffffff;
+            padding: 0.6rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            min-height: 44px;
+        }
+        .btn-primary:hover {
+            background: #222222;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.2);
+        }
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .btn-danger {
+            background: #EF4444;
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+        .btn-outline {
+            background: transparent;
+            color: #1e293b;
+            padding: 0.4rem 1rem;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.8rem;
+            border: 1.5px solid #e5e7eb;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .btn-outline:hover {
+            background: #f8fafc;
+        }
+
+        .image-upload-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .image-preview {
+            width: 80px;
+            height: 80px;
+            border-radius: 12px;
+            border: 2px dashed #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: #fafafa;
+            flex-shrink: 0;
+        }
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .image-preview.cover {
+            width: 160px;
+            height: 80px;
+        }
+        .image-preview .placeholder {
+            color: #94a3b8;
+            font-size: 0.7rem;
+            text-align: center;
+        }
+        .image-preview .placeholder i {
+            font-size: 1.5rem;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .color-option {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+        .color-option.active {
+            border-color: #000000;
+            box-shadow: 0 0 0 2px white, 0 0 0 4px #000000;
+        }
+
+        .message-box {
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+        .message-box.error {
+            display: block;
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+        .message-box.success {
+            display: block;
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        @media (max-width: 640px) {
+            .main-content {
+                padding: 0.75rem;
+            }
+            .sidebar {
+                width: 260px;
+                padding: 1rem;
+            }
+            .settings-card {
+                padding: 1rem;
+            }
+            .btn-primary {
+                font-size: 0.8rem;
+                min-height: 40px;
+                padding: 0.5rem 1rem;
+            }
+            .form-control {
+                font-size: 0.85rem;
+                padding: 0.45rem 0.75rem;
+            }
+            .image-preview {
+                width: 60px;
+                height: 60px;
+            }
+            .image-preview.cover {
+                width: 120px;
+                height: 60px;
+            }
+            .image-upload-wrapper {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .sidebar {
+                width: 240px;
+                padding: 0.75rem;
+            }
+            .sidebar-link {
+                font-size: 0.75rem;
+                padding: 0.5rem 0.75rem;
+            }
+            .settings-card {
+                padding: 0.75rem;
+            }
+            .btn-primary {
+                font-size: 0.75rem;
+                min-height: 36px;
+                padding: 0.4rem 0.75rem;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .sidebar {
+                transform: translateX(0) !important;
+            }
+            .sidebar-overlay {
+                display: none !important;
+            }
+            .main-content {
+                margin-right: 280px;
+                padding: 1.5rem 2rem;
+            }
+            .mobile-header {
+                display: none !important;
+            }
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .sidebar::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 2px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #e5e5e5;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ======== طبقة خلفية القائمة ======== -->
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+    <!-- ======== القائمة الجانبية ======== -->
+    <aside id="sidebar" class="sidebar">
+        <div class="hidden md:block mb-8">
+            <a href="../index.html" class="flex items-center gap-2 text-xl font-extrabold text-white no-underline">
+                <i class="fas fa-feather-alt text-[#555555]"></i>
+                <span>مداد العلم</span>
+                <span class="text-[10px] bg-[#1a1a1a] px-2 py-0.5 rounded-full text-white">OWNER</span>
+            </a>
+        </div>
+        <div class="flex items-center justify-between mb-6 md:hidden">
+            <a href="../index.html" class="text-lg font-extrabold text-white no-underline">
+                <i class="fas fa-feather-alt text-[#555555] ml-2"></i>مداد
+            </a>
+            <button id="closeSidebarBtn" class="text-gray-400 hover:text-white text-xl">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <nav class="space-y-0.5">
+            <a href="dashboard.html" class="sidebar-link">
+                <i class="fas fa-chart-pie"></i> لوحة التحكم
+            </a>
+            <a href="students.html" class="sidebar-link">
+                <i class="fas fa-user-graduate"></i> الطلاب
+            </a>
+            <a href="courses.html" class="sidebar-link">
+                <i class="fas fa-book-open"></i> الكورسات
+            </a>
+            <a href="teachers.html" class="sidebar-link">
+                <i class="fas fa-chalkboard-teacher"></i> المدرسون
+            </a>
+            <a href="classes.html" class="sidebar-link">
+                <i class="fas fa-calendar-check"></i> الحصص
+            </a>
+            <a href="exams.html" class="sidebar-link">
+                <i class="fas fa-pencil-alt"></i> الامتحانات
+            </a>
+            <a href="assignments.html" class="sidebar-link">
+                <i class="fas fa-tasks"></i> الواجبات
+            </a>
+            <a href="finance.html" class="sidebar-link">
+                <i class="fas fa-coins"></i> المالية
+            </a>
+            <a href="settings.html" class="sidebar-link active">
+                <i class="fas fa-cog"></i> الإعدادات
+            </a>
+            <a href="profile.html" class="sidebar-link">
+                <i class="fas fa-user"></i> الملف الشخصي
+            </a>
+            <button id="logoutBtn" class="sidebar-link text-red-400 hover:bg-red-900/30 hover:text-red-300 w-full text-right mt-4">
+                <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+            </button>
+        </nav>
+    </aside>
+
+    <!-- ======== المحتوى الرئيسي ======== -->
+    <main class="main-content">
+
+        <!-- ===== رأس الهواتف ===== -->
+        <div class="mobile-header">
+            <button class="menu-btn" id="openSidebarBtn" aria-label="فتح القائمة">
+                <i class="fas fa-bars"></i>
+            </button>
+            <a href="../index.html" class="text-lg font-extrabold text-[#0f172a]">
+                <i class="fas fa-feather-alt text-[#000000] ml-1"></i>مداد العلم
+            </a>
+            <div class="w-8"></div>
+        </div>
+
+        <!-- ===== رأس الصفحة ===== -->
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
+            <h1 class="text-xl md:text-2xl font-bold text-[#000000]">الإعدادات</h1>
+            <span class="text-xs bg-[#1a1a1a] text-white px-3 py-1 rounded-full">Owner</span>
+        </div>
+
+        <!-- ===== الإعدادات العامة ===== -->
+        <div class="settings-card">
+            <h2 class="card-title"><i class="fas fa-building ml-2"></i> الإعدادات العامة</h2>
+            <form id="settingsForm">
+                <div class="form-group">
+                    <label for="academyName">اسم الأكاديمية</label>
+                    <input type="text" id="academyName" class="form-control" placeholder="أكاديمية المستقبل" required />
+                </div>
+                <div class="form-group">
+                    <label for="academyDescription">الوصف</label>
+                    <textarea id="academyDescription" class="form-control" rows="2" placeholder="وصف الأكاديمية..."></textarea>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div class="form-group">
+                        <label for="language">اللغة</label>
+                        <select id="language" class="form-control">
+                            <option value="ar">العربية</option>
+                            <option value="en">English</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="currency">العملة</label>
+                        <select id="currency" class="form-control">
+                            <option value="SAR">ريال سعودي (SAR)</option>
+                            <option value="USD">دولار أمريكي (USD)</option>
+                            <option value="EGP">جنيه مصري (EGP)</option>
+                            <option value="EUR">يورو (EUR)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="timezone">المنطقة الزمنية</label>
+                    <select id="timezone" class="form-control">
+                        <option value="Asia/Riyadh">الرياض (UTC+3)</option>
+                        <option value="UTC">UTC</option>
+                        <option value="America/New_York">نيويورك (UTC-5)</option>
+                        <option value="Europe/London">لندن (UTC+0)</option>
+                    </select>
+                </div>
+                <div id="settingsMessage" class="message-box"></div>
+                <button type="submit" class="btn-primary"><i class="fas fa-save"></i> حفظ الإعدادات العامة</button>
+            </form>
+        </div>
+
+        <!-- ===== الشعار وصورة الغلاف ===== -->
+        <div class="settings-card">
+            <h2 class="card-title"><i class="fas fa-image ml-2"></i> الشعار وصورة الغلاف</h2>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold text-[#1e293b] mb-1">الشعار</label>
+                    <div class="image-upload-wrapper">
+                        <div class="image-preview" id="logoPreview">
+                            <div class="placeholder">
+                                <i class="fas fa-image"></i>
+                                <span>شعار</span>
+                            </div>
+                        </div>
+                        <div class="flex gap-2 flex-wrap">
+                            <label class="btn-primary text-sm cursor-pointer" style="min-height:36px;padding:0.4rem 1rem;">
+                                <i class="fas fa-upload"></i> رفع
+                                <input type="file" id="logoUpload" accept="image/*" class="hidden" />
+                            </label>
+                            <button id="removeLogoBtn" class="btn-danger text-sm"><i class="fas fa-trash"></i> حذف</button>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-[#1e293b] mb-1">صورة الغلاف</label>
+                    <div class="image-upload-wrapper">
+                        <div class="image-preview cover" id="coverPreview">
+                            <div class="placeholder">
+                                <i class="fas fa-image"></i>
+                                <span>غلاف</span>
+                            </div>
+                        </div>
+                        <div class="flex gap-2 flex-wrap">
+                            <label class="btn-primary text-sm cursor-pointer" style="min-height:36px;padding:0.4rem 1rem;">
+                                <i class="fas fa-upload"></i> رفع
+                                <input type="file" id="coverUpload" accept="image/*" class="hidden" />
+                            </label>
+                            <button id="removeCoverBtn" class="btn-danger text-sm"><i class="fas fa-trash"></i> حذف</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== الألوان والمظهر ===== -->
+        <div class="settings-card">
+            <h2 class="card-title"><i class="fas fa-palette ml-2"></i> الألوان والمظهر</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div class="form-group">
+                    <label for="colorPrimary">اللون الأساسي</label>
+                    <input type="color" id="colorPrimary" class="form-control" value="#4B5563" />
+                </div>
+                <div class="form-group">
+                    <label for="colorSecondary">اللون الثانوي</label>
+                    <input type="color" id="colorSecondary" class="form-control" value="#0F172A" />
+                </div>
+                <div class="form-group">
+                    <label for="colorAccent">لون الإبراز</label>
+                    <input type="color" id="colorAccent" class="form-control" value="#2563EB" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="theme">المظهر</label>
+                <select id="theme" class="form-control">
+                    <option value="light">فاتح</option>
+                    <option value="dark">داكن</option>
+                    <option value="system">النظام</option>
+                </select>
+            </div>
+            <button id="saveAppearanceBtn" class="btn-primary"><i class="fas fa-save"></i> حفظ المظهر</button>
+        </div>
+
+        <!-- ===== الروابط الاجتماعية ===== -->
+        <div class="settings-card">
+            <h2 class="card-title"><i class="fas fa-share-alt ml-2"></i> الروابط الاجتماعية</h2>
+            <form id="socialForm">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div class="form-group">
+                        <label for="facebook"><i class="fab fa-facebook ml-1"></i> فيسبوك</label>
+                        <input type="url" id="facebook" class="form-control" placeholder="https://facebook.com/..." />
+                    </div>
+                    <div class="form-group">
+                        <label for="twitter"><i class="fab fa-twitter ml-1"></i> تويتر</label>
+                        <input type="url" id="twitter" class="form-control" placeholder="https://twitter.com/..." />
+                    </div>
+                    <div class="form-group">
+                        <label for="instagram"><i class="fab fa-instagram ml-1"></i> إنستغرام</label>
+                        <input type="url" id="instagram" class="form-control" placeholder="https://instagram.com/..." />
+                    </div>
+                    <div class="form-group">
+                        <label for="youtube"><i class="fab fa-youtube ml-1"></i> يوتيوب</label>
+                        <input type="url" id="youtube" class="form-control" placeholder="https://youtube.com/..." />
+                    </div>
+                    <div class="form-group">
+                        <label for="linkedin"><i class="fab fa-linkedin ml-1"></i> لينكدإن</label>
+                        <input type="url" id="linkedin" class="form-control" placeholder="https://linkedin.com/..." />
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary"><i class="fas fa-save"></i> حفظ الروابط</button>
+            </form>
+        </div>
+
+        <!-- ===== SEO ===== -->
+        <div class="settings-card">
+            <h2 class="card-title"><i class="fas fa-search ml-2"></i> تحسين محركات البحث (SEO)</h2>
+            <form id="seoForm">
+                <div class="form-group">
+                    <label for="seoTitle">عنوان الموقع</label>
+                    <input type="text" id="seoTitle" class="form-control" placeholder="مداد العلم - منصة تعليمية" />
+                </div>
+                <div class="form-group">
+                    <label for="seoDescription">وصف الموقع</label>
+                    <textarea id="seoDescription" class="form-control" rows="2" placeholder="منصة تعليمية متكاملة لإدارة الأكاديميات الإلكترونية..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="seoKeywords">الكلمات المفتاحية</label>
+                    <input type="text" id="seoKeywords" class="form-control" placeholder="تعليم، أكاديمية، كورسات، مداد العلم" />
+                </div>
+                <button type="submit" class="btn-primary"><i class="fas fa-save"></i> حفظ SEO</button>
+            </form>
+        </div>
+
+        <!-- ===== زر تحديث ===== -->
+        <div class="mt-3 text-center md:hidden">
+            <button id="refreshBtnMobile" class="text-sm text-[#2563EB] hover:underline flex items-center justify-center gap-1 w-full py-2">
+                <i class="fas fa-sync-alt"></i> تحديث البيانات
+            </button>
+        </div>
+
+    </main>
+
+    <!-- ======== SCRIPTS ======== -->
+    <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    <!-- ===== Import Map ===== -->
+    <script type="importmap">
+        {
+            "imports": {
+                "firebase/app": "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js",
+                "firebase/auth": "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js",
+                "firebase/firestore": "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js",
+                "firebase/storage": "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js"
+            }
+        }
+    </script>
+
+    <script type="module">
+        // ============================================================
+        // owner/settings.js – إعدادات الأكاديمية
+        // ============================================================
+
+        import { auth, db, storage } from '../assets/js/firebase-config.js';
+        import { onAuthStateChanged, signOut } from "firebase/auth";
+        import {
+            doc,
+            getDoc,
+            updateDoc,
+            setDoc,
+            serverTimestamp,
+        } from "firebase/firestore";
+        import {
+            ref,
+            uploadBytes,
+            getDownloadURL,
+            deleteObject,
+        } from "firebase/storage";
+
+        // ============================================================
+        // دوال مساعدة
+        // ============================================================
+        function showToast(message, type = "error") {
+            Toastify({
+                text: message,
+                duration: 4000,
+                gravity: "top",
+                position: "center",
+                style: {
+                    background: type === "success" ? "#22C55E" : "#EF4444",
+                    borderRadius: "12px",
+                    padding: "12px 24px",
+                    boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
+                },
+                stopOnFocus: true,
+            }).showToast();
+        }
+
+        function showSuccess(message) {
+            Swal.fire({
+                icon: "success",
+                title: "نجاح",
+                text: message,
+                confirmButtonColor: "#4B5563",
+                confirmButtonText: "حسناً",
+                timer: 3000,
+                timerProgressBar: true,
+            });
+        }
+
+        function showError(message) {
+            Swal.fire({
+                icon: "error",
+                title: "خطأ",
+                text: message,
+                confirmButtonColor: "#EF4444",
+                confirmButtonText: "حسناً",
+            });
+        }
+
+        // ============================================================
+        // عناصر DOM
+        // ============================================================
+        const settingsForm = document.getElementById('settingsForm');
+        const socialForm = document.getElementById('socialForm');
+        const seoForm = document.getElementById('seoForm');
+        const saveAppearanceBtn = document.getElementById('saveAppearanceBtn');
+
+        const academyNameInput = document.getElementById('academyName');
+        const academyDescriptionInput = document.getElementById('academyDescription');
+        const languageSelect = document.getElementById('language');
+        const currencySelect = document.getElementById('currency');
+        const timezoneSelect = document.getElementById('timezone');
+        const settingsMessage = document.getElementById('settingsMessage');
+
+        const facebookInput = document.getElementById('facebook');
+        const twitterInput = document.getElementById('twitter');
+        const instagramInput = document.getElementById('instagram');
+        const youtubeInput = document.getElementById('youtube');
+        const linkedinInput = document.getElementById('linkedin');
+
+        const seoTitleInput = document.getElementById('seoTitle');
+        const seoDescriptionInput = document.getElementById('seoDescription');
+        const seoKeywordsInput = document.getElementById('seoKeywords');
+
+        const logoUpload = document.getElementById('logoUpload');
+        const logoPreview = document.getElementById('logoPreview');
+        const removeLogoBtn = document.getElementById('removeLogoBtn');
+
+        const coverUpload = document.getElementById('coverUpload');
+        const coverPreview = document.getElementById('coverPreview');
+        const removeCoverBtn = document.getElementById('removeCoverBtn');
+
+        const colorPrimary = document.getElementById('colorPrimary');
+        const colorSecondary = document.getElementById('colorSecondary');
+        const colorAccent = document.getElementById('colorAccent');
+        const themeSelect = document.getElementById('theme');
+
+        const refreshBtnMobile = document.getElementById('refreshBtnMobile');
+
+        let academyId = null;
+        let currentUser = null;
+        let currentLogoUrl = null;
+        let currentCoverUrl = null;
+
+        // ============================================================
+        // عرض رسائل
+        // ============================================================
+        function showSettingsMessage(text, type = "success") {
+            settingsMessage.textContent = text;
+            settingsMessage.className = `message-box ${type}`;
+            clearTimeout(settingsMessage._timeout);
+            settingsMessage._timeout = setTimeout(() => {
+                settingsMessage.className = "message-box";
+                settingsMessage.textContent = "";
+            }, 5000);
+        }
+
+        // ============================================================
+        // تحميل الإعدادات
+        // ============================================================
+        async function loadSettings() {
+            if (!academyId) return;
+
+            try {
+                const academyRef = doc(db, "academies", academyId);
+                const academySnap = await getDoc(academyRef);
+
+                if (academySnap.exists()) {
+                    const data = academySnap.data();
+
+                    // الإعدادات العامة
+                    academyNameInput.value = data.academyName || "";
+                    academyDescriptionInput.value = data.description || "";
+                    languageSelect.value = data.language || "ar";
+                    currencySelect.value = data.currency || "SAR";
+                    timezoneSelect.value = data.timezone || "Asia/Riyadh";
+
+                    // الألوان
+                    colorPrimary.value = data.primaryColor || "#4B5563";
+                    colorSecondary.value = data.secondaryColor || "#0F172A";
+                    colorAccent.value = data.accentColor || "#2563EB";
+
+                    // المظهر
+                    themeSelect.value = data.theme || "light";
+
+                    // الروابط الاجتماعية
+                    const social = data.social || {};
+                    facebookInput.value = social.facebook || "";
+                    twitterInput.value = social.twitter || "";
+                    instagramInput.value = social.instagram || "";
+                    youtubeInput.value = social.youtube || "";
+                    linkedinInput.value = social.linkedin || "";
+
+                    // SEO
+                    const seo = data.seo || {};
+                    seoTitleInput.value = seo.title || "";
+                    seoDescriptionInput.value = seo.description || "";
+                    seoKeywordsInput.value = seo.keywords || "";
+
+                    // الشعار
+                    if (data.logo) {
+                        currentLogoUrl = data.logo;
+                        logoPreview.innerHTML =
+                            `<img src="${data.logo}" alt="الشعار" loading="lazy" />`;
+                    }
+
+                    // صورة الغلاف
+                    if (data.cover) {
+                        currentCoverUrl = data.cover;
+                        coverPreview.innerHTML =
+                            `<img src="${data.cover}" alt="صورة الغلاف" loading="lazy" />`;
+                    }
+
+                    // تطبيق الألوان على الواجهة
+                    document.documentElement.style.setProperty('--primary', colorPrimary.value);
+                    document.documentElement.style.setProperty('--secondary', colorSecondary.value);
+                    document.documentElement.style.setProperty('--accent', colorAccent.value);
+
+                    // تطبيق الثيم
+                    if (themeSelect.value === 'dark') {
+                        document.body.classList.add('dark-mode');
+                    } else {
+                        document.body.classList.remove('dark-mode');
+                    }
+
+                } else {
+                    // إنشاء وثيقة الأكاديمية إذا لم توجد
+                    await setDoc(doc(db, "academies", academyId), {
+                        academyName: "أكاديميتي",
+                        description: "",
+                        language: "ar",
+                        currency: "SAR",
+                        timezone: "Asia/Riyadh",
+                        primaryColor: "#4B5563",
+                        secondaryColor: "#0F172A",
+                        accentColor: "#2563EB",
+                        theme: "light",
+                        social: {},
+                        seo: {},
+                        createdAt: serverTimestamp(),
+                        updatedAt: serverTimestamp(),
+                    });
+                    loadSettings();
+                }
+            } catch (error) {
+                console.error("خطأ في تحميل الإعدادات:", error);
+                showToast("فشل تحميل الإعدادات", "error");
+            }
+        }
+
+        // ============================================================
+        // حفظ الإعدادات العامة
+        // ============================================================
+        settingsForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (!academyId) {
+                showToast("لم يتم تحديد الأكاديمية", "error");
+                return;
+            }
+
+            const data = {
+                academyName: academyNameInput.value.trim(),
+                description: academyDescriptionInput.value.trim(),
+                language: languageSelect.value,
+                currency: currencySelect.value,
+                timezone: timezoneSelect.value,
+                updatedAt: serverTimestamp(),
+            };
+
+            if (!data.academyName) {
+                showSettingsMessage("اسم الأكاديمية مطلوب", "error");
+                return;
+            }
+
+            try {
+                await updateDoc(doc(db, "academies", academyId), data);
+                showSettingsMessage("تم حفظ الإعدادات العامة بنجاح", "success");
+            } catch (error) {
+                showSettingsMessage("فشل حفظ الإعدادات: " + error.message, "error");
+            }
+        });
+
+        // ============================================================
+        // حفظ الروابط الاجتماعية
+        // ============================================================
+        socialForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (!academyId) {
+                showToast("لم يتم تحديد الأكاديمية", "error");
+                return;
+            }
+
+            const social = {
+                facebook: facebookInput.value.trim(),
+                twitter: twitterInput.value.trim(),
+                instagram: instagramInput.value.trim(),
+                youtube: youtubeInput.value.trim(),
+                linkedin: linkedinInput.value.trim(),
+            };
+
+            try {
+                await updateDoc(doc(db, "academies", academyId), {
+                    social: social,
+                    updatedAt: serverTimestamp(),
+                });
+                showSuccess("تم حفظ الروابط الاجتماعية بنجاح");
+            } catch (error) {
+                showError("فشل حفظ الروابط الاجتماعية: " + error.message);
+            }
+        });
+
+        // ============================================================
+        // حفظ SEO
+        // ============================================================
+        seoForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (!academyId) {
+                showToast("لم يتم تحديد الأكاديمية", "error");
+                return;
+            }
+
+            const seo = {
+                title: seoTitleInput.value.trim(),
+                description: seoDescriptionInput.value.trim(),
+                keywords: seoKeywordsInput.value.trim(),
+            };
+
+            try {
+                await updateDoc(doc(db, "academies", academyId), {
+                    seo: seo,
+                    updatedAt: serverTimestamp(),
+                });
+                showSuccess("تم حفظ إعدادات SEO بنجاح");
+            } catch (error) {
+                showError("فشل حفظ إعدادات SEO: " + error.message);
+            }
+        });
+
+        // ============================================================
+        // حفظ الألوان والمظهر
+        // ============================================================
+        saveAppearanceBtn.addEventListener('click', async () => {
+            if (!academyId) {
+                showToast("لم يتم تحديد الأكاديمية", "error");
+                return;
+            }
+
+            const data = {
+                primaryColor: colorPrimary.value,
+                secondaryColor: colorSecondary.value,
+                accentColor: colorAccent.value,
+                theme: themeSelect.value,
+                updatedAt: serverTimestamp(),
+            };
+
+            try {
+                await updateDoc(doc(db, "academies", academyId), data);
+
+                // تطبيق الألوان على الواجهة
+                document.documentElement.style.setProperty('--primary', colorPrimary.value);
+                document.documentElement.style.setProperty('--secondary', colorSecondary.value);
+                document.documentElement.style.setProperty('--accent', colorAccent.value);
+
+                // تطبيق الثيم
+                if (themeSelect.value === 'dark') {
+                    document.body.classList.add('dark-mode');
+                } else {
+                    document.body.classList.remove('dark-mode');
+                }
+
+                showSuccess("تم حفظ المظهر بنجاح");
+            } catch (error) {
+                showError("فشل حفظ المظهر: " + error.message);
+            }
+        });
+
+        // ============================================================
+        // رفع الشعار
+        // ============================================================
+        logoUpload.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            if (!file.type.startsWith('image/')) {
+                showToast("يرجى اختيار ملف صورة", "error");
+                return;
+            }
+            if (file.size > 2 * 1024 * 1024) {
+                showToast("حجم الصورة يجب أن يكون أقل من 2 ميجابايت", "error");
+                return;
+            }
+
+            try {
+                // حذف الصورة القديمة
+                if (currentLogoUrl) {
+                    try {
+                        await deleteObject(ref(storage, currentLogoUrl));
+                    } catch (e) { /* تجاهل */ }
+                }
+
+                const storageRef = ref(storage,
+                    `academies/${academyId}/logo/${Date.now()}_${file.name}`);
+                await uploadBytes(storageRef, file);
+                const downloadUrl = await getDownloadURL(storageRef);
+
+                await updateDoc(doc(db, "academies", academyId), {
+                    logo: downloadUrl,
+                    updatedAt: serverTimestamp(),
+                });
+
+                currentLogoUrl = downloadUrl;
+                logoPreview.innerHTML =
+                    `<img src="${downloadUrl}" alt="الشعار" loading="lazy" />`;
+                showToast("تم رفع الشعار بنجاح", "success");
+            } catch (error) {
+                showToast("فشل رفع الشعار: " + error.message, "error");
+            }
+            logoUpload.value = '';
+        });
+
+        // ============================================================
+        // رفع صورة الغلاف
+        // ============================================================
+        coverUpload.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            if (!file.type.startsWith('image/')) {
+                showToast("يرجى اختيار ملف صورة", "error");
+                return;
+            }
+            if (file.size > 5 * 1024 * 1024) {
+                showToast("حجم الصورة يجب أن يكون أقل من 5 ميجابايت", "error");
+                return;
+            }
+
+            try {
+                if (currentCoverUrl) {
+                    try {
+                        await deleteObject(ref(storage, currentCoverUrl));
+                    } catch (e) { /* تجاهل */ }
+                }
+
+                const storageRef = ref(storage,
+                    `academies/${academyId}/cover/${Date.now()}_${file.name}`);
+                await uploadBytes(storageRef, file);
+                const downloadUrl = await getDownloadURL(storageRef);
+
+                await updateDoc(doc(db, "academies", academyId), {
+                    cover: downloadUrl,
+                    updatedAt: serverTimestamp(),
+                });
+
+                currentCoverUrl = downloadUrl;
+                coverPreview.innerHTML =
+                    `<img src="${downloadUrl}" alt="صورة الغلاف" loading="lazy" />`;
+                showToast("تم رفع صورة الغلاف بنجاح", "success");
+            } catch (error) {
+                showToast("فشل رفع صورة الغلاف: " + error.message, "error");
+            }
+            coverUpload.value = '';
+        });
+
+        // ============================================================
+        // حذف الشعار
+        // ============================================================
+        removeLogoBtn.addEventListener('click', async () => {
+            if (!currentLogoUrl) {
+                showToast("لا يوجد شعار لحذفه", "error");
+                return;
+            }
+
+            const result = await Swal.fire({
+                title: "هل أنت متأكد؟",
+                text: "سيتم حذف الشعار بشكل دائم",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#EF4444",
+                confirmButtonText: "نعم، احذف",
+                cancelButtonText: "إلغاء",
+            });
+
+            if (result.isConfirmed) {
+                try {
+                    await deleteObject(ref(storage, currentLogoUrl));
+                    await updateDoc(doc(db, "academies", academyId), {
+                        logo: null,
+                        updatedAt: serverTimestamp(),
+                    });
+                    currentLogoUrl = null;
+                    logoPreview.innerHTML =
+                        `<div class="placeholder"><i class="fas fa-image"></i><span>شعار</span></div>`;
+                    showToast("تم حذف الشعار بنجاح", "success");
+                } catch (error) {
+                    showToast("فشل حذف الشعار: " + error.message, "error");
+                }
+            }
+        });
+
+        // ============================================================
+        // حذف صورة الغلاف
+        // ============================================================
+        removeCoverBtn.addEventListener('click', async () => {
+            if (!currentCoverUrl) {
+                showToast("لا توجد صورة غلاف لحذفها", "error");
+                return;
+            }
+
+            const result = await Swal.fire({
+                title: "هل أنت متأكد؟",
+                text: "سيتم حذف صورة الغلاف بشكل دائم",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#EF4444",
+                confirmButtonText: "نعم، احذف",
+                cancelButtonText: "إلغاء",
+            });
+
+            if (result.isConfirmed) {
+                try {
+                    await deleteObject(ref(storage, currentCoverUrl));
+                    await updateDoc(doc(db, "academies", academyId), {
+                        cover: null,
+                        updatedAt: serverTimestamp(),
+                    });
+                    currentCoverUrl = null;
+                    coverPreview.innerHTML =
+                        `<div class="placeholder"><i class="fas fa-image"></i><span>غلاف</span></div>`;
+                    showToast("تم حذف صورة الغلاف بنجاح", "success");
+                } catch (error) {
+                    showToast("فشل حذف صورة الغلاف: " + error.message, "error");
+                }
+            }
+        });
+
+        // ============================================================
+        // تحديث البيانات
+        // ============================================================
+        async function refreshData() {
+            await loadSettings();
+            showToast("تم تحديث البيانات", "success");
+        }
+
+        if (refreshBtnMobile) {
+            refreshBtnMobile.addEventListener('click', refreshData);
+        }
+
+        // ============================================================
+        // مراقبة حالة المصادقة
+        // ============================================================
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.href = "../login.html";
+                return;
+            }
+            currentUser = user;
+
+            try {
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                if (userDoc.exists()) {
+                    const data = userDoc.data();
+                    if (data.role !== "owner") {
+                        showToast("ليس لديك صلاحية الوصول لهذه الصفحة", "error");
+                        setTimeout(() => {
+                            window.location.href = "../dashboard.html";
+                        }, 1500);
+                        return;
+                    }
+                    academyId = data.academyId || user.uid;
+                    await loadSettings();
+                } else {
+                    window.location.href = "../register.html";
+                }
+            } catch (error) {
+                console.error("خطأ في تحميل بيانات المستخدم:", error);
+                showToast("فشل تحميل بيانات المستخدم", "error");
+            }
+        });
+
+        // ============================================================
+        // تسجيل الخروج
+        // ============================================================
+        document.getElementById("logoutBtn")?.addEventListener("click", async () => {
+            try {
+                await signOut(auth);
+                window.location.href = "../login.html";
+            } catch (error) {
+                showToast("فشل تسجيل الخروج: " + error.message, "error");
+            }
+        });
+
+        // ============================================================
+        // القائمة الجانبية
+        // ============================================================
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.getElementById("sidebarOverlay");
+        const openBtn = document.getElementById("openSidebarBtn");
+        const closeBtn = document.getElementById("closeSidebarBtn");
+
+        function openSidebar() {
+            sidebar.classList.add("open");
+            overlay.classList.add("show");
+            document.body.style.overflow = "hidden";
+        }
+
+        function closeSidebar() {
+            sidebar.classList.remove("open");
+            overlay.classList.remove("show");
+            document.body.style.overflow = "";
+        }
+
+        if (openBtn) openBtn.addEventListener("click", openSidebar);
+        if (closeBtn) closeBtn.addEventListener("click", closeSidebar);
+        if (overlay) overlay.addEventListener("click", closeSidebar);
+        document.querySelectorAll("#sidebar a").forEach((link) => {
+            link.addEventListener("click", closeSidebar);
+        });
+
+        window.addEventListener("resize", () => {
+            if (window.innerWidth >= 768) closeSidebar();
+        });
+
+        // ============================================================
+        // Lenis Smooth Scroll
+        // ============================================================
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            orientation: "vertical",
+            gestureOrientation: "vertical",
+            smoothWheel: true,
+            wheelMultiplier: 1,
+            touchMultiplier: 2,
+        });
+
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        console.log("✅ مداد العلم — صفحة الإعدادات (Owner) جاهزة");
+    </script>
+
+</body>
+</html>

@@ -22,6 +22,7 @@
 - **تمرير سلس**: باستخدام Lenis و AOS لتجربة مستخدم سلسة.
 - **تكامل Firebase**: Authentication, Firestore, Storage مع إمكانية نقل المشروع لأي Backend مستقبلاً.
 
+---
 
 ## 🛠️ التقنيات المستخدمة
 
@@ -100,6 +101,9 @@ educore/
 ├── README.md # توثيق المشروع
 └── LICENSE # الترخيص
 
+text
+
+---
 
 ## ⚙️ تشغيل المشروع محلياً
 
@@ -107,3 +111,82 @@ educore/
 ```bash
 git clone https://github.com/your-username/midad-al-ilm.git
 cd midad-al-ilm
+2. إعداد Firebase
+أنشئ مشروعاً في Firebase Console.
+
+فعّل Authentication (Email/Password + Google).
+
+فعّل Firestore Database و Storage.
+
+انسخ إعدادات Firebase إلى ملف .env (راجع .env.example).
+
+3. تشغيل خادم محلي
+استخدم أي خادم محلي مثل Live Server في VS Code:
+
+bash
+# باستخدام VS Code: قم بتثبيت إضافة Live Server ثم افتح index.html
+# أو باستخدام Python
+python -m http.server 8000
+ثم افتح المتصفح على http://localhost:8000.
+
+🔑 إعداد Firebase
+أنشئ ملف .env في جذر المشروع وأضف المتغيرات التالية (استخدم قيمك من Firebase Console):
+
+env
+# Firebase Configuration
+FIREBASE_API_KEY=AIzaSy...
+FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
+FIREBASE_PROJECT_ID=your-project
+FIREBASE_STORAGE_BUCKET=your-project.appspot.com
+FIREBASE_MESSAGING_SENDER_ID=123456789
+FIREBASE_APP_ID=1:123456789:web:abcdef
+FIREBASE_MEASUREMENT_ID=G-XXXXXXX
+ملاحظة: في هذا المشروع (باستخدام HTML/JS التقليدي)، يتم وضع الإعدادات مباشرة في assets/js/firebase-config.js. لكن يُنصح باستخدام متغيرات البيئة عند النشر على خدمات مثل Vercel أو Netlify.
+
+🧪 الاختبار والتطوير
+التصميم: جميع الصفحات متجاوبة مع شاشات 320px → 1920px.
+
+المصادقة: اختبر تسجيل الدخول بالبريد وكلمة المرور، وكذلك عبر Google.
+
+إدارة الأكاديمية: اختبر إنشاء أكاديمية، إضافة طلاب، كورسات، مدرسين، حصص، امتحانات، واجبات.
+
+رابط تسجيل الطلاب: أنشئ أكاديمية واحصل على الرابط الخاص، ثم سجل كطالب عبره.
+
+🤝 المساهمة
+نرحب بمساهماتكم! يرجى اتباع الخطوات التالية:
+
+Fork المستودع.
+
+أنشئ فرعاً جديداً (git checkout -b feature/amazing-feature).
+
+أضف تغييراتك (git commit -m 'Add some amazing feature').
+
+ارفع التغييرات (git push origin feature/amazing-feature).
+
+افتح Pull Request.
+
+قواعد المساهمة
+استخدم TypeScript Strict (حيثما أمكن).
+
+اتبع أسلوب Clean Architecture.
+
+لا تكرر الكود (DRY).
+
+اكتب كوداً قابلاً للاختبار والصيانة.
+
+وثّق أي تغييرات جوهرية.
+
+📄 الترخيص
+هذا المشروع مرخص بموجب رخصة MIT – راجع ملف LICENSE للتفاصيل.
+
+📧 التواصل
+للاستفسارات والدعم، يرجى التواصل عبر صفحة تواصل معنا.
+
+صنع بـ ❤️ من فريق مداد العلم
+
+text
+
+---
+
+## 2. `.env.example` – مثال لملف البيئة
+============================================================

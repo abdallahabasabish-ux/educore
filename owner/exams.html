@@ -598,9 +598,9 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>الامتحان</th>
+                            <th>العنوان</th>
                             <th>الكورس</th>
-                            <th>عدد الأسئلة</th>
+                            <th>الأسئلة</th>
                             <th>المدة</th>
                             <th>الحالة</th>
                             <th class="text-center">الإجراءات</th>
@@ -656,8 +656,8 @@
                 <div class="form-group">
                     <label for="examStatus">الحالة</label>
                     <select id="examStatus" class="form-control">
-                        <option value="active">نشط</option>
                         <option value="draft">مسودة</option>
+                        <option value="active">نشط</option>
                         <option value="closed">مغلق</option>
                     </select>
                 </div>
@@ -789,7 +789,7 @@
         // ============================================================
         // تحميل قائمة الكورسات للمودال
         // ============================================================
-        function loadCoursesForSelect() {
+        function loadCourses() {
             if (!academyId) return;
 
             const coursesRef = collection(db, "courses");
@@ -995,7 +995,7 @@
                 if (docSnap.exists()) {
                     const data = docSnap.data();
 
-                    // جلب نتائج الامتحان من المجموعة الفرعية
+                    // جلب نتائج الامتحان
                     const resultsRef = collection(db, "exams", id, "results");
                     const q = query(resultsRef, orderBy("score", "desc"));
                     const resultsSnap = await getDocs(q);
@@ -1007,12 +1007,10 @@
                     } else {
                         resultsSnap.forEach((doc) => {
                             const r = doc.data();
-                            const scoreColor = r.score >= 70 ? '#22C55E' : r.score >= 50 ? '#F59E0B' :
-                                '#EF4444';
                             resultsHtml += `
-                                <div class="flex items-center justify-between p-2 border-b border-[#f1f5f9] last:border-0 hover:bg-[#f8fafc] rounded-lg transition">
-                                    <span class="text-sm font-medium">${r.studentName || "طالب"}</span>
-                                    <span class="text-sm font-bold" style="color: ${scoreColor}">${r.score || 0}%</span>
+                                <div class="flex items-center justify-between p-2 border-b border-[#f1f5f9] last:border-0">
+                                    <span class="text-sm">${r.studentName || "طالب"}</span>
+                                    <span class="text-sm font-bold ${r.score >= 70 ? 'text-[#22C55E]' : r.score >= 50 ? 'text-[#F59E0B]' : 'text-[#EF4444]'}">${r.score || 0}%</span>
                                 </div>
                             `;
                         });
@@ -1060,7 +1058,7 @@
 
             if (result.isConfirmed) {
                 try {
-                    // حذف جميع النتائج المرتبطة
+                    // حذف النتائج المرتبطة
                     const resultsRef = collection(db, "exams", id, "results");
                     const resultsSnap = await getDocs(resultsRef);
                     const deletePromises = [];
@@ -1106,7 +1104,7 @@
         // تحديث البيانات
         // ============================================================
         async function refreshData() {
-            loadCoursesForSelect();
+            loadCourses();
             loadExams();
             showToast("تم تحديث البيانات", "success");
         }
@@ -1137,7 +1135,7 @@
                         return;
                     }
                     academyId = data.academyId || user.uid;
-                    loadCoursesForSelect();
+                    loadCourses();
                     loadExams();
                 } else {
                     window.location.href = "../register.html";

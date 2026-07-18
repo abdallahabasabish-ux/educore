@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>الحصص – مداد العلم</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..700&family=Cairo:wght@300..700&display=swap" rel="stylesheet" />
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+    <!-- Lenis CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/lenis@1.1.13/dist/lenis.css" />
+
+    <!-- Toastify -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="../assets/css/style.css" />
+
+    <style>
+        /* ===== تنسيقات خاصة بصفحة الحصص ===== */
+        body {
+            background: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', 'Cairo', sans-serif;
+        }
+
+        /* ===== القائمة الجانبية ===== */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 280px;
+            height: 100%;
+            background: #0f172a;
+            color: #94a3b8;
+            padding: 1.5rem;
+            overflow-y: auto;
+            z-index: 40;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateX(100%);
+            border-left: 1px solid #1e293b;
+        }
+        .sidebar.open {
+            transform: translateX(0);
+        }
+        .sidebar-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 39;
+            display: none;
+        }
+        .sidebar-overlay.show {
+            display: block;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.625rem 0.875rem;
+            border-radius: 10px;
+            color: #94a3b8;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            font-size: 0.85rem;
+        }
+        .sidebar-link:hover {
+            background: #1e293b;
+            color: #ffffff;
+        }
+        .sidebar-link.active {
+            background: #2563EB;
+            color: #ffffff;
+        }
+        .sidebar-link i {
+            width: 1.25rem;
+            text-align: center;
+        }
+
+        /* ===== المحتوى الرئيسي ===== */
+        .main-content {
+            margin-right: 0;
+            padding: 1rem;
+            min-height: 100vh;
+            transition: margin-right 0.3s ease;
+        }
+
+        /* ===== رأس الهواتف ===== */
+        .mobile-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            margin-bottom: 1rem;
+        }
+        .menu-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #4b5563;
+            cursor: pointer;
+            padding: 0.25rem;
+            transition: color 0.2s;
+        }
+        .menu-btn:hover {
+            color: #000000;
+        }
+
+        /* ===== بطاقات الإحصائيات ===== */
+        .stat-card {
+            background: #ffffff;
+            padding: 1rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            border: 1px solid #e5e5e5;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.06);
+        }
+        .stat-card .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #000000;
+        }
+        .stat-card .stat-label {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+
+        /* ===== الجدول ===== */
+        .table-wrap {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border-radius: 16px;
+        }
+        .table-wrap table {
+            min-width: 700px;
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        .table-wrap th {
+            text-align: right;
+            padding: 0.75rem 1rem;
+            background: #f8fafc;
+            color: #64748b;
+            font-weight: 600;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #e5e5e5;
+            white-space: nowrap;
+        }
+        .table-wrap td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: middle;
+        }
+        .table-wrap tr:last-child td {
+            border-bottom: none;
+        }
+        .table-wrap tr:hover td {
+            background: #fafbfc;
+        }
+
+        /* ===== شارات ===== */
+        .badge {
+            display: inline-block;
+            padding: 0.15rem 0.6rem;
+            border-radius: 9999px;
+            font-size: 0.65rem;
+            font-weight: 600;
+        }
+        .badge-scheduled {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        .badge-ongoing {
+            background: #dcfce7;
+            color: #166534;
+        }
+        .badge-completed {
+            background: #f1f5f9;
+            color: #475569;
+        }
+        .badge-cancelled {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* ===== الأزرار ===== */
+        .btn-sm {
+            padding: 0.25rem 0.6rem;
+            font-size: 0.7rem;
+            min-height: 32px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .btn-edit {
+            background: #000000;
+            color: #ffffff;
+        }
+        .btn-edit:hover {
+            background: #222222;
+        }
+        .btn-danger {
+            background: #EF4444;
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+        .btn-success {
+            background: #22C55E;
+            color: white;
+        }
+        .btn-success:hover {
+            background: #16a34a;
+        }
+
+        .btn-primary {
+            background: #000000;
+            color: #ffffff;
+            padding: 0.6rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            min-height: 44px;
+        }
+        .btn-primary:hover {
+            background: #222222;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.2);
+        }
+
+        /* ===== المودال ===== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        .modal-overlay.show {
+            display: flex;
+        }
+        .modal-box {
+            background: white;
+            border-radius: 20px;
+            padding: 1.75rem;
+            max-width: 520px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalIn 0.3s ease;
+        }
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        .modal-box .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            color: #94a3b8;
+            cursor: pointer;
+            transition: color 0.2s;
+            padding: 0.25rem;
+        }
+        .modal-box .close-btn:hover {
+            color: #1e293b;
+        }
+
+        /* ===== الحقول ===== */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 0.3rem;
+        }
+        .form-control {
+            width: 100%;
+            padding: 0.55rem 0.875rem;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 10px;
+            background: #fafafa;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            color: #111827;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: #000000;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+        }
+        .form-control::placeholder {
+            color: #94a3b8;
+        }
+        select.form-control {
+            appearance: auto;
+        }
+        input[type="date"].form-control,
+        input[type="time"].form-control {
+            direction: ltr;
+            text-align: right;
+        }
+
+        /* ===== الرسائل ===== */
+        .message-box {
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+        .message-box.error {
+            display: block;
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+        .message-box.success {
+            display: block;
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        /* ===== الحالة الفارغة ===== */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #94a3b8;
+        }
+        .empty-state i {
+            font-size: 3rem;
+            opacity: 0.3;
+            display: block;
+            margin-bottom: 0.75rem;
+        }
+        .empty-state p {
+            font-size: 0.9rem;
+        }
+        .empty-state .sub {
+            font-size: 0.8rem;
+            color: #cbd5e1;
+        }
+
+        /* ===== استجابة الهواتف ===== */
+        @media (max-width: 640px) {
+            .main-content {
+                padding: 0.75rem;
+            }
+            .sidebar {
+                width: 260px;
+                padding: 1rem;
+            }
+            .modal-box {
+                padding: 1.25rem;
+                margin: 0.5rem;
+                border-radius: 16px;
+            }
+            .btn-primary {
+                font-size: 0.8rem;
+                min-height: 40px;
+                padding: 0.5rem 1rem;
+            }
+            .form-control {
+                font-size: 0.85rem;
+                padding: 0.45rem 0.75rem;
+            }
+            .stat-card {
+                padding: 0.75rem;
+            }
+            .stat-card .stat-number {
+                font-size: 1.25rem;
+            }
+            .table-wrap table {
+                min-width: 600px;
+                font-size: 0.75rem;
+            }
+            .table-wrap th,
+            .table-wrap td {
+                padding: 0.5rem 0.75rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .sidebar {
+                width: 240px;
+                padding: 0.75rem;
+            }
+            .sidebar-link {
+                font-size: 0.75rem;
+                padding: 0.5rem 0.75rem;
+            }
+            .modal-box {
+                padding: 1rem;
+            }
+            .btn-primary {
+                font-size: 0.75rem;
+                min-height: 36px;
+                padding: 0.4rem 0.75rem;
+            }
+            .table-wrap table {
+                min-width: 480px;
+                font-size: 0.65rem;
+            }
+            .table-wrap th,
+            .table-wrap td {
+                padding: 0.35rem 0.5rem;
+            }
+        }
+
+        /* ===== استجابة سطح المكتب ===== */
+        @media (min-width: 768px) {
+            .sidebar {
+                transform: translateX(0) !important;
+            }
+            .sidebar-overlay {
+                display: none !important;
+            }
+            .main-content {
+                margin-right: 280px;
+                padding: 1.5rem 2rem;
+            }
+            .mobile-header {
+                display: none !important;
+            }
+        }
+
+        /* ===== شريط التمرير ===== */
+        .sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .sidebar::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 2px;
+        }
+
+        /* ===== صورة المستخدم ===== */
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #e5e5e5;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ======== طبقة خلفية القائمة ======== -->
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+    <!-- ======== القائمة الجانبية ======== -->
+    <aside id="sidebar" class="sidebar">
+        <div class="hidden md:block mb-8">
+            <a href="../index.html" class="flex items-center gap-2 text-xl font-extrabold text-white no-underline">
+                <i class="fas fa-feather-alt text-[#555555]"></i>
+                <span>مداد العلم</span>
+                <span class="text-[10px] bg-[#1a1a1a] px-2 py-0.5 rounded-full text-white">OWNER</span>
+            </a>
+        </div>
+        <div class="flex items-center justify-between mb-6 md:hidden">
+            <a href="../index.html" class="text-lg font-extrabold text-white no-underline">
+                <i class="fas fa-feather-alt text-[#555555] ml-2"></i>مداد
+            </a>
+            <button id="closeSidebarBtn" class="text-gray-400 hover:text-white text-xl">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <nav class="space-y-0.5">
+            <a href="dashboard.html" class="sidebar-link">
+                <i class="fas fa-chart-pie"></i> لوحة التحكم
+            </a>
+            <a href="students.html" class="sidebar-link">
+                <i class="fas fa-user-graduate"></i> الطلاب
+            </a>
+            <a href="courses.html" class="sidebar-link">
+                <i class="fas fa-book-open"></i> الكورسات
+            </a>
+            <a href="teachers.html" class="sidebar-link">
+                <i class="fas fa-chalkboard-teacher"></i> المدرسون
+            </a>
+            <a href="classes.html" class="sidebar-link active">
+                <i class="fas fa-calendar-check"></i> الحصص
+            </a>
+            <a href="exams.html" class="sidebar-link">
+                <i class="fas fa-pencil-alt"></i> الامتحانات
+            </a>
+            <a href="assignments.html" class="sidebar-link">
+                <i class="fas fa-tasks"></i> الواجبات
+            </a>
+            <a href="finance.html" class="sidebar-link">
+                <i class="fas fa-coins"></i> المالية
+            </a>
+            <a href="settings.html" class="sidebar-link">
+                <i class="fas fa-cog"></i> الإعدادات
+            </a>
+            <a href="profile.html" class="sidebar-link">
+                <i class="fas fa-user"></i> الملف الشخصي
+            </a>
+            <button id="logoutBtn" class="sidebar-link text-red-400 hover:bg-red-900/30 hover:text-red-300 w-full text-right mt-4">
+                <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+            </button>
+        </nav>
+    </aside>
+
+    <!-- ======== المحتوى الرئيسي ======== -->
+    <main class="main-content">
+
+        <!-- ===== رأس الهواتف ===== -->
+        <div class="mobile-header">
+            <button class="menu-btn" id="openSidebarBtn" aria-label="فتح القائمة">
+                <i class="fas fa-bars"></i>
+            </button>
+            <a href="../index.html" class="text-lg font-extrabold text-[#0f172a]">
+                <i class="fas fa-feather-alt text-[#000000] ml-1"></i>مداد العلم
+            </a>
+            <div class="w-8"></div>
+        </div>
+
+        <!-- ===== رأس الصفحة ===== -->
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
+            <h1 class="text-xl md:text-2xl font-bold text-[#000000]">إدارة الحصص</h1>
+            <button id="addClassBtn" class="btn-primary text-sm">
+                <i class="fas fa-plus"></i> إضافة حصة
+            </button>
+        </div>
+
+        <!-- ===== الإحصائيات ===== -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
+            <div class="stat-card">
+                <p class="stat-number" id="totalClasses">0</p>
+                <p class="stat-label">إجمالي الحصص</p>
+            </div>
+            <div class="stat-card">
+                <p class="stat-number" id="todayClasses">0</p>
+                <p class="stat-label">حصص اليوم</p>
+            </div>
+            <div class="stat-card">
+                <p class="stat-number" id="upcomingClasses">0</p>
+                <p class="stat-label">قادمة</p>
+            </div>
+            <div class="stat-card">
+                <p class="stat-number" id="completedClasses">0</p>
+                <p class="stat-label">مكتملة</p>
+            </div>
+        </div>
+
+        <!-- ===== جدول الحصص ===== -->
+        <div class="bg-white rounded-2xl shadow-sm border border-[#E5E5E5] overflow-hidden">
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>العنوان</th>
+                            <th>الكورس</th>
+                            <th>المدرس</th>
+                            <th>التاريخ</th>
+                            <th>الوقت</th>
+                            <th>الحالة</th>
+                            <th class="text-center">الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="classesTableBody">
+                        <tr>
+                            <td colspan="7" class="text-center text-gray-400 py-8">
+                                <i class="fas fa-spinner fa-spin ml-2"></i> جاري التحميل...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ===== زر تحديث ===== -->
+        <div class="mt-3 text-center md:hidden">
+            <button id="refreshBtnMobile" class="text-sm text-[#2563EB] hover:underline flex items-center justify-center gap-1 w-full py-2">
+                <i class="fas fa-sync-alt"></i> تحديث البيانات
+            </button>
+        </div>
+
+    </main>
+
+    <!-- ======== مودال إضافة/تعديل حصة ======== -->
+    <div id="classModal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="flex items-center justify-between mb-4">
+                <h2 id="modalTitle" class="text-lg font-bold text-[#000000]">إضافة حصة جديدة</h2>
+                <button class="close-btn" id="closeModalBtn"><i class="fas fa-times"></i></button>
+            </div>
+            <form id="classForm">
+                <input type="hidden" id="classId" />
+                <div class="form-group">
+                    <label for="classTitle">عنوان الحصة</label>
+                    <input type="text" id="classTitle" class="form-control" placeholder="مقدمة في البرمجة" required />
+                </div>
+                <div class="form-group">
+                    <label for="classCourse">الكورس</label>
+                    <select id="classCourse" class="form-control">
+                        <option value="">اختر كورس</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="classTeacher">المدرس</label>
+                    <select id="classTeacher" class="form-control">
+                        <option value="">اختر مدرس</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="classDate">التاريخ</label>
+                    <input type="date" id="classDate" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label for="classTime">الوقت</label>
+                    <input type="time" id="classTime" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label for="classDuration">المدة</label>
+                    <input type="text" id="classDuration" class="form-control" placeholder="ساعة" />
+                </div>
+                <div class="form-group">
+                    <label for="classStatus">الحالة</label>
+                    <select id="classStatus" class="form-control">
+                        <option value="scheduled">مجدولة</option>
+                        <option value="ongoing">جارية</option>
+                        <option value="completed">مكتملة</option>
+                        <option value="cancelled">ملغية</option>
+                    </select>
+                </div>
+                <div id="modalMessage" class="message-box"></div>
+                <button type="submit" class="btn-primary w-full mt-2">
+                    <i class="fas fa-save"></i> حفظ
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ======== SCRIPTS ======== -->
+    <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    <!-- ===== Import Map ===== -->
+    <script type="importmap">
+        {
+            "imports": {
+                "firebase/app": "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js",
+                "firebase/auth": "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js",
+                "firebase/firestore": "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js",
+                "firebase/storage": "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js"
+            }
+        }
+    </script>
+
+    <script type="module">
+        // ============================================================
+        // owner/classes.js – إدارة الحصص
+        // ============================================================
+
+        import { auth, db } from '../assets/js/firebase-config.js';
+        import { onAuthStateChanged, signOut } from "firebase/auth";
+        import {
+            collection,
+            doc,
+            getDoc,
+            getDocs,
+            addDoc,
+            updateDoc,
+            deleteDoc,
+            onSnapshot,
+            query,
+            where,
+            orderBy,
+            serverTimestamp,
+        } from "firebase/firestore";
+
+        // ============================================================
+        // دوال مساعدة
+        // ============================================================
+        function showToast(message, type = "error") {
+            Toastify({
+                text: message,
+                duration: 4000,
+                gravity: "top",
+                position: "center",
+                style: {
+                    background: type === "success" ? "#22C55E" : "#EF4444",
+                    borderRadius: "12px",
+                    padding: "12px 24px",
+                    boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
+                },
+                stopOnFocus: true,
+            }).showToast();
+        }
+
+        function getStatusBadge(status) {
+            const map = {
+                scheduled: "badge-scheduled",
+                ongoing: "badge-ongoing",
+                completed: "badge-completed",
+                cancelled: "badge-cancelled",
+            };
+            const labels = {
+                scheduled: "مجدولة",
+                ongoing: "جارية",
+                completed: "مكتملة",
+                cancelled: "ملغية",
+            };
+            return `<span class="badge ${map[status] || "badge-scheduled"}">${labels[status] || status}</span>`;
+        }
+
+        function formatDate(timestamp) {
+            if (!timestamp) return "-";
+            const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+            return date.toLocaleDateString("ar");
+        }
+
+        function formatTime(time) {
+            if (!time) return "-";
+            return time;
+        }
+
+        // ============================================================
+        // عناصر DOM
+        // ============================================================
+        const tbody = document.getElementById("classesTableBody");
+        const modal = document.getElementById("classModal");
+        const closeModalBtn = document.getElementById("closeModalBtn");
+        const addClassBtn = document.getElementById("addClassBtn");
+        const form = document.getElementById("classForm");
+        const classIdInput = document.getElementById("classId");
+        const titleInput = document.getElementById("classTitle");
+        const courseSelect = document.getElementById("classCourse");
+        const teacherSelect = document.getElementById("classTeacher");
+        const dateInput = document.getElementById("classDate");
+        const timeInput = document.getElementById("classTime");
+        const durationInput = document.getElementById("classDuration");
+        const statusInput = document.getElementById("classStatus");
+        const messageEl = document.getElementById("modalMessage");
+        const refreshBtnMobile = document.getElementById("refreshBtnMobile");
+
+        // ===== إحصائيات =====
+        const totalClassesEl = document.getElementById("totalClasses");
+        const todayClassesEl = document.getElementById("todayClasses");
+        const upcomingClassesEl = document.getElementById("upcomingClasses");
+        const completedClassesEl = document.getElementById("completedClasses");
+
+        let academyId = null;
+        let currentUser = null;
+        let unsubscribeClasses = null;
+        let unsubscribeCourses = null;
+        let unsubscribeTeachers = null;
+
+        // ============================================================
+        // عرض رسائل في المودال
+        // ============================================================
+        function showModalMessage(text, type = "error") {
+            messageEl.textContent = text;
+            messageEl.className = `message-box ${type}`;
+            clearTimeout(messageEl._timeout);
+            messageEl._timeout = setTimeout(() => {
+                messageEl.className = "message-box";
+                messageEl.textContent = "";
+            }, 5000);
+        }
+
+        // ============================================================
+        // تحميل قوائم الكورسات والمدرسين
+        // ============================================================
+        function loadCoursesAndTeachers() {
+            if (!academyId) return;
+
+            // تحميل الكورسات النشطة
+            const coursesRef = collection(db, "courses");
+            const coursesQuery = query(
+                coursesRef,
+                where("academyId", "==", academyId),
+                where("status", "==", "active")
+            );
+
+            unsubscribeCourses = onSnapshot(coursesQuery, (snapshot) => {
+                let options = `<option value="">اختر كورس</option>`;
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    options += `<option value="${doc.id}">${data.title || "بدون عنوان"}</option>`;
+                });
+                courseSelect.innerHTML = options;
+            });
+
+            // تحميل المدرسين النشطين
+            const teachersRef = collection(db, "academies", academyId, "teachers");
+            const teachersQuery = query(teachersRef, where("status", "==", "active"));
+
+            unsubscribeTeachers = onSnapshot(teachersQuery, (snapshot) => {
+                let options = `<option value="">اختر مدرس</option>`;
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    options += `<option value="${doc.id}">${data.fullName || "غير محدد"}</option>`;
+                });
+                teacherSelect.innerHTML = options;
+            });
+        }
+
+        // ============================================================
+        // تحميل الحصص وتحديث الإحصائيات
+        // ============================================================
+        function loadClasses() {
+            if (!academyId) return;
+
+            if (unsubscribeClasses) {
+                unsubscribeClasses();
+                unsubscribeClasses = null;
+            }
+
+            const classesRef = collection(db, "classes");
+            const q = query(
+                classesRef,
+                where("academyId", "==", academyId),
+                orderBy("date", "desc")
+            );
+
+            unsubscribeClasses = onSnapshot(q, (snapshot) => {
+                // تحديث الجدول
+                if (snapshot.empty) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="7" class="text-center text-gray-400 py-8">
+                                <i class="fas fa-calendar-times text-3xl opacity-30 block mb-2"></i>
+                                <p class="text-sm">لا توجد حصص</p>
+                                <p class="text-xs mt-1">اضغط على "إضافة حصة" لإضافة أول حصة</p>
+                            </td>
+                        </tr>
+                    `;
+                    updateStats(snapshot);
+                    return;
+                }
+
+                let html = "";
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const courseName = data.courseName || "-";
+                    const teacherName = data.teacherName || "-";
+
+                    html += `
+                        <tr>
+                            <td class="font-medium">${data.title || "بدون عنوان"}</td>
+                            <td>${courseName}</td>
+                            <td>${teacherName}</td>
+                            <td>${formatDate(data.date)}</td>
+                            <td>${formatTime(data.time)}</td>
+                            <td>${getStatusBadge(data.status || "scheduled")}</td>
+                            <td class="text-center whitespace-nowrap">
+                                <button onclick="editClass('${doc.id}')" class="btn-sm btn-edit" title="تعديل">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button onclick="deleteClass('${doc.id}')" class="btn-sm btn-danger" title="حذف">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                tbody.innerHTML = html;
+                updateStats(snapshot);
+            });
+        }
+
+        // ============================================================
+        // تحديث الإحصائيات
+        // ============================================================
+        function updateStats(snapshot) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const todayStr = today.toISOString().split("T")[0];
+
+            let total = 0,
+                todayCount = 0,
+                upcomingCount = 0,
+                completedCount = 0;
+
+            snapshot.forEach((doc) => {
+                const data = doc.data();
+                total++;
+
+                // حصص اليوم
+                if (data.date) {
+                    const classDate = data.date.toDate ? data.date.toDate() : new Date(data.date);
+                    classDate.setHours(0, 0, 0, 0);
+                    if (classDate.getTime() === today.getTime()) {
+                        todayCount++;
+                    }
+                }
+
+                // حصص قادمة
+                if (data.status === "scheduled") {
+                    upcomingCount++;
+                }
+
+                // حصص مكتملة
+                if (data.status === "completed") {
+                    completedCount++;
+                }
+            });
+
+            totalClassesEl.textContent = total;
+            todayClassesEl.textContent = todayCount;
+            upcomingClassesEl.textContent = upcomingCount;
+            completedClassesEl.textContent = completedCount;
+        }
+
+        // ============================================================
+        // إضافة/تعديل حصة
+        // ============================================================
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const id = classIdInput.value;
+            const courseId = courseSelect.value;
+            const teacherId = teacherSelect.value;
+
+            // جلب أسماء الكورس والمدرس
+            let courseName = "";
+            let teacherName = "";
+
+            if (courseId) {
+                const courseDoc = await getDoc(doc(db, "courses", courseId));
+                if (courseDoc.exists()) {
+                    courseName = courseDoc.data().title || "";
+                }
+            }
+
+            if (teacherId) {
+                const teacherDoc = await getDoc(doc(db, "academies", academyId, "teachers", teacherId));
+                if (teacherDoc.exists()) {
+                    teacherName = teacherDoc.data().fullName || "";
+                }
+            }
+
+            const data = {
+                title: titleInput.value.trim(),
+                courseId: courseId || null,
+                courseName: courseName,
+                teacherId: teacherId || null,
+                teacherName: teacherName,
+                date: dateInput.value ? new Date(dateInput.value) : null,
+                time: timeInput.value || null,
+                duration: durationInput.value || null,
+                status: statusInput.value,
+                academyId: academyId,
+                updatedAt: serverTimestamp(),
+            };
+
+            if (!data.title) {
+                showModalMessage("عنوان الحصة مطلوب", "error");
+                return;
+            }
+
+            try {
+                if (id) {
+                    await updateDoc(doc(db, "classes", id), data);
+                    showToast("تم تحديث الحصة بنجاح", "success");
+                } else {
+                    data.createdAt = serverTimestamp();
+                    await addDoc(collection(db, "classes"), data);
+                    showToast("تم إضافة الحصة بنجاح", "success");
+                }
+                closeModal();
+            } catch (error) {
+                showModalMessage("فشل حفظ الحصة: " + error.message, "error");
+            }
+        });
+
+        // ============================================================
+        // تعديل حصة
+        // ============================================================
+        window.editClass = async (id) => {
+            try {
+                const docSnap = await getDoc(doc(db, "classes", id));
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    classIdInput.value = id;
+                    titleInput.value = data.title || "";
+                    courseSelect.value = data.courseId || "";
+                    teacherSelect.value = data.teacherId || "";
+                    dateInput.value = data.date ?
+                        (data.date.toDate ? data.date.toDate().toISOString().split("T")[0] : "") :
+                        "";
+                    timeInput.value = data.time || "";
+                    durationInput.value = data.duration || "";
+                    statusInput.value = data.status || "scheduled";
+                    document.getElementById("modalTitle").textContent = "تعديل الحصة";
+                    modal.classList.add("show");
+                    messageEl.className = "message-box";
+                    messageEl.textContent = "";
+                }
+            } catch (error) {
+                showToast("فشل تحميل بيانات الحصة", "error");
+            }
+        };
+
+        // ============================================================
+        // حذف حصة
+        // ============================================================
+        window.deleteClass = async (id) => {
+            const result = await Swal.fire({
+                title: "هل أنت متأكد؟",
+                text: "سيتم حذف هذه الحصة!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#EF4444",
+                cancelButtonColor: "#94a3b8",
+                confirmButtonText: "نعم، احذف",
+                cancelButtonText: "إلغاء",
+            });
+
+            if (result.isConfirmed) {
+                try {
+                    await deleteDoc(doc(db, "classes", id));
+                    showToast("تم حذف الحصة بنجاح", "success");
+                } catch (error) {
+                    showToast("فشل حذف الحصة: " + error.message, "error");
+                }
+            }
+        };
+
+        // ============================================================
+        // التحكم بالمودال
+        // ============================================================
+        function openModal() {
+            classIdInput.value = "";
+            form.reset();
+            statusInput.value = "scheduled";
+            document.getElementById("modalTitle").textContent = "إضافة حصة جديدة";
+            messageEl.className = "message-box";
+            messageEl.textContent = "";
+            modal.classList.add("show");
+        }
+
+        function closeModal() {
+            modal.classList.remove("show");
+        }
+
+        addClassBtn.addEventListener("click", openModal);
+        closeModalBtn.addEventListener("click", closeModal);
+
+        modal.addEventListener("click", (e) => {
+            if (e.target === modal) closeModal();
+        });
+
+        // ============================================================
+        // تحديث البيانات
+        // ============================================================
+        async function refreshData() {
+            loadCoursesAndTeachers();
+            loadClasses();
+            showToast("تم تحديث البيانات", "success");
+        }
+
+        if (refreshBtnMobile) {
+            refreshBtnMobile.addEventListener("click", refreshData);
+        }
+
+        // ============================================================
+        // مراقبة حالة المصادقة
+        // ============================================================
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.href = "../login.html";
+                return;
+            }
+            currentUser = user;
+
+            try {
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                if (userDoc.exists()) {
+                    const data = userDoc.data();
+                    if (data.role !== "owner") {
+                        showToast("ليس لديك صلاحية الوصول لهذه الصفحة", "error");
+                        setTimeout(() => {
+                            window.location.href = "../dashboard.html";
+                        }, 1500);
+                        return;
+                    }
+                    academyId = data.academyId || user.uid;
+                    loadCoursesAndTeachers();
+                    loadClasses();
+                } else {
+                    window.location.href = "../register.html";
+                }
+            } catch (error) {
+                console.error("خطأ في تحميل بيانات المستخدم:", error);
+                showToast("فشل تحميل بيانات المستخدم", "error");
+            }
+        });
+
+        // ============================================================
+        // تسجيل الخروج
+        // ============================================================
+        document.getElementById("logoutBtn")?.addEventListener("click", async () => {
+            try {
+                await signOut(auth);
+                window.location.href = "../login.html";
+            } catch (error) {
+                showToast("فشل تسجيل الخروج: " + error.message, "error");
+            }
+        });
+
+        // ============================================================
+        // القائمة الجانبية
+        // ============================================================
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.getElementById("sidebarOverlay");
+        const openBtn = document.getElementById("openSidebarBtn");
+        const closeBtn = document.getElementById("closeSidebarBtn");
+
+        function openSidebar() {
+            sidebar.classList.add("open");
+            overlay.classList.add("show");
+            document.body.style.overflow = "hidden";
+        }
+
+        function closeSidebar() {
+            sidebar.classList.remove("open");
+            overlay.classList.remove("show");
+            document.body.style.overflow = "";
+        }
+
+        if (openBtn) openBtn.addEventListener("click", openSidebar);
+        if (closeBtn) closeBtn.addEventListener("click", closeSidebar);
+        if (overlay) overlay.addEventListener("click", closeSidebar);
+        document.querySelectorAll("#sidebar a").forEach((link) => {
+            link.addEventListener("click", closeSidebar);
+        });
+
+        window.addEventListener("resize", () => {
+            if (window.innerWidth >= 768) closeSidebar();
+        });
+
+        // ============================================================
+        // Lenis Smooth Scroll
+        // ============================================================
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            orientation: "vertical",
+            gestureOrientation: "vertical",
+            smoothWheel: true,
+            wheelMultiplier: 1,
+            touchMultiplier: 2,
+        });
+
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        console.log("✅ مداد العلم — صفحة الحصص (Owner) جاهزة");
+    </script>
+
+</body>
+</html>

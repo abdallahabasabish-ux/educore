@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>إنشاء أكاديمية – مداد العلم</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..700&family=Cairo:wght@300..700&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="stylesheet" href="https://unpkg.com/lenis@1.1.13/dist/lenis.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="assets/css/style.css" />
+
+    <style>
+        body {
+            background: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 1rem;
+            margin: 0;
+            font-family: 'Inter', 'Cairo', sans-serif;
+        }
+        .auth-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 2rem 1.75rem;
+            max-width: 520px;
+            width: 100%;
+            box-shadow: 0 16px 48px -12px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e5e5e5;
+        }
+        .auth-logo {
+            text-align: center;
+            margin-bottom: 1.75rem;
+        }
+        .auth-logo i {
+            font-size: 2.2rem;
+            color: #000000;
+        }
+        .auth-logo h1 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-top: 0.25rem;
+            color: #000000;
+        }
+        .auth-logo p {
+            color: #555555;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.1rem;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 0.3rem;
+        }
+        .form-control {
+            width: 100%;
+            padding: 0.55rem 0.875rem;
+            border: 1.5px solid #e5e5e5;
+            border-radius: 10px;
+            background: #fafafa;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            color: #111827;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: #000000;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+        }
+        .form-control::placeholder {
+            color: #94a3b8;
+        }
+        .form-hint {
+            font-size: 0.7rem;
+            color: #888888;
+            margin-top: 0.25rem;
+        }
+
+        .btn-primary {
+            background: #000000;
+            color: #ffffff;
+            padding: 0.7rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            min-height: 48px;
+        }
+        .btn-primary:hover {
+            background: #222222;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.2);
+        }
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e5e5e5;
+        }
+        .divider span {
+            color: #888888;
+            font-size: 0.8rem;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: #555555;
+        }
+        .auth-footer a {
+            color: #000000;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .message-box {
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+        .message-box.error {
+            display: block;
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+        .message-box.success {
+            display: block;
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        @media (max-width: 480px) {
+            .auth-card {
+                padding: 1.5rem 1.25rem;
+                border-radius: 16px;
+            }
+            .auth-logo i {
+                font-size: 1.8rem;
+            }
+            .auth-logo h1 {
+                font-size: 1.25rem;
+            }
+            .form-control {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.85rem;
+            }
+            .btn-primary {
+                font-size: 0.85rem;
+                min-height: 44px;
+                padding: 0.6rem 1rem;
+            }
+        }
+        @media (max-width: 360px) {
+            .auth-card {
+                padding: 1.25rem 1rem;
+            }
+            .auth-logo h1 {
+                font-size: 1.1rem;
+            }
+            .btn-primary {
+                font-size: 0.8rem;
+                min-height: 40px;
+                padding: 0.5rem 0.75rem;
+            }
+        }
+        @media (min-width: 1024px) {
+            .auth-card {
+                padding: 2.5rem;
+            }
+            .auth-logo i {
+                font-size: 2.5rem;
+            }
+        }
+
+        .slug-prefix {
+            display: flex;
+            align-items: center;
+            border: 1.5px solid #e5e5e5;
+            border-radius: 10px;
+            background: #fafafa;
+            overflow: hidden;
+            transition: border-color 0.2s ease;
+        }
+        .slug-prefix:focus-within {
+            border-color: #000000;
+            box-shadow: 0 0 0 3px rgba(0,0,0,0.05);
+        }
+        .slug-prefix .prefix {
+            padding: 0.55rem 0.75rem;
+            background: #f0f0f0;
+            color: #555555;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            border-left: 1px solid #e5e5e5;
+        }
+        .slug-prefix input {
+            border: none;
+            background: transparent;
+            padding: 0.55rem 0.75rem;
+            font-size: 0.9rem;
+            width: 100%;
+            outline: none;
+            color: #111827;
+            direction: ltr;
+            text-align: right;
+        }
+        .slug-prefix input::placeholder {
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="auth-card">
+
+        <div class="auth-logo">
+            <i class="fas fa-feather-alt"></i>
+            <h1>مداد العلم</h1>
+            <p>أنشئ أكاديميتك التعليمية</p>
+        </div>
+
+        <form id="registerAcademyForm" novalidate>
+
+            <!-- اسم الأكاديمية -->
+            <div class="form-group">
+                <label for="academyName">اسم الأكاديمية</label>
+                <input type="text" id="academyName" class="form-control" placeholder="أكاديمية المستقبل" required />
+            </div>
+
+            <!-- الرابط المخصص (slug) -->
+            <div class="form-group">
+                <label for="academySlug">الرابط المخصص</label>
+                <div class="slug-prefix">
+                    <span class="prefix">midad.com/</span>
+                    <input type="text" id="academySlug" placeholder="example-academy" required dir="ltr" />
+                </div>
+                <div class="form-hint">يُستخدم هذا الرابط لدخول الطلاب إلى أكاديميتك (حروف، أرقام، وشرطة فقط)</div>
+            </div>
+
+            <!-- المدرس المسؤول -->
+            <div class="form-group">
+                <label for="teacherName">اسم المدرس المسؤول</label>
+                <input type="text" id="teacherName" class="form-control" placeholder="أحمد محمد" required />
+            </div>
+
+            <!-- البريد الإلكتروني للمدرس -->
+            <div class="form-group">
+                <label for="teacherEmail">البريد الإلكتروني للمدرس</label>
+                <input type="email" id="teacherEmail" class="form-control" placeholder="teacher@example.com" required />
+            </div>
+
+            <!-- كلمة المرور -->
+            <div class="form-group">
+                <label for="teacherPassword">كلمة مرور المدرس</label>
+                <input type="password" id="teacherPassword" class="form-control" placeholder="••••••••" required minlength="6" />
+            </div>
+
+            <!-- تأكيد كلمة المرور -->
+            <div class="form-group">
+                <label for="teacherConfirm">تأكيد كلمة المرور</label>
+                <input type="password" id="teacherConfirm" class="form-control" placeholder="••••••••" required minlength="6" />
+            </div>
+
+            <!-- رسالة الخطأ/النجاح -->
+            <div id="registerMessage" class="message-box"></div>
+
+            <button type="submit" class="btn-primary" id="registerBtn">
+                <i class="fas fa-school"></i> إنشاء الأكاديمية
+            </button>
+
+        </form>
+
+        <div class="divider"><span>أو</span></div>
+
+        <p class="text-center text-sm text-[#555555]">
+            لديك حساب بالفعل؟ <a href="login.html">تسجيل الدخول</a>
+        </p>
+
+        <div class="auth-footer">
+            <span class="text-xs text-[#888888]">سيتم إنشاء حسابك كـ <strong>مالك أكاديمية</strong> مع صلاحيات كاملة</span>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "firebase/app": "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js",
+                "firebase/auth": "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js",
+                "firebase/firestore": "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js",
+                "firebase/storage": "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js"
+            }
+        }
+    </script>
+
+    <script type="module">
+        // ============================================================
+        // register-academy.js – إنشاء أكاديمية جديدة مع حساب المدرس
+        // ============================================================
+
+        import { initializeApp } from "firebase/app";
+        import { getAuth, createUserWithEmailAndPassword, setPersistence, browserLocalPersistence } from "firebase/auth";
+        import { getFirestore, doc, setDoc, serverTimestamp } from "firebase/firestore";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBsSP8Le5_nDG2YFiyGcZ6BFR7aLi3djLU",
+            authDomain: "edu-core-ddb48.firebaseapp.com",
+            projectId: "edu-core-ddb48",
+            storageBucket: "edu-core-ddb48.firebasestorage.app",
+            messagingSenderId: "4743644287",
+            appId: "1:4743644287:web:9167749cc80417b6876b4a",
+            measurementId: "G-S94FBCFCXW"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // ===== عناصر DOM =====
+        const form = document.getElementById('registerAcademyForm');
+        const messageEl = document.getElementById('registerMessage');
+        const registerBtn = document.getElementById('registerBtn');
+
+        const academyNameInput = document.getElementById('academyName');
+        const academySlugInput = document.getElementById('academySlug');
+        const teacherNameInput = document.getElementById('teacherName');
+        const teacherEmailInput = document.getElementById('teacherEmail');
+        const teacherPasswordInput = document.getElementById('teacherPassword');
+        const teacherConfirmInput = document.getElementById('teacherConfirm');
+
+        // ===== عرض الرسائل =====
+        function showMessage(text, type = 'error') {
+            messageEl.textContent = text;
+            messageEl.className = `message-box ${type}`;
+            clearTimeout(messageEl._timeout);
+            messageEl._timeout = setTimeout(() => {
+                messageEl.className = 'message-box';
+                messageEl.textContent = '';
+            }, 5000);
+        }
+
+        function setLoading(isLoading) {
+            if (isLoading) {
+                registerBtn.disabled = true;
+                registerBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإنشاء...';
+            } else {
+                registerBtn.disabled = false;
+                registerBtn.innerHTML = '<i class="fas fa-school"></i> إنشاء الأكاديمية';
+            }
+        }
+
+        // ===== التحقق من صحة الرابط المخصص =====
+        function isValidSlug(slug) {
+            return /^[a-z0-9-]+$/.test(slug) && slug.length >= 3 && slug.length <= 30;
+        }
+
+        // ===== إرسال النموذج =====
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const academyName = academyNameInput.value.trim();
+            const academySlug = academySlugInput.value.trim().toLowerCase().replace(/\s+/g, '-');
+            const teacherName = teacherNameInput.value.trim();
+            const teacherEmail = teacherEmailInput.value.trim();
+            const teacherPassword = teacherPasswordInput.value;
+            const teacherConfirm = teacherConfirmInput.value;
+
+            // التحقق من الحقول
+            if (!academyName || !academySlug || !teacherName || !teacherEmail || !teacherPassword || !teacherConfirm) {
+                showMessage('يرجى ملء جميع الحقول المطلوبة', 'error');
+                return;
+            }
+
+            if (teacherPassword.length < 6) {
+                showMessage('كلمة المرور يجب أن تكون 6 أحرف على الأقل', 'error');
+                return;
+            }
+
+            if (teacherPassword !== teacherConfirm) {
+                showMessage('كلمات المرور غير متطابقة', 'error');
+                return;
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(teacherEmail)) {
+                showMessage('البريد الإلكتروني غير صحيح', 'error');
+                return;
+            }
+
+            if (!isValidSlug(academySlug)) {
+                showMessage('الرابط المخصص يجب أن يحتوي على 3-30 حرفاً (أحرف، أرقام، شرطة فقط)', 'error');
+                return;
+            }
+
+            // تعطيل الزر أثناء التحميل
+            setLoading(true);
+
+            try {
+                // 1. إنشاء حساب المدرس في Firebase Authentication
+                const userCredential = await createUserWithEmailAndPassword(auth, teacherEmail, teacherPassword);
+                const user = userCredential.user;
+
+                // 2. إنشاء وثيقة الأكاديمية في Firestore
+                const academyId = user.uid; // نستخدم uid كمعرف للأكاديمية
+                const academyData = {
+                    id: academyId,
+                    academyName: academyName,
+                    slug: academySlug,
+                    ownerId: user.uid,
+                    status: 'active',
+                    studentCount: 0,
+                    createdAt: serverTimestamp(),
+                    updatedAt: serverTimestamp(),
+                    language: 'ar',
+                    currency: 'SAR',
+                    description: '',
+                    primaryColor: '#4B5563',
+                    secondaryColor: '#0F172A',
+                    accentColor: '#2563EB',
+                    theme: 'light',
+                    social: {},
+                    seo: {},
+                };
+                await setDoc(doc(db, 'academies', academyId), academyData);
+
+                // 3. إنشاء حساب المدرس في مجموعة users
+                const userData = {
+                    uid: user.uid,
+                    fullName: teacherName,
+                    email: teacherEmail,
+                    role: 'owner',
+                    status: 'active',
+                    academyId: academyId,
+                    academyName: academyName,
+                    academySlug: academySlug,
+                    createdAt: serverTimestamp(),
+                    updatedAt: serverTimestamp(),
+                };
+                await setDoc(doc(db, 'users', user.uid), userData);
+
+                // 4. إنشاء مجموعة فرعية للطلاب (جمعية) لتسهيل التنظيم
+                await setDoc(doc(db, 'academies', academyId, 'students', '_empty'), {
+                    placeholder: true,
+                    createdAt: serverTimestamp()
+                });
+
+                // 5. حفظ رابط تسجيل الطلاب في إعدادات الأكاديمية
+                const studentRegisterUrl = `${window.location.origin}/student-register.html?academy=${academySlug}`;
+                await setDoc(doc(db, 'academies', academyId, 'settings', 'registration'), {
+                    studentRegisterUrl: studentRegisterUrl,
+                    createdAt: serverTimestamp(),
+                });
+
+                // حفظ بيانات المدرس في localStorage لتسهيل الوصول
+                localStorage.setItem('academySlug', academySlug);
+                localStorage.setItem('academyId', academyId);
+
+                showMessage('✅ تم إنشاء الأكاديمية بنجاح! جاري التوجيه...', 'success');
+
+                setTimeout(() => {
+                    window.location.href = 'owner-dashboard.html';
+                }, 2000);
+
+            } catch (error) {
+                let msg = 'فشل إنشاء الأكاديمية';
+                if (error.code === 'auth/email-already-in-use') {
+                    msg = 'البريد الإلكتروني مستخدم بالفعل';
+                } else if (error.code === 'auth/invalid-email') {
+                    msg = 'البريد الإلكتروني غير صحيح';
+                } else if (error.code === 'auth/weak-password') {
+                    msg = 'كلمة المرور ضعيفة جداً';
+                } else if (error.code === 'auth/network-request-failed') {
+                    msg = 'فشل الاتصال بالشبكة، تأكد من اتصال الإنترنت';
+                } else {
+                    msg = error.message;
+                }
+                showMessage(msg, 'error');
+            } finally {
+                setLoading(false);
+            }
+        });
+
+        // ===== إزالة الرسائل عند الكتابة =====
+        const inputs = [academyNameInput, academySlugInput, teacherNameInput, teacherEmailInput, teacherPasswordInput, teacherConfirmInput];
+        inputs.forEach(input => {
+            input.addEventListener('input', () => {
+                if (messageEl.className !== 'message-box') {
+                    messageEl.className = 'message-box';
+                    messageEl.textContent = '';
+                }
+            });
+        });
+
+        // ===== Lenis Smooth Scroll =====
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            orientation: 'vertical',
+            gestureOrientation: 'vertical',
+            smoothWheel: true,
+            wheelMultiplier: 1,
+            touchMultiplier: 2,
+        });
+
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        console.log('✅ register-academy.html جاهزة');
+    </script>
+
+</body>
+</html>
